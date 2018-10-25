@@ -2,6 +2,7 @@ Authors Haven - A Social platform for the creative at heart.
 =======
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed%20By-Hound-8E64B0.svg)](https://houndci.com)
 
+[![Build Status](https://travis-ci.org/andela/noldor-ah-backend.svg?branch=master)](https://travis-ci.org/andela/noldor-ah-backend)
 ## Vision
 Create a community of like minded authors to foster inspiration and innovation
 by leveraging the modern web.
