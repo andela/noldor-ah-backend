@@ -1,0 +1,10 @@
+{
+  "extends": "@istanbuljs/nyc-config-babel",
+  "reporter": [
+    "lcov",
+    "text-summary"
+  ],
+  "require": [
+    "babel-core/register"
+  ]
+}

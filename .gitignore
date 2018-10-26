@@ -36,5 +36,6 @@ node_modules
 
 # Production Folder
 server/dist/
-# File housing all environment variables
-.env
+
+# coveralls file for repo_token
+.coveralls.yml
