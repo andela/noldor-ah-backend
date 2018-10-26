@@ -14,6 +14,8 @@ const moganDev = morgan('dev');
 app.use(cors());
 app.use(routes);
 
+console.log(require('morgan')('dev'));
+
 // Normal express config defaults
 app.use(moganDev);
 app.use(bodyParser.urlencoded({ extended: false }));

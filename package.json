@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=production npm run build && cross-env NODE_ENV=production node server/bin/production",
     "test": "cross-env NODE_ENV=test npm run build && mocha ./server/dist/src/test/  --exit",
     "clean-dist": "rm -rf ./server/dist/",
-    "build": "npm run clean-dist && mkdir ./server/dist/ && mkdir ./server/dist/src && babel ./server/src/ -d ./server/dist/src && babel index.js -d ./server/dist/",
+    "build": "npm run clean-dist && mkdir ./server/dist/ && babel index.js -d ./server/dist/ && mkdir ./server/dist/src && babel ./server/src/ -d ./server/dist/src",
     "dev": "nodemon index.js --exec babel-node",
     "migrate": "sequelize db:migrate",
     "clean-db": "sequelize db:migrate:undo:all"
@@ -44,6 +44,8 @@
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
     "eslint": "^5.8.0",
+    "sequelize": "^4.41.0",
+    "slug": "^0.9.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
