@@ -61,7 +61,5 @@ export default {
       type: Sequelize.DATE
     }
   }),
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Users');
-  }
+  down: queryInterface => queryInterface.dropTable('Users')
 };
