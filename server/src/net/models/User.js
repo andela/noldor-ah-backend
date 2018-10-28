@@ -1,4 +1,4 @@
-export default (sequelize, DataTypes) => {
+const Users = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {
       allowNull: false,
@@ -6,13 +6,13 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4
     },
-    first_name: {
+    firstName: {
       required: true,
       allowNull: false,
       unique: false,
       type: DataTypes.STRING
     },
-    last_name: {
+    lastName: {
       required: true,
       allowNull: false,
       unique: false,
@@ -46,7 +46,7 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.STRING
     },
-    avatar_url: {
+    avatarUrl: {
       required: true,
       allowNull: false,
       unique: false,
@@ -58,3 +58,5 @@ export default (sequelize, DataTypes) => {
   };
   return User;
 };
+
+export default Users;

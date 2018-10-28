@@ -2,7 +2,6 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../../index';
 
-
 const { expect } = chai;
 chai.use(chaiHttp);
 
@@ -154,6 +153,29 @@ describe('Signup validation test', () => {
         if (err) done(err);
         expect(res.status).to.equal(400);
         expect(res.body.error.matchPass).to.equal('Passwords did not match, please try again');
+        done();
+      });
+  });
+
+  it('Should return a token on successful signup', (done) => {
+    const values = {
+      firstName: 'Janet',
+      lastName: 'Doe',
+      email: 'jane.John@mail.com',
+      username: 'JaneJanet',
+      password: 'password234',
+      confirmPassword: 'password234',
+      bio: 'This is a test bio description',
+      avatarUrl: 'http://www.google.com',
+    };
+    chai.request(app)
+      .post('/user/register')
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.token).to.be.a('string');
+        expect(res.body.message).to.equal('Registration successful, token issued');
         done();
       });
   });
