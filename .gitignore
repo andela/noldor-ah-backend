@@ -45,7 +45,8 @@ server/dist/
 
 # coverage folder for test repoter
 coverage
-# File housing all environment variables
+
+# .env file
 .env
 
 server/src/db/seeder

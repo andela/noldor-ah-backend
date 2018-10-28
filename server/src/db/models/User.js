@@ -3,8 +3,8 @@ const Users = (sequelize, DataTypes) => {
     id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
+      type: DataTypes.INTEGER,
+      // defaultValue: DataTypes.UUIDV4
     },
     firstName: {
       required: false,
@@ -45,7 +45,7 @@ const Users = (sequelize, DataTypes) => {
     confirmEmail: {
       allowNull: false,
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: false
     },
     avatarUrl: {
       required: false,
