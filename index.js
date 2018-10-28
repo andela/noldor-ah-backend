@@ -11,13 +11,13 @@ const isProduction = process.env.NODE_ENV;
 const app = express();
 const moganDev = morgan('dev');
 
-app.use(cors());
-app.use(routes);
-
 // Normal express config defaults
 app.use(moganDev);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(cors());
+app.use(routes);
 
 if (!isProduction) {
   app.use(errorhandler());
@@ -34,3 +34,5 @@ app.use((req, res, next) => {
 const server = app.listen(process.env.PORT || 3000, () => {
   console.log(`Listening on port ${server.address().port}`);
 });
+
+export default server;
