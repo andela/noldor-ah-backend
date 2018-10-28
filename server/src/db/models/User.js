@@ -7,14 +7,24 @@ const Users = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     firstName: {
+<<<<<<< HEAD:server/src/db/models/User.js
       required: false,
       allowNull: true,
+=======
+      required: true,
+      allowNull: false,
+>>>>>>> feat(Authentication):user receive token on registration:server/src/net/models/User.js
       unique: false,
       type: DataTypes.STRING
     },
     lastName: {
+<<<<<<< HEAD:server/src/db/models/User.js
       required: false,
       allowNull: true,
+=======
+      required: true,
+      allowNull: false,
+>>>>>>> feat(Authentication):user receive token on registration:server/src/net/models/User.js
       unique: false,
       type: DataTypes.STRING
     },
@@ -43,6 +53,14 @@ const Users = (sequelize, DataTypes) => {
       type: DataTypes.TEXT
     },
     confirmEmail: {
+<<<<<<< HEAD:server/src/db/models/User.js
+=======
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    avatarUrl: {
+      required: true,
+>>>>>>> feat(Authentication):user receive token on registration:server/src/net/models/User.js
       allowNull: false,
       type: DataTypes.BOOLEAN,
       defaultValue: false,
