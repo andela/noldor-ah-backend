@@ -3,8 +3,8 @@ export default {
     id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4
+      type: Sequelize.INTEGER,
+      // defaultValue: Sequelize.UUIDV4
     },
     userId: {
       required: true,
@@ -59,4 +59,4 @@ export default {
     }
   }),
   down: queryInterface => queryInterface.dropTable('Articles')
-};
+ };
