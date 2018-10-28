@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production npm run build && cross-env NODE_ENV=production node server/bin/production",
-    "test-dev": "cross-env NODE_ENV=test nyc --reporter=html --reporter=text mocha --require babel-core/register ./server/src/test/ --recursive --exit",
-    "test": "cross-env NODE_ENV=test npm run build && nyc --reporter=html --reporter=text mocha ./server/dist/src/test/ --exit",
+    "test-dev": "npm run clean-db && npm run migrate && cross-env NODE_ENV=test nyc --reporter=html --reporter=text mocha --compilers js:@babel/register --require @babel/polyfill ./server/src/test/ --recursive --exit",
+    "test": "npm run clean-db && npm run migrate && cross-env NODE_ENV=test npm run build && nyc --reporter=html --reporter=text mocha ./server/dist/src/test/ --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "clean-dist": "rm -rf ./server/dist/",
     "build": "npm run clean-dist && mkdir ./server/dist/ && babel index.js -d ./server/dist/ && mkdir ./server/dist/src && babel ./server/src/ -d ./server/dist/src",
