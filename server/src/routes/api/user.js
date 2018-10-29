@@ -1,4 +1,5 @@
 import express from 'express';
+import validate from '../../middlewares/validation';
 
 const router = express.Router();
 
@@ -20,7 +21,7 @@ router.post('/users/login', (req, res) => {
   });
 });
 
-router.post('/users', (req, res) => {
+router.post('/users', validate, (req, res) => {
   res.status(200).json({
     message: 'This is the POST signup user route'
   });
