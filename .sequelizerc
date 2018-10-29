@@ -1,0 +1,8 @@
+const path = require('path');
+
+module.exports = {
+  'config': path.resolve('./server/src/net/config', 'babelHook.js'),
+  'models-path': path.resolve('./server/src/net', 'models'),
+  'migrations-path': path.resolve('./server/src/net', 'migrations'),
+  'seeders-path': path.resolve('./server/src/net', 'seeders'),
+};

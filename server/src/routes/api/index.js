@@ -1,18 +1,17 @@
-const router = require("express").Router();
 
-router.use("/", require("./users"));
+import express from 'express';
+import user from './user';
+import route from './article';
 
-router.use(function(err, req, res, next) {
-    if (err.name === "ValidationError") {
-        return res.status(422).json({
-            errors: Object.keys(err.errors).reduce(function(errors, key) {
-                errors[key] = err.errors[key].message;
-                return errors;
-            }, {})
-        });
-    }
 
-    return next(err);
+const router = express.Router();
+
+router.use('/', user);
+router.use('/', route);
+
+// Home route
+router.get('/', (req, res) => {
+  res.status(200).send('<h1>Welcome to Author Haven</h1>');
 });
 
-module.exports = router;
+export default router;
