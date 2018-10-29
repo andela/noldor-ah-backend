@@ -1,0 +1,12 @@
+{
+    "name": "noldor-ah-backend",
+    "scripts": {},
+    "env": {},
+    "formation": {
+        "web": {
+        "quantity": 1
+        }
+    },
+    "addons": [],
+    "buildpacks": []
+}
