@@ -17,50 +17,15 @@ describe('Sample API for test', () => {
 });
 
 describe('Signup validation test', () => {
-  it('should return 409 (Conflict) POST /uesrs for signup using existing email', (done) => {
-    const values = {
-      name: 'jane doe',
-      email: 'jane.doe@mail.com',
-      username: 'meeky00',
-      password: 'password123',
-      confirmPassword: 'password123'
-    };
-    chai.request(app)
-      .post('/users')
-      .send(values)
-      .end((err, res) => {
-        expect(res.status).to.equal(409);
-        expect(res.body.error.email).to.equal(`Email ${values.email} aready exist`);
-        done();
-      });
-  });
-  it('should return 409 (Conflict) POST /uesrs for signup using existing username', (done) => {
-    const values = {
-      name: 'jane doe',
-      email: 'jane.doe8@mail.com',
-      username: 'meeky',
-      password: 'password123',
-      confirmPassword: 'password123'
-    };
-    chai.request(app)
-      .post('/users')
-      .send(values)
-      .end((err, res) => {
-        expect(res.status).to.equal(409);
-        expect(res.body.error.username).to.equal(`Username ${values.username} aready exist`);
-        done();
-      });
-  });
   it('should Return 400 (Bad request) for incomplete user details, missing email field in this case', (done) => {
     const values = {
-      name: 'jane doe',
       email: '',
       username: 'jane20',
       password: 'password123',
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(400);
@@ -68,15 +33,14 @@ describe('Signup validation test', () => {
         done();
       });
   });
-  it('should Return 400 (Bad request) for missing user details, missing username field in this case', (done) => {
+  it('should Return 400 (Bad request) for POST /users/register missing user details, missing username field in this case', (done) => {
     const values = {
-      name: 'jane doe',
       email: 'jane00@mail.com',
       password: 'password123',
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(400);
@@ -84,34 +48,64 @@ describe('Signup validation test', () => {
         done();
       });
   });
-  it('Login an existing user, when all the required parameters is in good standing', (done) => {
+  it('Register a user, when all the required parameters is in good standing', (done) => {
     const values = {
-      name: 'jane doe',
-      email: 'jane.doe0@mail.com',
+      email: 'jane.doe@mail.com',
+      username: 'meeky',
+      password: 'password123',
+      confirmPassword: 'password123'
+    };
+    chai.request(app)
+      .post('/api/v1/users/register')
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.user.success).to.equal(true);
+        done();
+      });
+  });
+  it('should return 409 (Conflict) POST /users/register for signup using existing username', (done) => {
+    const values = {
+      email: 'john.doe00@gmail.com',
+      username: 'meeky',
+      password: 'password123',
+      confirmPassword: 'password123'
+    };
+    chai.request(app)
+      .post('/api/v1/users/register')
+      .send(values)
+      .end((err, res) => {
+        expect(res.status).to.equal(409);
+        expect(res.body.message).to.equal(`Username ${values.username} aready exist`);
+        done();
+      });
+  });
+  it('should return 409 (Conflict) for POST /users/register for signup using existing email', (done) => {
+    const values = {
+      email: 'jane.doe@mail.com',
       username: 'meeky00',
       password: 'password123',
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
-        if (err) done(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.message).to.equal('This is the POST signup user route');
+        expect(res.status).to.equal(409);
+        expect(res.body.message).to.equal(`Email ${values.email} aready exist`);
         done();
       });
   });
   it('Should return 400 for invalid emails', (done) => {
     const values = {
-      name: 'jane doe',
       email: 'jane.doe0@mail.com.',
-      username: 'meeky00',
+      username: 'meekye',
       password: 'password123',
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -122,14 +116,13 @@ describe('Signup validation test', () => {
   });
   it('Should return 400 for invalid passwords', (done) => {
     const values = {
-      name: 'jane doe',
-      email: 'jane.doe0@mail.com.',
-      username: 'meeky00',
+      email: 'jane.doe0@mail.com',
+      username: 'meeky99',
       password: 'password',
       confirmPassword: 'password'
     };
     chai.request(app)
-      .post('/users')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -140,14 +133,13 @@ describe('Signup validation test', () => {
   });
   it('Should return 400 for non matching passwords', (done) => {
     const values = {
-      name: 'jane doe',
-      email: 'jane.doe0@mail.com.',
-      username: 'meeky00',
+      email: 'jane.doe0@mail.com',
+      username: 'meeky88',
       password: 'password234',
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -159,23 +151,73 @@ describe('Signup validation test', () => {
 
   it('Should return a token on successful signup', (done) => {
     const values = {
-      firstName: 'Janet',
-      lastName: 'Doe',
       email: 'jane.John@mail.com',
       username: 'JaneJanet',
       password: 'password234',
       confirmPassword: 'password234',
-      bio: 'This is a test bio description',
-      avatarUrl: 'http://www.google.com',
     };
     chai.request(app)
-      .post('/user/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
         expect(res.status).to.equal(200);
+        expect(res.body.user.token).to.be.a('string');
+        expect(res.body.user.message).to.equal('registration successful');
+        done();
+      });
+  });
+});
+
+describe('Login validation test', () => {
+  it('Should return 404 for unregistered user on login', (done) => {
+    const values = {
+      email: 'anasey@gmail.com',
+      password: 'password12',
+    };
+    chai.request(app)
+      .post('/api/v1/users/login')
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(404);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('email or password incorrect');
+        done();
+      });
+  });
+
+  it('Should return 401 for invalid email on login', (done) => {
+    const values = {
+      email: 'anasey@gmail.com.',
+      password: 'password12',
+    };
+    chai.request(app)
+      .post('/api/v1/users/login')
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(401);
+        expect(res.body.error.email).to.equal('Invalid email');
+        done();
+      });
+  });
+
+  it('Should return 200 for successful login', (done) => {
+    const values = {
+      email: 'jane.john@mail.com',
+      password: 'password234',
+    };
+    chai.request(app)
+      .post('/api/v1/users/login')
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.success).to.equal(true);
         expect(res.body.token).to.be.a('string');
-        expect(res.body.message).to.equal('Registration successful, token issued');
+        expect(res.header['x-token']).to.be.a('string');
+        expect(res.body.message).to.equal('successfully logged in');
         done();
       });
   });
