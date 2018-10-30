@@ -7,14 +7,14 @@ const Users = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     firstName: {
-      required: true,
-      allowNull: false,
+      required: false,
+      allowNull: true,
       unique: false,
       type: DataTypes.STRING
     },
     lastName: {
-      required: true,
-      allowNull: false,
+      required: false,
+      allowNull: true,
       unique: false,
       type: DataTypes.STRING
     },
@@ -37,18 +37,19 @@ const Users = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     bio: {
-      required: true,
-      allowNull: false,
+      required: false,
+      allowNull: true,
       unique: false,
       type: DataTypes.TEXT
     },
     confirmEmail: {
-      allowNull: true,
-      type: DataTypes.STRING
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     avatarUrl: {
-      required: true,
-      allowNull: false,
+      required: false,
+      allowNull: true,
       unique: false,
       type: DataTypes.STRING
     },

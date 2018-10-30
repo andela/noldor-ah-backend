@@ -11,6 +11,7 @@ class Token {
   /**
    * @description { Issues token to users }
    * @param { object } payload
+   * @param { object } lifeSpan
    * @returns { string } token
    */
   static issue(payload) {
@@ -38,7 +39,7 @@ class Token {
       });
     }
     try {
-      const decodedToken = jwt.verify(headerToken, process.env.SECRET_KEY);
+      const decodedToken = jwt.verify(headerToken, process.env.PRIVATE_KEY);
       req.user = decodedToken;
       return next();
     } catch (err) {
