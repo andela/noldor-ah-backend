@@ -1,15 +1,17 @@
 
 import express from 'express';
 import user from './user';
-import route from './article';
+import article from './article';
 
 
 const router = express.Router();
 
-router.use('/', user);
-router.use('/', route);
+router.use('/api/v1', user);
+router.use('/api/v1', article);
 
-// Home route
+/**
+ * Home route
+ */
 router.get('/', (req, res) => {
   res.status(200).send('<h1>Welcome to Author Haven</h1>');
 });

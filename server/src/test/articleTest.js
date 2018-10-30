@@ -39,7 +39,7 @@ const data = {};
 describe('GET all articles endpoint', () => {
   it('should return a 200', (done) => {
     chai.request(app)
-      .get('/api/articles')
+      .get('/api/v1/articles')
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(404);
@@ -57,7 +57,7 @@ describe('POST endpoint for creating articles', () => {
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -67,7 +67,7 @@ describe('POST endpoint for creating articles', () => {
         done();
       });
   });
-  it('Register a user, when all the required parameters is in good standing', (done) => {
+  it('Register a 2nd user, when all the required parameters is in good standing', (done) => {
     const values = {
       email: 'uwa@noldor.com',
       username: 'uwaelpis',
@@ -75,7 +75,7 @@ describe('POST endpoint for creating articles', () => {
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -85,7 +85,7 @@ describe('POST endpoint for creating articles', () => {
         done();
       });
   });
-  const api = '/api/articles';
+  const api = '/api/v1/articles';
   it('should require a token for authorisation ', (done) => {
     chai.request(app)
       .post(api)
@@ -196,7 +196,7 @@ describe('POST endpoint for creating articles', () => {
 
 
 describe('GET endpoint for logged-in user articles', () => {
-  const api = '/api/users/articles';
+  const api = '/api/v1/users/articles';
   it('should require an authorization token', (done) => {
     chai.request(app)
       .get(api)
@@ -245,7 +245,7 @@ describe('GET endpoint for logged-in user articles', () => {
 });
 
 describe('GET endpoint for logged-in user drafts', () => {
-  const api = '/api/articles/drafts';
+  const api = '/api/v1/articles/drafts';
   it('should require a token for authorisation ', (done) => {
     chai.request(app)
       .get(api)
@@ -297,7 +297,7 @@ describe('GET endpoint for logged-in user drafts', () => {
 describe('GET endpoint for an article', () => {
   it('should return an 200 if found', (done) => {
     chai.request(app)
-      .get(`/api/articles/${data.slug}`)
+      .get(`/api/v1/articles/${data.slug}`)
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(200);
@@ -306,21 +306,21 @@ describe('GET endpoint for an article', () => {
       });
   });
 
-  // it('should return 404 if article is not found ', (done) => {
-  //   const noArticleApi = '/api/articles/72567927';
-  //   chai.request(app)
-  //     .get(noArticleApi)
-  //     .end((error, response) => {
-  //       if (error) done(error);
-  //       expect(response.status).to.equal(404);
-  //       expect(response.body.error).to.be.an('object');
+  it('should return 404 if article is not found ', (done) => {
+    const noArticleApi = '/api/v1/articles/72567927';
+    chai.request(app)
+      .get(noArticleApi)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.be.an('object');
 
-  //       done();
-  //     });
-  // });
+        done();
+      });
+  });
 });
 describe('Update endpoint for articles', () => {
-  const api = `/api/articles/${data.slug}`;
+  const api = `/api/v1/articles/${data.slug}`;
   it('should require a token for authorisation', (done) => {
     chai.request(app)
       .put(api)
@@ -346,23 +346,23 @@ describe('Update endpoint for articles', () => {
   });
 
 
-  // it('should return a 404 if article does not exist', (done) => {
-  //   chai.request(app)
-  //     .put(`/api/articles/${5467898}`)
-  //     .set('X-Token', data.token)
-  //     .send(noDescriptionArticle)
-  //     .end((error, response) => {
-  //       if (error) done(error);
-  //       expect(response.status).to.equal(404);
-  //       expect(response.body).to.be.an('object');
-  //       done();
-  //     });
-  // });
+  it('should return a 404 if article does not exist', (done) => {
+    chai.request(app)
+      .put(`/api/v1/articles/${5467898}`)
+      .set('X-Token', data.token)
+      .send(noDescriptionArticle)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(404);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
 
 
   it('should return a 201', (done) => {
     chai.request(app)
-      .put(`/api/articles/${data.slug}`)
+      .put(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token)
       .send(testArticle)
       .end((error, response) => {
@@ -375,7 +375,7 @@ describe('Update endpoint for articles', () => {
 
   it('should return a 201', (done) => {
     chai.request(app)
-      .put(`/api/articles/${data.slug}`)
+      .put(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token)
       .send({
         title: 'this is the title',
@@ -391,7 +391,7 @@ describe('Update endpoint for articles', () => {
 
   it('should return a 201', (done) => {
     chai.request(app)
-      .put(`/api/articles/${data.slug}`)
+      .put(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token)
       .send({
         description: 'this is the description',
@@ -407,7 +407,7 @@ describe('Update endpoint for articles', () => {
 
   it('should return a 201', (done) => {
     chai.request(app)
-      .put(`/api/articles/${data.slug}`)
+      .put(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token)
       .send({
         title: 'this is the title',
@@ -424,7 +424,7 @@ describe('Update endpoint for articles', () => {
 
   it('should return a 401 if user is not author', (done) => {
     chai.request(app)
-      .put(`/api/articles/${data.slug}`)
+      .put(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token2)
       .end((error, response) => {
         if (error) done(error);
@@ -438,7 +438,7 @@ describe('Update endpoint for articles', () => {
 describe('Update endpoint for publishing article', () => {
   it('should require a token for authorisation', (done) => {
     chai.request(app)
-      .put(`/api/articles/${data.slug}/publish`)
+      .put(`/api/v1/articles/${data.slug}/publish`)
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(401);
@@ -448,7 +448,7 @@ describe('Update endpoint for publishing article', () => {
   });
   it('should require the correct token for authorisation', (done) => {
     chai.request(app)
-      .put(`/api/articles/${data.slug}/publish`)
+      .put(`/api/v1/articles/${data.slug}/publish`)
       .set('X-Token', wrongToken)
       .end((error, response) => {
         if (error) done(error);
@@ -461,7 +461,7 @@ describe('Update endpoint for publishing article', () => {
 
   it('should return a 404 if article does not exist', (done) => {
     chai.request(app)
-      .put('/api/articles/62a313a02a6g/publish')
+      .put('/api/v1/articles/62a313a02a6g/publish')
       .set('X-Token', data.token)
       .send(noDescriptionArticle)
       .end((error, response) => {
@@ -475,7 +475,7 @@ describe('Update endpoint for publishing article', () => {
 
   it('should return a 201', (done) => {
     chai.request(app)
-      .put(`/api/articles/${data.slug}/publish`)
+      .put(`/api/v1/articles/${data.slug}/publish`)
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
@@ -488,7 +488,7 @@ describe('Update endpoint for publishing article', () => {
 
   it('should return a 401 if user is not author', (done) => {
     chai.request(app)
-      .put(`/api/articles/${data.slug}/publish`)
+      .put(`/api/v1/articles/${data.slug}/publish`)
       .set('X-Token', data.token2)
       .end((error, response) => {
         if (error) done(error);
@@ -501,7 +501,7 @@ describe('Update endpoint for publishing article', () => {
 describe('GET all articles endpoint', () => {
   it('should return a 200', (done) => {
     chai.request(app)
-      .get('/api/articles')
+      .get('/api/v1/articles')
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(200);
@@ -513,7 +513,7 @@ describe('GET all articles endpoint', () => {
 describe('DELETE endpoint for an article', () => {
   it('should require a token for authorisation ', (done) => {
     chai.request(app)
-      .delete(`/api/articles/${data.slug}`)
+      .delete(`/api/v1/articles/${data.slug}`)
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(401);
@@ -524,7 +524,7 @@ describe('DELETE endpoint for an article', () => {
 
   it('should require the correct token for authorisation ', (done) => {
     chai.request(app)
-      .delete(`/api/articles/${data.slug}`)
+      .delete(`/api/v1/articles/${data.slug}`)
       .set('X-Token', wrongToken)
       .send(testArticle)
       .end((error, response) => {
@@ -536,7 +536,7 @@ describe('DELETE endpoint for an article', () => {
 
   it('should returns 401 if article is for another user ', (done) => {
     chai.request(app)
-      .delete(`/api/articles/${data.slug}`)
+      .delete(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token2)
       .end((error, response) => {
         expect(response.status).to.equal(401);
@@ -547,7 +547,7 @@ describe('DELETE endpoint for an article', () => {
 
   it('should return a status 200', (done) => {
     chai.request(app)
-      .delete(`/api/articles/${data.slug}`)
+      .delete(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token)
       .end((error, response) => {
         expect(response.status).to.equal(204);
@@ -559,7 +559,7 @@ describe('DELETE endpoint for an article', () => {
 
   it('should return 404 if article does not exist ', (done) => {
     chai.request(app)
-      .delete(`/api/articles/${data.slug}`)
+      .delete(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
