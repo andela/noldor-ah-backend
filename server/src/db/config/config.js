@@ -8,7 +8,7 @@ const config = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     host: process.env.HOST,
-    port: '5432',
+    port: process.env.PORT,
     dialect: 'postgres',
     logging: false,
     operatorsAliases: false
