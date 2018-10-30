@@ -1,5 +1,3 @@
-
-
 export default (sequelize, DataTypes) => {
   const Article = sequelize.define('Article', {
     id: {
@@ -11,7 +9,7 @@ export default (sequelize, DataTypes) => {
     userId: {
       required: true,
       allowNull: false,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID
     },
     title: {
       allowNull: false,
@@ -39,7 +37,6 @@ export default (sequelize, DataTypes) => {
         const value = `${val}-${articleId}`;
         this.setDataValue('slug', value);
       }
-
     },
     featuredImg: {
       required: false,
@@ -52,9 +49,7 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.BOOLEAN
     },
-  }, {
-
-  });
+  }, {});
   Article.associate = (models) => {
     Article.belongsTo(models.User, { foreignKey: 'userId' });
   };

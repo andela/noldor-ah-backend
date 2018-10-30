@@ -8,20 +8,13 @@ const config = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     host: process.env.HOST,
-    port: '5432',
+    port: '5433',
     dialect: 'postgres',
     logging: false,
     operatorsAliases: false
   },
   test: {
-<<<<<<< HEAD:server/src/db/config/config.js
-    use_env_variable: 'DATABASE_URL',
-=======
-    username: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME_TEST,
-    host: process.env.HOST,
->>>>>>> feat(Authentication):user receive token on registration:server/src/net/config/config.js
+    use_env_variable: 'DATABASE_URL_TEST',
     port: '5432',
     dialect: 'postgres'
   },
