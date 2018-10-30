@@ -36,5 +36,12 @@ node_modules
 
 # Production Folder
 server/dist/
-# File housing all environment variables
-.env
+
+# coveralls file for repo_token
+.coveralls.yml
+
+# nyc out for test coverage
+.nyc_output
+
+# coverage folder for test repoter
+coverage

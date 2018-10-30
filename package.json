@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production npm run build && cross-env NODE_ENV=production node server/bin/production",
-    "test": "cross-env NODE_ENV=test npm run build && mocha ./server/dist/src/test/ --exit",
-    "test-dev": "mocha --require babel-core/register ./server/src/test/ --recursive --exit",
+    "test-dev": "cross-env NODE_ENV=test nyc --reporter=html --reporter=text mocha --require babel-core/register ./server/src/test/ --recursive --exit",
+    "test": "cross-env NODE_ENV=test npm run build && nyc --reporter=html --reporter=text mocha ./server/dist/src/test/ --exit",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "clean-dist": "rm -rf ./server/dist/",
     "build": "npm run clean-dist && mkdir ./server/dist/ && babel index.js -d ./server/dist/ && mkdir ./server/dist/src && babel ./server/src/ -d ./server/dist/src",
     "dev": "nodemon index.js --exec babel-node",
@@ -48,14 +49,24 @@
     "babel-plugin-add-module-exports": "^1.0.0",
     "eslint": "^5.8.0",
     "babel-cli": "^6.26.0",
+    "@istanbuljs/nyc-config-babel": "^1.2.3",
+    "babel-plugin-istanbul": "^5.1.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "coveralls": "^3.0.2",
+    "cross-env": "^5.2.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
+    "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.4",
     "slug": "^0.9.1",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "mocha-istanbul": "^0.3.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^13.1.0"
   }
 }
