@@ -22,6 +22,7 @@ class ArticleController {
       where: {
         published: true
       },
+      attributes: ['slug', 'title', 'description', 'content', 'published', 'createdAt', 'updatedAt'],
       include: [{
         model: User, attributes: ['username', 'bio', 'avatarUrl']
       }]
@@ -31,7 +32,7 @@ class ArticleController {
           return res.status(404).json({
             success: false,
             error: {
-              msg: 'articles not found',
+              message: 'articles not found',
             }
           });
         }
@@ -40,7 +41,7 @@ class ArticleController {
       .catch(error => res.status(500).json({
         success: false,
         error: {
-          msg: error.message,
+          message: error.message,
         }
       }));
   }
@@ -58,15 +59,15 @@ class ArticleController {
     Article.findAll({
       where: {
         userId
-      }
-
+      },
+      attributes: ['slug', 'title', 'description', 'published', 'content', 'createdAt', 'updatedAt']
     })
       .then((result) => {
         if (result.length < 1) {
           return res.status(404).json({
             success: false,
             error: {
-              msg: 'articles not found',
+              message: 'articles not found',
             }
           });
         }
@@ -78,7 +79,7 @@ class ArticleController {
       .catch(error => res.status(500).json({
         success: false,
         error: {
-          msg: error.message,
+          message: error.message,
         }
       }));
   }
@@ -92,20 +93,19 @@ class ArticleController {
    */
   static userDrafts(req, res) { // need to check if user exist
     const userId = req.user.payload.id;
-
     Article.findAll({
       where: {
         userId,
         published: false
-      }
-
+      },
+      attributes: ['slug', 'title', 'description', 'published', 'content', 'createdAt', 'updatedAt'],
     })
       .then((result) => {
         if (result.length < 1) {
           return res.status(404).json({
             success: false,
             error: {
-              msg: 'no draft found',
+              message: 'no draft found',
             }
           });
         }
@@ -117,11 +117,10 @@ class ArticleController {
       .catch(error => res.status(500).json({
         success: false,
         error: {
-          msg: error.message,
+          message: error.message,
         }
       }));
   }
-
 
   /**
    *
@@ -139,6 +138,7 @@ class ArticleController {
           [Op.like]: `%${articleId}%`
         }
       },
+      attributes: ['slug', 'title', 'description', 'published', 'content', 'createdAt', 'updatedAt'],
       include: [{
         model: User, attributes: ['username', 'bio', 'avatarUrl']
       }]
@@ -148,7 +148,7 @@ class ArticleController {
           return res.status(404).json({
             success: false,
             error: {
-              msg: 'articles not found',
+              message: 'articles not found',
             }
           });
         }
@@ -160,7 +160,7 @@ class ArticleController {
       .catch(error => res.status(500).json({
         success: false,
         error: {
-          msg: error.message,
+          message: error.message,
         }
       }));
   }
@@ -191,12 +191,20 @@ class ArticleController {
         res.status(201).json({
           success: true,
           message: 'article was added successfully',
-          article: result
+          article: {
+            slug: result.slug,
+            title: result.title,
+            description: result.description,
+            content: result.content,
+            createdAt: result.createdAt,
+            updatedAt: result.updatedAt,
+            published: result.published
+          }
         });
       }).catch(error => res.status(500).json({
         success: false,
         error: {
-          msg: error.message,
+          message: error.message,
         }
       }));
   }
@@ -222,7 +230,7 @@ class ArticleController {
           return res.status(404).json({
             success: false,
             error: {
-              msg: 'articles not found',
+              message: 'articles not found',
             }
           });
         }
@@ -254,13 +262,13 @@ class ArticleController {
           .catch(error => res.status(500).json({
             success: false,
             error: {
-              msg: error.message,
+              message: error.message,
             }
           }));
       }).catch(error => res.status(500).json({
         success: false,
         error: {
-          msg: error.message,
+          message: error.message,
         }
       }));
   }
@@ -330,13 +338,13 @@ class ArticleController {
           .catch(error => res.status(500).json({
             success: false,
             error: {
-              msg: error.message,
+              message: error.message,
             }
           }));
       }).catch(error => res.status(500).json({
         success: false,
         error: {
-          msg: error.message,
+          message: error.message,
         }
       }));
   }
@@ -386,13 +394,13 @@ class ArticleController {
           }).catch(error => res.status(500).json({
             success: false,
             error: {
-              msg: error.message,
+              message: error.message,
             }
           }));
       }).catch(error => res.status(500).json({
         success: false,
         error: {
-          msg: error.message,
+          message: error.message,
         }
       }));
   }
@@ -405,7 +413,7 @@ class ArticleController {
    * @param { object } res
    * @returns { string } articleId
    */
-  static slugDecoder(req, res) {
+  static slugDecoder(req) {
     const { slug } = req.params;
     const articleId = slug.split('-').pop();
 
@@ -414,12 +422,7 @@ class ArticleController {
     const id = pattern.test(articleId);
 
     if (articleId.length !== 12 || id !== true) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          msg: 'article not found'
-        }
-      });
+      return null;
     }
 
     return articleId;
