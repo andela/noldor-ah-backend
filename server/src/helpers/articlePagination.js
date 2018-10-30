@@ -15,7 +15,10 @@ class Paginator {
   /**
      * @var {number} limit per page
      * @var {limit} offSet page skip
+<<<<<<< HEAD
      * @var {Users}
+=======
+>>>>>>>         feat(pagination): Pagination support for articles
    */
     const { Article } = model;
     const page = parseInt(req.params.source, 10);
@@ -30,7 +33,11 @@ class Paginator {
         message: 'Page number must be numeric and greater than zero'
       });
     }
+<<<<<<< HEAD
     let offset = page * limit;
+=======
+    const offset = (page - 1) * limit;
+>>>>>>>         feat(pagination): Pagination support for articles
     Article.findAndCountAll({
       limit,
       offset,
@@ -47,7 +54,11 @@ class Paginator {
           });
         }
         const pages = Math.ceil(data.count / limit);
+<<<<<<< HEAD
         offset = limit * (page - 1);
+=======
+        if (page > pages) return res.status(404).json({ message: 'Reached page limit...' });
+>>>>>>>         feat(pagination): Pagination support for articles
         return res.status(200).json({
           result: data.rows,
           count: data.count,

@@ -8,13 +8,13 @@ const config = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     host: process.env.HOST,
-    port: '5433',
+    port: '5432',
     dialect: 'postgres',
     logging: false,
     operatorsAliases: false
   },
   test: {
-    use_env_variable: 'DATABASE_URL',
+    use_env_variable: 'DATABASE_URL_TEST',
     port: '5432',
     dialect: 'postgres'
   },
