@@ -3,8 +3,8 @@ const Users = (sequelize, DataTypes) => {
     id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
+      type: DataTypes.INTEGER,
+      // defaultValue: DataTypes.INTEGER
     },
     firstName: {
       required: false,
@@ -54,8 +54,8 @@ const Users = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
   }, {});
-  User.associate = (models) => {
-    User.hasMany(models.Article);
+  User.associate = () => {
+    // User.hasMany(models.Article);
   };
   return User;
 };

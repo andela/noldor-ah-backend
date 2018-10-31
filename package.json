@@ -14,6 +14,7 @@
     "build": "npm run clean-dist && mkdir ./server/dist/ && babel index.js -d ./server/dist/ && mkdir ./server/dist/src && babel ./server/src/ -d ./server/dist/src",
     "dev": "nodemon --exec babel-node --presets env index.js",
     "migrate": "sequelize db:migrate",
+    "seed": "sequelize db:seed:all",
     "clean-db": "sequelize db:migrate:undo:all"
   },
   "author": "Andela Simulations Programme",

@@ -47,3 +47,5 @@ server/dist/
 coverage
 # File housing all environment variables
 .env
+
+server/src/db/seeder
