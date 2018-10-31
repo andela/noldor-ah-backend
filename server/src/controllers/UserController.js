@@ -69,6 +69,9 @@ class UserController {
     } catch (error) {
       res.status(500).json({
         success: false,
+        error: {
+          message: error.message,
+        }
       });
     }
   }
