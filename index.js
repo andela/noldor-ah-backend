@@ -28,7 +28,7 @@ if (!isProduction) {
 app.all('*', (req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Endpoint does not exist',
+    message: 'endpoint does not exist',
   });
 });
 
