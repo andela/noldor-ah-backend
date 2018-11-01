@@ -56,7 +56,7 @@ class UserController {
             username: data.dataValues.username
           };
           const token = userToken.issue(payload);
-          return res.status(200).json({
+          return res.header('x-token', token).status(200).json({
             user: {
               success: true,
               message: 'registration successful',
@@ -124,6 +124,36 @@ class UserController {
         success: false,
         error: {
           message: error.message,
+        }
+      }));
+  }
+
+  /**
+   * @description { get the list of users information }
+   * @param { object } req
+   * @param { object } res
+   * @returns { json } json
+   */
+  static getAllUser(req, res) {
+    User.findAll({
+      attributes: ['id', 'username', 'email']
+    })
+      .then((data) => {
+        const users = [];
+        data.forEach((info) => {
+          users.push(info.dataValues);
+        });
+        return res.status(200).json({
+          success: true,
+          message: 'successfully retrieved users list',
+          users,
+        });
+      })
+      .catch(err => res.status(500).json({
+        success: false,
+        message: 'internal server error',
+        error: {
+          messgae: err.message,
         }
       }));
   }
