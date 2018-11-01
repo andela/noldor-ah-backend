@@ -23,11 +23,11 @@ class ArticleController {
         published: true
       },
       include: [{
-        model: User, attributes: ['username', 'bio']
+        model: User, attributes: ['username', 'bio', 'avatarUrl']
       }]
     })
       .then((result) => {
-        if (result.rowCount < 1) {
+        if (result.length === 0) {
           return res.status(404).json({
             success: false,
             error: {
@@ -53,7 +53,7 @@ class ArticleController {
    * @returns {object} Json
    */
   static getUserArticles(req, res) { // need to check if user exist
-    const { userId } = req.params;
+    const userId = req.user.payload.id;
 
     Article.findAll({
       where: {
@@ -91,7 +91,7 @@ class ArticleController {
    * @returns {object} Json
    */
   static userDrafts(req, res) { // need to check if user exist
-    const { userId } = req.params;
+    const userId = req.user.payload.id;
 
     Article.findAll({
       where: {
@@ -105,7 +105,7 @@ class ArticleController {
           return res.status(404).json({
             success: false,
             error: {
-              msg: 'articles not found',
+              msg: 'no draft found',
             }
           });
         }
@@ -138,7 +138,10 @@ class ArticleController {
         slug: {
           [Op.like]: `%${articleId}%`
         }
-      }
+      },
+      include: [{
+        model: User, attributes: ['username', 'bio', 'avatarUrl']
+      }]
     })
       .then((result) => {
         if (result.length < 1) {
@@ -169,20 +172,19 @@ class ArticleController {
    * @returns { object } JSON
    */
   static postArticle(req, res) {
+    const userId = req.user.payload.id;
     const {
-      title, description, content, featureImg
+      title, description, content, featuredImg
     } = req.body;
-    const userId = 1;
     const slug = Slug(title, { lower: true, replacement: '-' });
     const published = 0;
     Article.create({
-      // shouldn't be here
       userId,
       title,
       description,
       content,
       slug,
-      featureImg,
+      featuredImg,
       published
     })
       .then((result) => {
@@ -206,6 +208,7 @@ class ArticleController {
    * @returns { object } JSON
    */
   static publishArticle(req, res) {
+    const userId = req.user.payload.id;
     const articleId = ArticleController.slugDecoder(req, res);
     Article.findAll({
       where: {
@@ -215,24 +218,33 @@ class ArticleController {
       }
     })
       .then((found) => {
-        if (!found) {
-          res.status(404).json({
+        if (found.length === 0) {
+          return res.status(404).json({
             success: false,
             error: {
               msg: 'articles not found',
             }
           });
         }
-        Article.update({
-          published: true
-        },
-        {
-          where: {
-            slug: {
-              [Op.like]: `%${articleId}`
+
+        if (found[0].dataValues.userId !== userId) {
+          return res.status(401).json({
+            success: false,
+            message: 'Unauthorized'
+          });
+        }
+        Article.update(
+          {
+            published: true
+          },
+          {
+            where: {
+              slug: {
+                [Op.like]: `%${articleId}`
+              }
             }
           }
-        })
+        )
           .then(() => {
             res.status(201).json({
               success: true,
@@ -255,11 +267,14 @@ class ArticleController {
 
   /**
    * @description { Update an article }
+   * @description { Only title content description can be updated by author}
    * @param { object } req - request body
    * @param { object } res - response body
    * @returns { object } JSON
    */
   static updateArticle(req, res) {
+    const userId = req.user.payload.id;
+
     const articleId = ArticleController.slugDecoder(req, res);
 
     Article.findAll({
@@ -270,39 +285,42 @@ class ArticleController {
       }
     })
       .then((found) => {
-        if (!found) {
-          res.status(404).json({
+        if (found.length === 0) {
+          return res.status(404).json({
             success: false,
             message: 'Article not found'
           });
         }
-        const input = req.body;
-        const { title, content, description } = found;
-
-        if (input.title === undefined) {
-          input.title = title;
+        if (found[0].dataValues.userId !== userId) {
+          return res.status(401).json({
+            success: false,
+            message: 'Unauthorized'
+          });
         }
-        if (input.content === undefined) {
-          input.content = content;
-        }
-        if (input.description === undefined) {
-          input.description = description;
-        }
+        const input = {};
+        // const { title, content, description } = found;
 
-        Article.update({
-          title: input.title,
-          content: input.content,
-          description: input.description
-        },
-        {
+        if (req.body.title !== undefined) {
+          input.title = req.body.title;
+        }
+        if (req.body.content !== undefined) {
+          input.content = req.body.content;
+        }
+        if (req.body.description !== undefined) {
+          input.description = req.body.description;
+        }
+        Article.update(
+          input,
+          {
 
-          where: {
-            slug: {
-              [Op.like]: `%${articleId}`
+            where: {
+              slug: {
+                [Op.like]: `%${articleId}`
+              }
             }
-          }
 
-        })
+          }
+        )
           .then(() => {
             res.status(201).json({
               success: 'true',
@@ -330,14 +348,27 @@ class ArticleController {
    * @returns { object } JSON
    */
   static deleteArticle(req, res) {
+    const userId = req.user.payload.id;
     const articleId = ArticleController.slugDecoder(req, res);
 
-    Article.findByPk(articleId)
+    Article.findAll({
+      where: {
+        slug: {
+          [Op.like]: `%${articleId}`
+        }
+      }
+    })
       .then((found) => {
-        if (!found) {
-          res.status(404).json({
+        if (found.length === 0) {
+          return res.status(404).json({
             success: false,
             message: 'Article not found'
+          });
+        }
+        if (found[0].dataValues.userId !== userId) {
+          return res.status(401).json({
+            success: false,
+            message: 'Unauthorized'
           });
         }
         Article.destroy({
@@ -366,14 +397,14 @@ class ArticleController {
       }));
   }
 
+
   /**
-   * @method { slug }
+   *
    * @description { decodes the slug }
    * @param { object } req
    * @param { object } res
    * @returns { string } articleId
    */
-
   static slugDecoder(req, res) {
     const { slug } = req.params;
     const articleId = slug.split('-').pop();
