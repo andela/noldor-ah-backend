@@ -281,6 +281,58 @@ describe('GET endpoint for logged-in user drafts', () => {
         done();
       });
   });
+<<<<<<< HEAD
+=======
+  it('should return an 404', (done) => {
+    chai.request(app)
+      .get(api)
+      .set('X-Token', data.token2)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(404);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+});
+
+describe('GET endpoint for logged-in user drafts', () => {
+  const api = '/api/v1/articles/drafts';
+  it('should require a token for authorisation ', (done) => {
+    chai.request(app)
+      .get(api)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(401);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+
+  it('should require the correct token for authorisation ', (done) => {
+    chai.request(app)
+      .get(api)
+      .set('X-Token', wrongToken)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(400);
+        expect(response.body).to.be.an('object');
+
+        done();
+      });
+  });
+  it('should return an 200 if successfull', (done) => {
+    chai.request(app)
+      .get(api)
+      .set('X-Token', data.token)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+>>>>>>> feat(articles): create,  read, update and delete articles
 
   it('should return 404 if article is not found ', (done) => {
     chai.request(app)

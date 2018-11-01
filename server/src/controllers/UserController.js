@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
 import userToken from '../middlewares/token';
 import Models from '../db/models';
 import template from '../helpers/sendMail/templates';
