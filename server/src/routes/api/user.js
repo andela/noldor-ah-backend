@@ -30,5 +30,7 @@ router.post('/users/login/', loginValidation, login);
 router.get('/users/', validateToken, getAllUser);
 router.put('/users/forgot', forgotPasswordValidation, forgetPassword);
 router.post('/users/forgot/:hash', resetPasswordValidation, resetPassword);
+router.post('/users/register', Validation.signupValidation, UserController.register);
+router.post('/users/login', Validation.loginValidation, UserController.login);
 
 export default router;
