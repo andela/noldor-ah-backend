@@ -5,6 +5,7 @@ import errorhandler from 'errorhandler';
 import morgan from 'morgan';
 import routes from './server/src/routes';
 
+
 const isProduction = process.env.NODE_ENV;
 
 // Create global app object
@@ -32,7 +33,8 @@ app.use((req, res, next) => {
 
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || 3000, () => {
+  // eslint-disable-next-line no-console
   console.log(`Listening on port ${server.address().port}`);
 });
 
-export default server;
+export default app;

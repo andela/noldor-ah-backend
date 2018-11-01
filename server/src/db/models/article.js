@@ -6,7 +6,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4
     },
-    user_id: {
+    userId: {
       required: true,
       allowNull: false,
       type: DataTypes.UUID
@@ -23,7 +23,7 @@ export default (sequelize, DataTypes) => {
       unique: false,
       type: DataTypes.TEXT
     },
-    featured_img: {
+    featuredImg: {
       required: false,
       allowNull: true,
       unique: false,

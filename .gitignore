@@ -45,3 +45,5 @@ server/dist/
 
 # coverage folder for test repoter
 coverage
+# File housing all environment variables
+.env

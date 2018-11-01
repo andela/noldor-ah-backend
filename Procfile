@@ -1,1 +1,1 @@
-web: npm run migrate && babel-node index.js --exec
+web: npm run migrate && babel-node index.js --exec 

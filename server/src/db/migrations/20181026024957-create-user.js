@@ -7,14 +7,14 @@ export default {
       defaultValue: Sequelize.UUIDV4
     },
     firstName: {
-      required: true,
-      allowNull: false,
+      required: false,
+      allowNull: true,
       unique: false,
       type: Sequelize.STRING
     },
     lastName: {
-      required: true,
-      allowNull: false,
+      required: false,
+      allowNull: true,
       unique: false,
       type: Sequelize.STRING
     },
@@ -37,18 +37,19 @@ export default {
       type: Sequelize.STRING
     },
     bio: {
-      required: true,
-      allowNull: false,
+      required: false,
+      allowNull: true,
       unique: false,
       type: Sequelize.TEXT
     },
     confirmEmail: {
-      allowNull: true,
-      type: Sequelize.STRING
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: Sequelize.FALSE,
     },
     avatarUrl: {
-      required: true,
-      allowNull: false,
+      required: false,
+      allowNull: true,
       unique: false,
       type: Sequelize.STRING
     },
