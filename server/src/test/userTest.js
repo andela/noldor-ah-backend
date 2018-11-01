@@ -25,7 +25,7 @@ describe('Signup validation test', () => {
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(400);
@@ -40,7 +40,7 @@ describe('Signup validation test', () => {
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(400);
@@ -56,7 +56,7 @@ describe('Signup validation test', () => {
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -73,7 +73,7 @@ describe('Signup validation test', () => {
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(409);
@@ -89,7 +89,7 @@ describe('Signup validation test', () => {
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(409);
@@ -105,7 +105,7 @@ describe('Signup validation test', () => {
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -122,7 +122,7 @@ describe('Signup validation test', () => {
       confirmPassword: 'password'
     };
     chai.request(app)
-      .post('/users/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -139,7 +139,7 @@ describe('Signup validation test', () => {
       confirmPassword: 'password123'
     };
     chai.request(app)
-      .post('/users/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -157,7 +157,7 @@ describe('Signup validation test', () => {
       confirmPassword: 'password234',
     };
     chai.request(app)
-      .post('/users/register')
+      .post('/api/v1/users/register')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -176,7 +176,7 @@ describe('Login validation test', () => {
       password: 'password12',
     };
     chai.request(app)
-      .post('/users/login')
+      .post('/api/v1/users/login')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -193,7 +193,7 @@ describe('Login validation test', () => {
       password: 'password12',
     };
     chai.request(app)
-      .post('/users/login')
+      .post('/api/v1/users/login')
       .send(values)
       .end((err, res) => {
         if (err) done(err);
@@ -209,7 +209,7 @@ describe('Login validation test', () => {
       password: 'password234',
     };
     chai.request(app)
-      .post('/users/login')
+      .post('/api/v1/users/login')
       .send(values)
       .end((err, res) => {
         if (err) done(err);

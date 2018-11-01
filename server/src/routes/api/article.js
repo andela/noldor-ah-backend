@@ -7,14 +7,14 @@ const authorization = tokenMiddleware.validateToken;
 
 const router = express.Router();
 
-router.get('/api/articles', ArticleController.getAll);
-router.get('/api/users/:userId/articles', ArticleController.getUserArticles);
-router.get('/api/articles/users/articles/drafts', ArticleController.userDrafts);
-router.get('/api/articles/:slug', ArticleController.getAnArticle);
-router.post('/api/articles', articlesValidation.postArticle, ArticleController.postArticle);
-router.put('/api/articles/:slug/publish', ArticleController.publishArticle);
-router.put('/api/articles/:slug', ArticleController.updateArticle);
-router.delete('/api/articles/:slug', ArticleController.deleteArticle);
+router.get('/articles', ArticleController.getAll);
+router.get('/users/articles', authorization, ArticleController.getUserArticles);
+router.get('/articles/drafts', authorization, ArticleController.userDrafts);
+router.get('/articles/:slug', ArticleController.getAnArticle);
+router.post('/articles', authorization, articlesValidation.postArticle, ArticleController.postArticle);
+router.put('/articles/:slug/publish', authorization, ArticleController.publishArticle);
+router.put('/articles/:slug', authorization, ArticleController.updateArticle);
+router.delete('/articles/:slug', authorization, ArticleController.deleteArticle);
 
 
 export default router;
