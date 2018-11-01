@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
 import userToken from '../middlewares/token';
 import Models from '../db/models';
 
@@ -54,9 +53,10 @@ class UserController {
           const payload = {
             id: data.dataValues.id,
             email: data.dataValues.email,
+            username: data.dataValues.username,
           };
           const token = userToken.issue(payload);
-          return res.status(200).json({
+          return res.header('x-token', token).status(200).json({
             user: {
               success: true,
               message: 'registration successful',
@@ -108,12 +108,13 @@ class UserController {
             message: 'email or password incorrect',
           });
         }
-        const token = jwt.sign({
+
+        const payload = {
           id: user.dataValues.id,
-          email: user.dataValues.email
-        }, process.env.PRIVATE_KEY, {
-          expiresIn: '1w',
-        });
+          email: user.dataValues.email,
+          username: user.dataValues.username,
+        };
+        const token = userToken.issue(payload);
         return res.header('x-token', token).status(200).json({
           success: true,
           message: 'successfully logged in',
@@ -124,6 +125,36 @@ class UserController {
         success: false,
         error: {
           message: error.message,
+        }
+      }));
+  }
+
+  /**
+   * @description { get the list of users information }
+   * @param { object } req
+   * @param { object } res
+   * @returns { json } json
+   */
+  static getAllUser(req, res) {
+    User.findAll({
+      attributes: ['id', 'username', 'email']
+    })
+      .then((data) => {
+        const users = [];
+        data.forEach((info) => {
+          users.push(info.dataValues);
+        });
+        return res.status(200).json({
+          success: true,
+          message: 'successfully retrieved users list',
+          users,
+        });
+      })
+      .catch(err => res.status(500).json({
+        success: false,
+        message: 'internal server error',
+        error: {
+          messgae: err.message,
         }
       }));
   }
