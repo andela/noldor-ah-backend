@@ -4,6 +4,7 @@ const Users = (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true,
       type: DataTypes.INTEGER,
+      autoIncrement: true,
       // defaultValue: DataTypes.UUIDV4
     },
     firstName: {
