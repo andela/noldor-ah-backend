@@ -10,6 +10,8 @@ chai.use(chaiHttp);
 const fakeToken = 'eyJhbGciO6IkpXVCJ9.eyJwYXiMDMODU4YS00NGEyLThhN2MtNmZmNiOiJvbHVzZXlpLmFuHAiOjE1NDE1NjI5ODB9.SArLW2nyj9I3S6yu-goP8T0iv2MqsD0ffff';
 
 const userOneDetails = {};
+let userParams = '';
+let userTwoParams = '';
 
 describe('Sample API for test', () => {
   it('should return a welcome message', (done) => {
@@ -242,6 +244,26 @@ describe('Login validation test', () => {
         expect(res.body.token).to.be.a('string');
         expect(res.header['x-token']).to.be.a('string');
         expect(res.body.message).to.equal('successfully logged in');
+        userParams = res.body.id;
+        done();
+      });
+  });
+  it('Should return 200 for successful login', (done) => {
+    const values = {
+      email: 'uwa@noldor.com',
+      password: 'password123',
+    };
+    chai.request(app)
+      .post('/api/v1/users/login')
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.success).to.equal(true);
+        expect(res.body.token).to.be.a('string');
+        expect(res.header['x-token']).to.be.a('string');
+        expect(res.body.message).to.equal('successfully logged in');
+        userTwoParams = res.body.id;
         done();
       });
   });
@@ -523,6 +545,127 @@ describe('Forgot Password Funtionality', () => {
         expect(res.status).to.equal(400);
         expect(res.body.success).to.equal(false);
         expect(res.body.message).to.equal('passwords does not match');
+        done();
+      });
+  });
+});
+
+describe('User Profile test', () => {
+  it('Should return 200(OK) on succefully returning a users profile', (done) => {
+    const id = userParams;
+    chai.request(app)
+      .get(`/api/v1/users/${id}/profiles`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.success).to.equal(true);
+        expect(res.body.message).to.equal('Retrieval successful');
+        done();
+      });
+  });
+  it('Should return 404(Not Found) if user does not exists', (done) => {
+    chai.request(app)
+      .get('/api/v1/users/b91398d5-53ae-4600-a301-35603b28a4ff/profiles')
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(404);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('User does not exist');
+        done();
+      });
+  });
+  it('Should return 401(Unauthorized) if an unauthorized user tries to edit', (done) => {
+    const id = userParams;
+    const values = {
+      firstName: 'Jane',
+      username: 'Janny',
+      bio: 'This is my test'
+    };
+    chai.request(app)
+      .put(`/api/v1/users/${id}/profiles`)
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(401);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('Access denied. No token provided.');
+        done();
+      });
+  });
+  it('Should return 205(Reset Content) on succesful edit', (done) => {
+    const id = userParams;
+    const values = {
+      firstName: 'Jane',
+      username: 'Janny',
+      bio: 'This is my test',
+      avatar: 'https://res.cloudinary.com/dstvcmycn/image/upload/v1541530550/Author%27s%20Haven/qtvmhyx8k4pfimdtsucs.jpg'
+    };
+    chai.request(app)
+      .put(`/api/v1/users/${id}/profiles`)
+      .set('x-token', userOneDetails.token)
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(205);
+        expect(res.body.success).to.equal(true);
+        expect(res.body.message).to.equal('Your edits have been saved');
+        done();
+      });
+  });
+  it('Should return 404(Not Found) if user does not exist', (done) => {
+    const values = {
+      firstName: 'Jane',
+      username: 'Janny',
+      bio: 'This is my test'
+    };
+    chai.request(app)
+      .put('/api/v1/users/1432c4df-2f33-4b93-84f8-b4ab7823cc00/profiles')
+      .send(values)
+      .set('x-token', userOneDetails.token)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(404);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('User does not exist');
+        done();
+      });
+  });
+});
+
+describe('Soft Delete users', () => {
+  it('Should return 204(No Content) on successful delete of an authorized user', (done) => {
+    const id = userParams;
+    chai.request(app)
+      .delete(`/api/v1/users/${id}/deactivate`)
+      .set('x-token', userOneDetails.token)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(204);
+        done();
+      });
+  });
+  it('Should return 404(Not Found) if user does not exist', (done) => {
+    chai.request(app)
+      .delete('/api/v1/users/361c55fa-40cf-41d8-bfee-5e1b4857e583/deactivate')
+      .set('x-token', userOneDetails.token)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(404);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('User does not exist');
+        done();
+      });
+  });
+  it('Should return 401(Not Found) if user does not exist', (done) => {
+    const id = userTwoParams;
+    chai.request(app)
+      .delete(`/api/v1/users/${id}/deactivate`)
+      .set('x-token', userOneDetails.token)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(401);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('You are not authorized to do this');
         done();
       });
   });

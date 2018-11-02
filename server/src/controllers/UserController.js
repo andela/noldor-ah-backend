@@ -5,8 +5,9 @@ import userToken from '../helpers/token';
 import Models from '../db/models';
 import template from '../helpers/sendMail/templates';
 import sendMail from '../helpers/sendMail/sendMail';
+// import cron from 'cron';
 
-const { User } = Models;
+const { User, Op } = Models;
 dotenv.config();
 
 /**
@@ -58,6 +59,7 @@ class UserController {
             email: data.dataValues.email,
             username: data.dataValues.username,
           };
+
           const token = userToken.issue(payload);
           return res.header('x-token', token).status(200).json({
             user: {
@@ -65,7 +67,7 @@ class UserController {
               message: 'registration successful',
               email: data.dataValues.email,
               token,
-              username: data.dataValues.username,
+              username: data.dataValues.username
             }
           });
         });
@@ -121,7 +123,8 @@ class UserController {
         return res.header('x-token', token).status(200).json({
           success: true,
           message: 'successfully logged in',
-          token
+          token,
+          id: user.dataValues.id
         });
       })
       .catch(error => res.status(500).json({
@@ -277,6 +280,133 @@ class UserController {
             error: error.message,
           }
         }));
+    }
+  }
+
+  /**
+   * @description Enable a user view profile even if not authorized
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } json
+   */
+  static async viewUserProfile(req, res) {
+    try {
+      const { userId } = req.params;
+
+      const noUser = await User.findByPk(userId);
+      if (noUser === null) {
+        return res.status(404).json({
+          success: false,
+          message: 'User does not exist'
+        });
+      }
+
+      const profile = await User.findByPk(userId);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Retrieval successful',
+        data: {
+          profile,
+        }
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: {
+          message: error.message,
+        }
+      });
+    }
+  }
+
+  /**
+   * @description Enable a user edit profile only if authorized
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } json
+   */
+  static async editUserProfile(req, res) {
+    try {
+      if (req.file) {
+        req.body.avatarUrl = req.file.secure_url;
+      }
+
+      const { userId } = req.params;
+      const decodedId = req.user.payload.id;
+
+      const noUser = await User.findByPk(userId);
+      if (noUser === null) {
+        return res.status(404).json({
+          success: false,
+          message: 'User does not exist'
+        });
+      }
+      const userProfile = await User.findByPk(userId);
+
+      if (userProfile.dataValues.id === decodedId) {
+        const editProfile = await userProfile.update(req.body, {
+          fields: Object.keys(req.body)
+        });
+
+        return res.status(205).json({
+          success: true,
+          message: 'Your edits have been saved',
+          data: {
+            editProfile,
+          }
+        });
+      }
+      return res.status(401).json({
+        success: false,
+        message: 'You are not authorized to do that!'
+      });
+    } catch (error) {
+      res.status(409).json({
+        success: false,
+        message: error.errors[0].message,
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * @description Deactivates a user profile only if authorized
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } json
+   */
+  static async deactivateUser(req, res) {
+    try {
+      const { userId } = req.params;
+      const decodedId = req.user.payload.id;
+
+      const softDeletingUser = await User.findByPk(userId); 
+      if (!softDeletingUser) {
+        return res.status(404).json({
+          success: false,
+          message: 'User does not exist'
+        });
+      }
+
+      if (softDeletingUser.id === decodedId) {
+        await softDeletingUser.destroy();
+        return res.status(204).json({});
+      }
+
+      if (softDeletingUser.id !== decodedId) {
+        return res.status(401).json({
+          success: false,
+          message: 'You are not authorized to do this',
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: {
+          message: error.message,
+        }
+      });
     }
   }
 }
