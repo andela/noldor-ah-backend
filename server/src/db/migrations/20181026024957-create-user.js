@@ -3,8 +3,8 @@ export default {
     id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.INTEGER,
-      // defaultValue: Sequelize.UUIDV4
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4
     },
     firstName: {
       required: false,
@@ -45,7 +45,13 @@ export default {
     confirmEmail: {
       allowNull: false,
       type: Sequelize.BOOLEAN,
-      defaultValue: false
+      defaultValue: Sequelize.FALSE,
+    },
+    forgotPasswordHash: {
+      required: false,
+      allowNull: true,
+      unique: true,
+      type: Sequelize.STRING
     },
     avatarUrl: {
       required: false,
@@ -60,7 +66,11 @@ export default {
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE
+    },
+    deletedAt: {
+      allowNull: true,
+      type: Sequelize.DATE
     }
-  }),
+  }, { paranoid: true }),
   down: queryInterface => queryInterface.dropTable('Users')
 };

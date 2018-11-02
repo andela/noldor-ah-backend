@@ -3,8 +3,8 @@ export default (sequelize, DataTypes) => {
     id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.INTEGER,
-      // defaultValue: DataTypes.UUIDV4
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
     },
     userId: {
       required: true,

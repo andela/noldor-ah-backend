@@ -2,7 +2,7 @@
 const trimWhiteSpaces = input => input.trim().length;
 const hasSpecialCharacters = input => /[ !@#$%^&*()_+=[\]{};':"\\|,.<>/?]/.test(input);
 
-const postArticle = (req, res, next) => {
+const postValidation = (req, res, next) => {
   const error = [];
 
   if (req.body.title === undefined) {
@@ -11,7 +11,8 @@ const postArticle = (req, res, next) => {
   if (req.body.title === '') {
     error.push('title field can not be blank');
   }
-  if (req.body.title !== undefined && req.body.title !== '' && trimWhiteSpaces(req.body.title) < 6) {
+  if (req.body.title !== undefined && req.body.title
+    !== '' && trimWhiteSpaces(req.body.title) < 6) {
     error.push('title must be more than 6 characters');
   }
   if (req.body.content === undefined) {
@@ -20,7 +21,8 @@ const postArticle = (req, res, next) => {
   if (req.body.content === '') {
     error.push('content field can not be blank');
   }
-  if (req.body.content !== undefined && req.body.content !== '' && trimWhiteSpaces(req.body.content) < 6) {
+  if (req.body.content !== undefined && req.body.content
+    !== '' && trimWhiteSpaces(req.body.content) < 6) {
     error.push('content must be more than 6 characters');
   }
   if (req.body.description === undefined) {
@@ -29,7 +31,8 @@ const postArticle = (req, res, next) => {
   if (req.body.description === '') {
     error.push('description field can not be blank');
   }
-  if (req.body.description !== undefined && req.body.description !== '' && trimWhiteSpaces(req.body.description) < 6) {
+  if (req.body.description !== undefined && req.body.description
+    !== '' && trimWhiteSpaces(req.body.description) < 6) {
     error.push('description must be more than 6 characters');
   }
 
@@ -75,6 +78,6 @@ const tagsValidation = (req, res, next) => {
 };
 
 export default {
-  postArticle,
+  postValidation,
   tagsValidation,
 };

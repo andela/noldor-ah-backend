@@ -165,9 +165,7 @@ class ArticleController {
       const article = await Article.create(req.body, {
         fields: Object.keys(req.body)
       });
-
       if (tags) addTags(tags, article);
-
       return res.status(201).json({
         success: true,
         message: 'article was added successfully',

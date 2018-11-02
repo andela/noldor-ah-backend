@@ -1,14 +1,12 @@
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import userToken from '../middlewares/token';
-=======
+import jwt from 'jsonwebtoken';
 import userToken from '../helpers/token';
->>>>>>> refactor(UserToken): move token issuer to helpers folder
 import Models from '../db/models';
 import template from '../helpers/sendMail/templates';
 import sendMail from '../helpers/sendMail/sendMail';
 
-const { User, Article } = Models;
+const { User } = Models;
 dotenv.config();
 
 /**
@@ -60,7 +58,6 @@ class UserController {
             email: data.dataValues.email,
             username: data.dataValues.username,
           };
-
           const token = userToken.issue(payload);
           return res.header('x-token', token).status(200).json({
             user: {
@@ -124,7 +121,8 @@ class UserController {
         return res.header('x-token', token).status(200).json({
           success: true,
           message: 'successfully logged in',
-          token
+          token,
+          id: user.dataValues.id
         });
       })
       .catch(error => res.status(500).json({
@@ -286,6 +284,8 @@ class UserController {
             error: error.message,
           }
         }));
+    }
+  }
 
   /**
    * @description Enable a user view profile even if not authorized
@@ -295,37 +295,35 @@ class UserController {
    */
   static async viewUserProfile(req, res) {
     try {
-      const userId = Number(req.params.userId);
-
-      if (Number.isInteger(userId) === false) {
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid params'
-        });
-      }
-
+      const { userId } = req.params;
       const noUser = await User.findByPk(userId);
-      if (noUser === null) {
+      if (!noUser) {
         return res.status(404).json({
           success: false,
           message: 'User does not exist'
         });
       }
-
-      const profile = await User.findByPk(userId, {
-        attributes: ['username', 'email', 'bio', 'avatarUrl'],
-        include: [{
-          model: Article,
-          as: 'articles',
-          attributes: ['title', 'content']
-        }],
-      });
-
+      const profile = await User.findByPk(userId);
+      const {
+        id,
+        firstName,
+        lastName,
+        username,
+        email,
+        bio,
+        avatarUrl
+      } = profile;
       return res.status(200).json({
         success: true,
         message: 'Retrieval successful',
         data: {
-          profile,
+          id,
+          firstName,
+          lastName,
+          username,
+          email,
+          bio,
+          avatarUrl
         }
       });
     } catch (error) {
@@ -346,93 +344,88 @@ class UserController {
    */
   static async editUserProfile(req, res) {
     try {
-      const userId = Number(req.params.userId);
-      if (Number.isInteger(userId) === false) {
-        return res.status(400).json({
+      if (req.file) {
+        req.body.avatarUrl = req.file.secure_url;
+      }
+      const { userId } = req.params;
+      const decodedId = req.user.payload.id;
+      const noUser = await User.findByPk(userId);
+      if (!noUser) {
+        return res.status(404).json({
           success: false,
-          message: 'Invalid params'
+          message: 'User does not exist'
         });
       }
-      const decodedId = req.user.id;
-
-      const userProfile = await User.findByPk(userId, {
-        attributes: ['username', 'email', 'bio', 'avatarUrl'],
-        include: [{
-          model: Article,
-          as: 'articles',
-        }],
-      });
-
-      if (userProfile.id === decodedId) {
+      const userProfile = await User.findByPk(userId);
+      if (userProfile.dataValues.id === decodedId) {
         const editProfile = await userProfile.update(req.body, {
           fields: Object.keys(req.body)
         });
-
+        const {
+          id,
+          firstName,
+          lastName,
+          username,
+          email,
+          bio,
+          avatarUrl,
+          updatedAt
+        } = editProfile;
         return res.status(205).json({
           success: true,
           message: 'Your edits have been saved',
           data: {
-            editProfile,
+            id,
+            firstName,
+            lastName,
+            username,
+            email,
+            bio,
+            avatarUrl,
+            updatedAt
           }
         });
       }
-
       return res.status(401).json({
         success: false,
-        message: 'You are not unauthorized to do that!'
+        message: 'You are not authorized to do that!'
       });
     } catch (error) {
-      res.status(500).json({
+      res.status(409).json({
         success: false,
-        error: {
-          message: error.message,
-        }
+        error: error.message,
+        message: error.errors[0].message,
       });
     }
   }
 
   /**
-   * @description Enable a user edit profile only if authorized
+   * @description Deactivates a user profile only if authorized
    * @param { object } req
    * @param { object } res
    * @returns { object } json
    */
-  static async deleteUser(req, res) {
+  static async deactivateUser(req, res) {
     try {
-      const userId = Number(req.params.userId);
-
-      if (Number.isInteger(userId) === false) {
-        return res.status(400).json({
+      const { userId } = req.params;
+      const decodedId = req.user.payload.id;
+      const softDeletingUser = await User.findByPk(userId);
+      if (!softDeletingUser) {
+        return res.status(404).json({
           success: false,
-          message: 'Invalid params'
+          message: 'User does not exist'
         });
       }
-
-      const deletingUser = await User.findByPk(userId);
-      const decodedId = req.user.id;
-
-      if (deletingUser.id === decodedId) {
-        const deleteduser = await deletingUser.destroy({ force: true });
-        return res.status(204).json({
-          success: true,
-          message: 'Account has been deleted',
-          data: {
-            deleteduser,
-          }
-        });
+      if (softDeletingUser.id === decodedId) {
+        await softDeletingUser.destroy();
+        return res.status(204).json({});
       }
-
-      if (deletingUser.id !== decodedId) {
+      if (softDeletingUser.id !== decodedId) {
         return res.status(401).json({
-          status: 'fail',
+          success: false,
           message: 'You are not authorized to do this',
         });
       }
-
-      return res.status(404).json({
-        status: 'fail',
-        message: 'User does not exist',
-      });
     } catch (error) {
       res.status(500).json({
         success: false,
