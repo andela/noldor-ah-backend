@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import userToken from '../middlewares/token';
 import Models from '../db/models';
 
-const { User } = Models;
+const { User, Article } = Models;
 dotenv.config();
 
 /**
@@ -55,8 +55,9 @@ class UserController {
             email: data.dataValues.email,
             username: data.dataValues.username
           };
+
           const token = userToken.issue(payload);
-          return res.status(200).json({
+          return res.header('x-token', token).status(200).json({
             user: {
               success: true,
               message: 'registration successful',
@@ -126,6 +127,163 @@ class UserController {
           message: error.message,
         }
       }));
+  }
+
+
+  /**
+   * @description Enable a user view profile even if not authorized
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } json
+   */
+  static async viewUserProfile(req, res) {
+    try {
+      const userId = Number(req.params.userId);
+
+      if (Number.isInteger(userId) === false) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid params'
+        });
+      }
+
+      const noUser = await User.findByPk(userId);
+      if (noUser === null) {
+        return res.status(404).json({
+          success: false,
+          message: 'User does not exist'
+        });
+      }
+
+      const profile = await User.findByPk(userId, {
+        attributes: ['username', 'email', 'bio', 'avatarUrl'],
+        include: [{
+          model: Article,
+          as: 'articles',
+          attributes: ['title', 'content']
+        }],
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: 'Retrieval successful',
+        data: {
+          profile,
+        }
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: {
+          message: error.message,
+        }
+      });
+    }
+  }
+
+  /**
+   * @description Enable a user edit profile only if authorized
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } json
+   */
+  static async editUserProfile(req, res) {
+    try {
+      const userId = Number(req.params.userId);
+      if (Number.isInteger(userId) === false) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid params'
+        });
+      }
+      const decodedId = req.user.id;
+
+      const userProfile = await User.findByPk(userId, {
+        attributes: ['username', 'email', 'bio', 'avatarUrl'],
+        include: [{
+          model: Article,
+          as: 'articles',
+        }],
+      });
+
+      if (userProfile.id === decodedId) {
+        const editProfile = await userProfile.update(req.body, {
+          fields: Object.keys(req.body)
+        });
+
+        return res.status(205).json({
+          success: true,
+          message: 'Your edits have been saved',
+          data: {
+            editProfile,
+          }
+        });
+      }
+
+      return res.status(401).json({
+        success: false,
+        message: 'You are not unauthorized to do that!'
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: {
+          message: error.message,
+        }
+      });
+    }
+  }
+
+  /**
+   * @description Enable a user edit profile only if authorized
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } json
+   */
+  static async deleteUser(req, res) {
+    try {
+      const userId = Number(req.params.userId);
+
+      if (Number.isInteger(userId) === false) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid params'
+        });
+      }
+
+      const deletingUser = await User.findByPk(userId);
+      const decodedId = req.user.id;
+
+      if (deletingUser.id === decodedId) {
+        const deleteduser = await deletingUser.destroy({ force: true });
+        return res.status(204).json({
+          success: true,
+          message: 'Account has been deleted',
+          data: {
+            deleteduser,
+          }
+        });
+      }
+
+      if (deletingUser.id !== decodedId) {
+        return res.status(401).json({
+          status: 'fail',
+          message: 'You are not authorized to do this',
+        });
+      }
+
+      return res.status(404).json({
+        status: 'fail',
+        message: 'User does not exist',
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: {
+          message: error.message,
+        }
+      });
+    }
   }
 }
 

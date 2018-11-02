@@ -4,6 +4,7 @@ export default {
       allowNull: false,
       primaryKey: true,
       type: Sequelize.INTEGER,
+      autoIncrement: true,
       // defaultValue: Sequelize.UUIDV4
     },
     firstName: {

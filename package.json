@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production npm run build && cross-env NODE_ENV=production node server/bin/production",
-    "test-dev": "cross-env NODE_ENV=test npm run clean-db-test && cross-env NODE_ENV=test npm run migrate-test && cross-env NODE_ENV=test nyc --reporter=html --reporter=text mocha  --require babel-core/register ./server/src/test/ --timeout 10000 --recursive --exit",
+    "test-dev": "cross-env NODE_ENV=test npm run clean-db-test && cross-env NODE_ENV=test npm run migrate-test && cross-env NODE_ENV=test nyc --reporter=html --reporter=text mocha  --require babel-core/register ./server/src/test/ --recursive --exit",
     "migrate-test": "cross-env NODE_ENV=test sequelize db:migrate",
     "clean-db-test": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
     "test": "npm run clean-db && npm run migrate && cross-env NODE_ENV=test npm run build && nyc --reporter=html --reporter=text mocha ./server/dist/src/test/ --exit",

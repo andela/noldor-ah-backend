@@ -14,9 +14,14 @@ const config = {
     operatorsAliases: false
   },
   test: {
-    use_env_variable: 'DATABASE_URL',
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME_TEST,
+    host: process.env.HOST,
     port: '5432',
-    dialect: 'postgres'
+    dialect: 'postgres',
+    logging: false,
+    operatorsAliases: false
   },
   production: {
     use_env_variable: 'DATABASE_URL',
