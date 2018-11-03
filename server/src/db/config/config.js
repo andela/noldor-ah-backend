@@ -8,15 +8,19 @@ const config = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     host: process.env.HOST,
-    port: process.env.PORT,
+    port: process.env.DB_PORT,
     dialect: 'postgres',
     logging: false,
     operatorsAliases: false
   },
   test: {
-    use_env_variable: 'DATABASE_URL_TEST',
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME_TEST,
+    host: process.env.HOST,
     port: '5432',
-    dialect: 'postgres'
+    dialect: 'postgres',
+    logging: false,
   },
   production: {
     use_env_variable: 'DATABASE_URL',
