@@ -11,17 +11,19 @@ const config = {
     port: '5432',
     dialect: 'postgres',
     logging: false,
-    operatorsAliases: false
+    operatorsAliases: false,
   },
   test: {
     use_env_variable: 'DATABASE_URL',
     port: '5432',
-    dialect: 'postgres'
+    dialect: 'postgres',
+    logging: false,
+    operatorsAliases: false,
   },
   production: {
     use_env_variable: 'DATABASE_URL',
     port: '5432',
-    dialect: 'postgres'
+    dialect: 'postgres',
   }
 };
 
