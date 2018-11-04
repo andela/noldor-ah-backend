@@ -14,7 +14,7 @@ const config = {
     operatorsAliases: false
   },
   test: {
-    use_env_variable: 'DATABASE_URL',
+    use_env_variable: 'DATABASE_URL_TEST',
     port: '5432',
     dialect: 'postgres'
   },

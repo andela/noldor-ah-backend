@@ -15,7 +15,6 @@ class Paginator {
   /**
      * @var {number} limit per page
      * @var {limit} offSet page skip
-     * @var {Users}
    */
     const { Article } = model;
     const page = parseInt(req.params.source, 10);
@@ -30,7 +29,7 @@ class Paginator {
         message: 'Page number must be numeric and greater than zero'
       });
     }
-    let offset = page * limit;
+    const offset = (page - 1) * limit;
     Article.findAndCountAll({
       limit,
       offset,
@@ -47,7 +46,7 @@ class Paginator {
           });
         }
         const pages = Math.ceil(data.count / limit);
-        offset = limit * (page - 1);
+        if (page > pages) return res.status(404).json({ message: 'Reached page limit...' });
         return res.status(200).json({
           result: data.rows,
           count: data.count,
