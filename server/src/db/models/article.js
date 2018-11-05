@@ -17,11 +17,26 @@ export default (sequelize, DataTypes) => {
       unique: false,
       type: DataTypes.STRING
     },
+    description: {
+      allowNull: false,
+      required: true,
+      type: DataTypes.STRING
+    },
     content: {
       required: true,
       allowNull: false,
       unique: false,
       type: DataTypes.TEXT
+    },
+    slug: {
+      required: true,
+      allowNull: false,
+      type: DataTypes.TEXT,
+      set(val) {
+        const articleId = this.id.split('-').pop();
+        const value = `${val}-${articleId}`;
+        this.setDataValue('slug', value);
+      }
     },
     featuredImg: {
       required: false,
@@ -29,9 +44,14 @@ export default (sequelize, DataTypes) => {
       unique: false,
       type: DataTypes.TEXT
     },
+    published: {
+      required: false,
+      allowNull: false,
+      type: DataTypes.BOOLEAN
+    },
   }, {});
   Article.associate = (models) => {
-    Article.belongsTo(models.User);
+    Article.belongsTo(models.User, { foreignKey: 'userId' });
   };
   return Article;
 };

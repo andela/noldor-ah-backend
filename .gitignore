@@ -47,3 +47,8 @@ server/dist/
 coverage
 # File housing all environment variables
 .env
+
+server/src/db/seeder
+
+# Will be regenerated everytime we run NPM i
+package-lock.json

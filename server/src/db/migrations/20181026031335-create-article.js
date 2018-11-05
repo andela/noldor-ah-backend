@@ -11,7 +11,8 @@ export default {
       type: Sequelize.UUID,
       references: {
         model: 'Users',
-        key: 'id'
+        key: 'id',
+        as: 'userId'
       }
     },
     title: {
@@ -20,10 +21,20 @@ export default {
       unique: false,
       type: Sequelize.STRING
     },
+    description: {
+      allowNull: false,
+      required: true,
+      type: Sequelize.STRING
+    },
     content: {
       required: true,
       allowNull: false,
       unique: false,
+      type: Sequelize.TEXT
+    },
+    slug: {
+      required: true,
+      allowNull: false,
       type: Sequelize.TEXT
     },
     featuredImg: {
@@ -31,6 +42,11 @@ export default {
       allowNull: true,
       unique: false,
       type: Sequelize.TEXT
+    },
+    published: {
+      required: false,
+      allowNull: false,
+      type: Sequelize.BOOLEAN
     },
     createdAt: {
       allowNull: false,

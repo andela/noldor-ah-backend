@@ -43,9 +43,9 @@ const Users = (sequelize, DataTypes) => {
       type: DataTypes.TEXT
     },
     confirmEmail: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: false
     },
     avatarUrl: {
       required: false,
@@ -54,8 +54,8 @@ const Users = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
   }, {});
-  User.associate = (models) => {
-    User.hasMany(models.Article);
+  User.associate = () => {
+
   };
   return User;
 };
