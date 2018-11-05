@@ -32,7 +32,7 @@ class ArticleController {
           return res.status(404).json({
             success: false,
             error: {
-              message: 'articles not found',
+              message: 'article not found',
             }
           });
         }
@@ -67,7 +67,7 @@ class ArticleController {
           return res.status(404).json({
             success: false,
             error: {
-              message: 'articles not found',
+              message: 'article not found',
             }
           });
         }
@@ -105,7 +105,7 @@ class ArticleController {
           return res.status(404).json({
             success: false,
             error: {
-              message: 'no draft found',
+              msg: 'no draft found',
             }
           });
         }
@@ -148,7 +148,7 @@ class ArticleController {
           return res.status(404).json({
             success: false,
             error: {
-              message: 'articles not found',
+              message: 'article not found',
             }
           });
         }
@@ -230,7 +230,7 @@ class ArticleController {
           return res.status(404).json({
             success: false,
             error: {
-              message: 'articles not found',
+              message: 'article not found',
             }
           });
         }
@@ -256,7 +256,7 @@ class ArticleController {
           .then(() => {
             res.status(201).json({
               success: true,
-              message: 'Article published successfully'
+              message: 'article published successfully'
             });
           })
           .catch(error => res.status(500).json({
@@ -296,13 +296,13 @@ class ArticleController {
         if (found.length === 0) {
           return res.status(404).json({
             success: false,
-            message: 'Article not found'
+            message: 'article not found'
           });
         }
         if (found[0].dataValues.userId !== userId) {
           return res.status(401).json({
             success: false,
-            message: 'Unauthorized'
+            message: 'unauthorized'
           });
         }
         const input = {};
@@ -332,7 +332,7 @@ class ArticleController {
           .then(() => {
             res.status(201).json({
               success: 'true',
-              message: 'Article has been updated successfully'
+              message: 'article has been updated successfully'
             });
           })
           .catch(error => res.status(500).json({
