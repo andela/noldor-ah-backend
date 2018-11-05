@@ -53,11 +53,7 @@ class UserController {
           const payload = {
             id: data.dataValues.id,
             email: data.dataValues.email,
-<<<<<<< HEAD
             username: data.dataValues.username,
-=======
-            username: data.dataValues.username
->>>>>>> eef8e6254314816b911f8deb1333662c6567784c
           };
           const token = userToken.issue(payload);
           return res.header('x-token', token).status(200).json({
