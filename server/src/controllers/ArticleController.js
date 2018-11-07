@@ -1,10 +1,12 @@
 import Slug from 'slug';
-import Sequelize from 'sequelize';
 import Models from '../db/models';
+import helpers from '../helpers/helpers';
 
+const {
+  Sequelize, Article, User, Tags
+} = Models;
 const { Op } = Sequelize;
-
-const { Article, User } = Models;
+const { addTags } = helpers;
 
 /**
  * @class { ArticleController }
@@ -130,39 +132,45 @@ class ArticleController {
    * @returns {object} Json
    * @name getAnArticle
    */
-  static getAnArticle(req, res) {
+  static async getAnArticle(req, res) {
     const articleId = ArticleController.slugDecoder(req, res);
-    Article.findAll({
+    const articleArray = await Article.findAll({
       where: {
-        slug: {
-          [Op.like]: `%${articleId}%`
-        }
+        slug: { [Op.like]: `%${articleId}%` }
       },
       attributes: ['slug', 'title', 'description', 'published', 'content', 'createdAt', 'updatedAt'],
-      include: [{
-        model: User, attributes: ['username', 'bio', 'avatarUrl']
-      }]
-    })
-      .then((result) => {
-        if (result.length < 1) {
-          return res.status(404).json({
-            success: false,
-            error: {
-              message: 'article not found',
-            }
-          });
-        }
-        res.status(200).json({
-          success: true,
-          article: result
-        });
-      })
-      .catch(error => res.status(500).json({
+      include: [
+        {
+          model: User,
+          attributes: ['username', 'bio', 'avatarUrl'],
+        },
+        {
+          model: Tags,
+          as: 'tags',
+          attributes: ['name'],
+          through: { attributes: [] },
+        }]
+    });
+
+    if (articleArray.length < 1) {
+      return res.status(404).json({
         success: false,
         error: {
-          message: error.message,
+          message: 'article not found',
         }
-      }));
+      });
+    }
+
+    const parsedArticleArray = JSON.parse(JSON.stringify(articleArray));
+    const article = parsedArticleArray[0];
+    const tagsArray = article.tags.map(tag => tag.name);
+    article.tags = tagsArray;
+
+    return res.status(200).json({
+      success: true,
+      message: 'Article successfully retrieved',
+      article,
+    });
   }
 
   /**
@@ -171,42 +179,32 @@ class ArticleController {
    * @param { object } res
    * @returns { object } JSON
    */
-  static postArticle(req, res) {
-    const userId = req.user.payload.id;
-    const {
-      title, description, content, featuredImg
-    } = req.body;
-    const slug = Slug(title, { lower: true, replacement: '-' });
-    const published = 0;
-    Article.create({
-      userId,
-      title,
-      description,
-      content,
-      slug,
-      featuredImg,
-      published
-    })
-      .then((result) => {
-        res.status(201).json({
-          success: true,
-          message: 'article was added successfully',
-          article: {
-            slug: result.slug,
-            title: result.title,
-            description: result.description,
-            content: result.content,
-            createdAt: result.createdAt,
-            updatedAt: result.updatedAt,
-            published: result.published
-          }
-        });
-      }).catch(error => res.status(500).json({
+  static async postArticle(req, res) {
+    req.body.userId = req.user.payload.id;
+    req.body.slug = Slug(req.body.title, { lower: true, replacement: '-' });
+    req.body.published = false;
+    const { tags } = req.body;
+
+    try {
+      const article = await Article.create(req.body, {
+        fields: Object.keys(req.body)
+      });
+
+      if (tags) addTags(tags, article);
+
+      return res.status(201).json({
+        success: true,
+        message: 'article was added successfully',
+        article,
+      });
+    } catch (error) {
+      return res.status(500).json({
         success: false,
         error: {
           message: error.message,
         }
-      }));
+      });
+    }
   }
 
   /**
@@ -306,7 +304,6 @@ class ArticleController {
           });
         }
         const input = {};
-        // const { title, content, description } = found;
 
         if (req.body.title !== undefined) {
           input.title = req.body.title;
@@ -320,7 +317,6 @@ class ArticleController {
         Article.update(
           input,
           {
-
             where: {
               slug: {
                 [Op.like]: `%${articleId}`
@@ -355,56 +351,45 @@ class ArticleController {
    * @param { object } res
    * @returns { object } JSON
    */
-  static deleteArticle(req, res) {
+  static async deleteArticle(req, res) {
     const userId = req.user.payload.id;
     const articleId = ArticleController.slugDecoder(req, res);
 
-    Article.findAll({
+    const article = await Article.findOne({
       where: {
         slug: {
-          [Op.like]: `%${articleId}`
+          [Op.like]: `%${articleId}`,
         }
       }
-    })
-      .then((found) => {
-        if (found.length === 0) {
-          return res.status(404).json({
-            success: false,
-            message: 'Article not found'
-          });
-        }
-        if (found[0].dataValues.userId !== userId) {
-          return res.status(401).json({
-            success: false,
-            message: 'Unauthorized'
-          });
-        }
-        Article.destroy({
-          where: {
-            slug: {
-              [Op.like]: `%${articleId}`
-            }
-          }
-        })
-          .then(() => {
-            res.status(204).json({
-              success: true,
-              message: 'article deleted successfully'
-            });
-          }).catch(error => res.status(500).json({
-            success: false,
-            error: {
-              message: error.message,
-            }
-          }));
-      }).catch(error => res.status(500).json({
-        success: false,
-        error: {
-          message: error.message,
-        }
-      }));
-  }
+    });
 
+    if (!article) {
+      return res.status(404).json({
+        success: false,
+        message: 'article not found',
+      });
+    }
+
+    if (article.dataValues.userId !== userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'unauthorized',
+      });
+    }
+
+    try {
+      const deleted = await article.destroy();
+
+      if (deleted) {
+        return res.status(204).json({});
+      }
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
 
   /**
    *
@@ -418,7 +403,7 @@ class ArticleController {
     const articleId = slug.split('-').pop();
 
     // https://stackoverflow.com/questions/388996/regex-for-javascript-to-allow-only-alphanumeric/389022#389022
-    const pattern = new RegExp('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$');
+    const pattern = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
     const id = pattern.test(articleId);
 
     if (articleId.length !== 12 || id !== true) {
@@ -426,6 +411,58 @@ class ArticleController {
     }
 
     return articleId;
+  }
+
+  /**
+   * @description { updates article tags }
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } JSON
+   */
+  static async updateTags(req, res) {
+    const articleId = ArticleController.slugDecoder(req, res);
+    const userId = req.user.payload.id;
+    const newTags = req.body.tags;
+
+    if (!newTags) {
+      return res.status(400).json({
+        success: false,
+        message: 'tags field is required',
+      });
+    }
+
+    const article = await Article.findOne({
+      where: {
+        slug: { [Op.like]: `%${articleId}` }
+      }
+    });
+
+    if (!article) {
+      return res.status(404).json({
+        success: false,
+        message: 'article not found',
+      });
+    }
+
+    if (article.dataValues.userId !== userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'unauthorized',
+      });
+    }
+
+    let results = await article.getTags({ attributes: ['id'] });
+    results = JSON.parse(JSON.stringify(results));
+
+    const oldTags = results.map(tag => tag.id);
+
+    await article.removeTags(oldTags);
+    addTags(newTags, article);
+
+    return res.status(200).json({
+      success: true,
+      message: 'tags updated successfully',
+    });
   }
 }
 

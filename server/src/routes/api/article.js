@@ -11,10 +11,11 @@ router.get('/articles', ArticleController.getAll);
 router.get('/users/articles', authorization, ArticleController.getUserArticles);
 router.get('/articles/drafts', authorization, ArticleController.userDrafts);
 router.get('/articles/:slug', ArticleController.getAnArticle);
-router.post('/articles', authorization, articlesValidation.postArticle, ArticleController.postArticle);
+router.post('/articles', authorization, articlesValidation.postArticle, articlesValidation.tagsValidation, ArticleController.postArticle);
 router.put('/articles/:slug/publish', authorization, ArticleController.publishArticle);
 router.put('/articles/:slug', authorization, ArticleController.updateArticle);
 router.delete('/articles/:slug', authorization, ArticleController.deleteArticle);
 router.get('/articles/page/:source', Paginator.page);
+router.put('/articles/:slug/tags', authorization, articlesValidation.tagsValidation, ArticleController.updateTags);
 
 export default router;
