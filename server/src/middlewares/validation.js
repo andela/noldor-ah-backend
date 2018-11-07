@@ -255,6 +255,82 @@ class UserValidation {
     req.body.lastName = req.body.lastName.trim();
     next();
   }
+
+  /**
+   *  @description { validates email input field on forget password }
+   * @param { object } req
+   * @param { object } res
+   * @param { callback } next
+   * @returns { callback } json/callback
+   */
+  static forgotPasswordValidation(req, res, next) {
+    /**
+    * https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+    */
+    const emailFilter = /^([a-zA-Z0-9_\s.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
+    const { email } = req.body;
+    if (!req.body.email) {
+      return res.status(400).json({
+        success: false,
+        message: 'email is required',
+      });
+    }
+    if (typeof email !== 'string' || email.trim() === '' || emailFilter.test(email.toLocaleLowerCase()) === false) {
+      return res.status(400).json({
+        success: false,
+        message: 'invalid email'
+      });
+    }
+    next();
+  }
+
+  /**
+   * @description { validate password fields }
+   * @param { object } req
+   * @param { object } res
+   * @param { callback } next
+   * @returns { callback } callback
+   */
+  static resetPasswordValidation(req, res, next) {
+    const {
+      password,
+      confirmPassword
+    } = req.body;
+    const checkPassword = (str) => {
+      const check = /(?=.*\d)(?=.*[a-z]).{8,}/;
+      return check.test(str);
+    };
+
+    if (!req.body.password) {
+      return res.status(400).json({
+        success: false,
+        message: 'password field is required',
+      });
+    }
+    if (!req.body.confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'confirmPassword field is required',
+      });
+    }
+
+    if (typeof password !== 'string' || !checkPassword(password)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be atleast 8 characters long and must be a combination of characters and numbers'
+      });
+    }
+
+    const firstEntry = checkPassword(password) && password.toString().replace(/\s/g, '');
+    const secondEntry = checkPassword(password) && confirmPassword.toString().replace(/\s/g, '');
+    if (firstEntry !== secondEntry) {
+      return res.status(400).json({
+        success: false,
+        message: 'passwords does not match',
+      });
+    }
+    next();
+  }
 }
 
 export default UserValidation;

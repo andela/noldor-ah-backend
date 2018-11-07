@@ -47,6 +47,12 @@ export default {
       type: Sequelize.BOOLEAN,
       defaultValue: Sequelize.FALSE,
     },
+    forgotPasswordHash: {
+      required: false,
+      allowNull: true,
+      unique: true,
+      type: Sequelize.STRING
+    },
     avatarUrl: {
       required: false,
       allowNull: true,

@@ -5,8 +5,30 @@ import userToken from '../../middlewares/token';
 
 const router = express.Router();
 
-router.post('/users/register', Validation.signupValidation, UserController.register);
-router.post('/users/login/', Validation.loginValidation, UserController.login);
-router.get('/users/', userToken.validateToken, UserController.getAllUser);
+const {
+  signupValidation,
+  loginValidation,
+  forgotPasswordValidation,
+  resetPasswordValidation,
+} = Validation;
+
+const {
+  register,
+  login,
+  getAllUser,
+  forgetPassword,
+  resetPassword,
+} = UserController;
+
+const {
+  validateToken,
+
+} = userToken;
+
+router.post('/users/register', signupValidation, register);
+router.post('/users/login/', loginValidation, login);
+router.get('/users/', validateToken, getAllUser);
+router.put('/users/forgot', forgotPasswordValidation, forgetPassword);
+router.post('/users/forgot/:hash', resetPasswordValidation, resetPassword);
 
 export default router;

@@ -47,6 +47,12 @@ const Users = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    forgotPasswordHash: {
+      required: false,
+      allowNull: true,
+      unique: true,
+      type: DataTypes.STRING
+    },
     avatarUrl: {
       required: false,
       allowNull: true,
