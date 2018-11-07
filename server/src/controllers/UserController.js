@@ -1,9 +1,10 @@
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import sgMail from '@sendgrid/mail';
 import jwt from 'jsonwebtoken';
 import userToken from '../middlewares/token';
 import Models from '../db/models';
+import template from '../helpers/sendMail/templates';
+import sendMail from '../helpers/sendMail/sendMail';
 
 const { User } = Models;
 dotenv.config();
@@ -184,38 +185,14 @@ class UserController {
     const token = userToken.issue(payload, '1h');
     User.update(
       { forgotPasswordHash: token },
-      { where: { id } },
+      { where: { id } }
     )
       .then((data) => {
         if (data) {
-          // using SendGrid's v3 Node.js Library
-          // https://github.com/sendgrid/sendgrid-nodejs
-          sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-          const emailTemplate = {
-            to: providedEmail,
-            subject: 'Reset your password',
-            html:
-            `<div> 
-              <p>You told us you forgot your password. If you really did, click <a href=http://${req.headers.host}/api/v1/users/forgot/${token}> here</a> to get a new one</p>
-            
-             <div>
-             <p> 
-                <a href="http://${req.headers.host}/api/v1/users/forgot/${token}">Choose a new password</a> 
-             </p>
-            </div>
-           
-              <p>If you didn't mean to change your password, you can just ignore this email; </br>
-            Your password will not be changed.</p>
-            </div>
-            `
-          };
-          const message = {
-            to: emailTemplate.to,
-            from: 'no-reply@authorshaven.com',
-            subject: emailTemplate.subject,
-            html: emailTemplate.html,
-          };
-          sgMail.send(message);
+          const sender = 'no-reply@authorshaven.com';
+          const subject = 'Reset your password';
+          const resetPasswordTemplate = template.resetPasswordTemplate(req.headers.host, token);
+          sendMail(providedEmail, sender, subject, resetPasswordTemplate);
           return res.status(200).json({
             success: true,
             message: 'Check your email for further instructions',
