@@ -1,6 +1,6 @@
 // from stackoverflow
 const trimWhiteSpaces = input => input.trim().length;
-const hasSpecialCharacters = input => /[ !@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(input);
+const hasSpecialCharacters = input => /[ !@#$%^&*()_+=[\]{};':"\\|,.<>/?]/.test(input);
 
 const postArticle = (req, res, next) => {
   const error = [];

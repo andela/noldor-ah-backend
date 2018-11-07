@@ -182,8 +182,10 @@ class UserController {
       email,
     };
     const token = userToken.issue(payload, '1h');
-    User.update({ forgotPasswordHash: token },
-      { where: { id } })
+    User.update(
+      { forgotPasswordHash: token },
+      { where: { id } },
+    )
       .then((data) => {
         if (data) {
           // using SendGrid's v3 Node.js Library
@@ -275,8 +277,10 @@ class UserController {
       const salt = bcrypt.genSaltSync(10);
       const hashed = bcrypt.hashSync(password, salt);
       const hashedPassword = hashed;
-      User.update({ password: hashedPassword },
-        { where: { id } })
+      User.update(
+        { password: hashedPassword },
+        { where: { id } }
+      )
         .then((data) => {
           if (!data) {
             return res.status(503).json({
