@@ -24,6 +24,11 @@ class Paginator {
         message: 'Page number must be numeric and greater than zero'
       });
     }
+    if (page === '') {
+      return res.status(404).json({
+        message: 'Page number can not be empty'
+      });
+    }
     if (!page) {
       return res.status(404).json({
         message: 'Page number must be numeric and greater than zero'
@@ -35,8 +40,11 @@ class Paginator {
       offset,
       $sort: { id: 1 },
       order: [
-        ['published', 'ASC']
-      ]
+        ['createdAt', 'ASC']
+      ],
+      where: {
+        published: true
+      }
     })
       .then((data) => {
         if (data.count === 0) {

@@ -56,7 +56,7 @@ describe('GET all articles endpoint', () => {
   });
   it('Should return 404 for invalid page number', (done) => {
     chai.request(app)
-      .get('/api/v1/articles/page/')
+      .get('/api/v1/articles/page')
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(404);
@@ -107,16 +107,6 @@ describe('GET all articles endpoint', () => {
   it('Should return 404 for invalid page number', (done) => {
     chai.request(app)
       .get('/api/v1/articles/page/-')
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(404);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
-  it('Should return 404 for invalid page number', (done) => {
-    chai.request(app)
-      .get('/api/v1/articles/page/')
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(404);

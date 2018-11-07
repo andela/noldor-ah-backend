@@ -162,7 +162,8 @@ describe('POST endpoint for creating articles', () => {
         title: 'this is the title',
         description: 'this is the description',
         content: 'this is the content',
-        featuredImg: 'ahghgkjag.jpg'
+        featuredImg: 'ahghgkjag.jpg',
+        tags: 'bars,foos,philosophical,smart'
 
       })
       .end((error, response) => {
@@ -174,7 +175,7 @@ describe('POST endpoint for creating articles', () => {
       });
   });
 
-  it('should return 201 if article is added successfully', (done) => {
+  it('should return 500 if userId doesnt exist', (done) => {
     chai.request(app)
       .post(api)
       .set('X-Token', fakeToken)
@@ -220,13 +221,13 @@ describe('GET endpoint for logged-in user articles', () => {
         done();
       });
   });
-  it('should return an 200 if successfull', (done) => {
+  it('should return an 400 if not published', (done) => {
     chai.request(app)
       .get(api)
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(200);
+        expect(response.status).to.equal(404);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -295,12 +296,12 @@ describe('GET endpoint for logged-in user drafts', () => {
   });
 });
 describe('GET endpoint for an article', () => {
-  it('should return an 200 if found', (done) => {
+  it('should return an 404 for unpublished', (done) => {
     chai.request(app)
       .get(`/api/v1/articles/${data.slug}`)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(200);
+        expect(response.status).to.equal(404);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -498,10 +499,31 @@ describe('Update endpoint for publishing article', () => {
       });
   });
 });
-describe('GET all articles endpoint', () => {
+describe('GET published articles endpoint', () => {
+  it('should return an 200 if successfull', (done) => {
+    chai.request(app)
+      .get('/api/v1/users/articles')
+      .set('X-Token', data.token)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
   it('should return a 200', (done) => {
     chai.request(app)
       .get('/api/v1/articles')
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+  it('should return an 200', (done) => {
+    chai.request(app)
+      .get(`/api/v1/articles/${data.slug}`)
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(200);
