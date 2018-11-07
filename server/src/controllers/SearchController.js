@@ -19,11 +19,14 @@ class SearchController {
     const searchTerm = keywords.split(' ').join(',');
 
     if (Object.keys(filters).length === 0 && filters.constructor === Object) {
-      const q1 = 'SELECT "Articles".id, "Articles"."userId", "Articles".title, "Articles".description,  "Articles".content, ';
-      const q2 = '"Articles".slug, "Articles"."featuredImg", "Articles"."createdAt", "Articles"."updatedAt" FROM "Articles" INNER JOIN "Users"';
-      const q3 = ` ON "Articles"."userId" = "Users"."id" AND "Articles".published = 'TRUE' WHERE "Articles"."searchVectors" @@ to_tsquery('${searchTerm}')`;
-      const q4 = 'ORDER BY "Articles"."createdAt" DESC';
-      const query = `${q1}${q2}${q3}${q4}`;
+      const q1 = 'SELECT "Articles".id, "Articles"."userId", "Articles".title';
+      const q2 = ', "Articles".description,  "Articles".content, ';
+      const q3 = '"Articles".slug, "Articles"."featuredImg", "Articles"."createdAt",';
+      const q4 = ' "Articles"."updatedAt" FROM "Articles" INNER JOIN "Users"';
+      const q5 = ' ON "Articles"."userId" = "Users"."id" AND "Articles".published = \'TRUE\'';
+      const q6 = ` WHERE "Articles"."searchVectors" @@ to_tsquery('${searchTerm}')`;
+      const q7 = 'ORDER BY "Articles"."createdAt" DESC';
+      const query = `${q1}${q2}${q3}${q4}${q5}${q6}${q7}`;
 
       const results = await sequelize.query(query, {
         type: sequelize.QueryTypes.SELECT,
@@ -41,12 +44,15 @@ class SearchController {
       return res.status(200).json(results);
     }
 
-    const q1 = 'SELECT "Articles".id, "Articles"."userId", "Articles".title, "Articles".description,  "Articles".content, "Articles".slug,';
-    const q2 = ' "Articles"."featuredImg", "Articles"."createdAt", "Articles"."createdAt", "Articles"."updatedAt" FROM "Articles"';
-    const q3 = ' INNER JOIN "Users" ON "Articles"."userId" = "Users"."id" AND "Articles".published = \'TRUE\' WHERE "Users"."username" =';
-    const q4 = ` '${filters.author}' AND "Articles"."searchVectors" @@ to_tsquery('${searchTerm}')`;
-    const q5 = 'ORDER BY "Articles"."createdAt" DESC';
-    const query = `${q1}${q2}${q3}${q4}${q5}`;
+    const q1 = 'SELECT "Articles".id, "Articles"."userId", "Articles".title,';
+    const q2 = ' "Articles".description, "Articles".content, "Articles".slug,';
+    const q3 = ' "Articles"."featuredImg", "Articles"."createdAt", ';
+    const q4 = '"Articles"."createdAt", "Articles"."updatedAt" FROM "Articles"';
+    const q5 = ' INNER JOIN "Users" ON "Articles"."userId" = "Users"."id" AND ';
+    const q6 = '"Articles".published = \'TRUE\' WHERE "Users"."username" =';
+    const q7 = ` '${filters.author}' AND "Articles"."searchVectors" @@ to_tsquery('${searchTerm}')`;
+    const q8 = 'ORDER BY "Articles"."createdAt" DESC';
+    const query = `${q1}${q2}${q3}${q4}${q5}${q6}${q7}${q8}`;
 
     const results = await sequelize.query(query, {
       type: sequelize.QueryTypes.SELECT,
