@@ -1,5 +1,9 @@
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+<<<<<<< HEAD
+=======
+import jwt from 'jsonwebtoken';
+>>>>>>> feat: user reset password functionality
 import userToken from '../middlewares/token';
 import Models from '../db/models';
 import template from '../helpers/sendMail/templates';
