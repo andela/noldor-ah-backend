@@ -83,7 +83,7 @@ describe('add articles for test', () => {
         .send(testArticle)
         .end((error, response) => {
           if (error) done(error);
-          expect(response.status).to.equal(400);
+          expect(response.status).to.equal(401);
           expect(response.body).to.be.an('object');
 
           done();
