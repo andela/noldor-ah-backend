@@ -4,25 +4,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 /**
  *@class{Token}
- *@description { Issue token to users on successful registration}
  *@description{ validate user token }
  */
 class Token {
-  /**
-   * @description { Issues token to users }
-   * @param { object } payload
-   * @param { object } expiresIn
-   * @returns { string } token
-   */
-  static issue(payload, expiresIn = '1w') {
-    const token = jwt.sign({
-      payload,
-    }, process.env.PRIVATE_KEY, {
-      expiresIn,
-    });
-    return token;
-  }
-
   /**
  *@description { validates user token }
  * @param { object } req
@@ -39,9 +23,19 @@ class Token {
       });
     }
     try {
-      const decodedToken = jwt.verify(headerToken, process.env.PRIVATE_KEY);
-      req.user = decodedToken;
-      return next();
+      jwt.verify(headerToken, process.env.PRIVATE_KEY, (err, decoded) => {
+        if (err) {
+          return res.status(401).json({
+            success: false,
+            message: 'invalid token',
+            expiredAt: err.expiredAt,
+          });
+        }
+        if (!err) {
+          req.user = decoded;
+          return next();
+        }
+      });
     } catch (err) {
       res.status(400).json({
         success: false,

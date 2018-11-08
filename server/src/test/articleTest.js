@@ -1,7 +1,7 @@
 import chaiHttp from 'chai-http';
 import chai from 'chai';
 import app from '../../../index';
-import userToken from '../middlewares/token';
+import userToken from '../helpers/token';
 
 const { expect } = chai;
 chai.use(chaiHttp);
