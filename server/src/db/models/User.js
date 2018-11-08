@@ -45,7 +45,7 @@ const Users = (sequelize, DataTypes) => {
     confirmEmail: {
       allowNull: true,
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: false
     },
     forgotPasswordHash: {
       required: false,
