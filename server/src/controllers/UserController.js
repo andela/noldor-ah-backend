@@ -5,9 +5,8 @@ import userToken from '../helpers/token';
 import Models from '../db/models';
 import template from '../helpers/sendMail/templates';
 import sendMail from '../helpers/sendMail/sendMail';
-// import cron from 'cron';
 
-const { User, Op } = Models;
+const { User } = Models;
 dotenv.config();
 
 /**
@@ -381,7 +380,7 @@ class UserController {
       const { userId } = req.params;
       const decodedId = req.user.payload.id;
 
-      const softDeletingUser = await User.findByPk(userId); 
+      const softDeletingUser = await User.findByPk(userId);
       if (!softDeletingUser) {
         return res.status(404).json({
           success: false,

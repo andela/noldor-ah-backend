@@ -3,7 +3,6 @@ import UserController from '../../controllers/UserController';
 import Validation from '../../middlewares/validation';
 import userToken from '../../middlewares/token';
 import multifile from '../../helpers/multer';
-// import uuidChecker from  '../../helpers/validationHelpers/profileVal';
 
 const router = express.Router();
 
@@ -23,7 +22,6 @@ const {
   viewUserProfile,
   editUserProfile,
   deactivateUser,
-  deleteUser
 } = UserController;
 
 const {

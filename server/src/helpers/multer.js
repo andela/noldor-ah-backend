@@ -1,8 +1,6 @@
 /**
  * Resources: https://medium.freecodecamp.org/how-to-allow-users-to-upload-images-with-node-express-mongoose-and-cloudinary-84cefbdff1d9
- * 
  * https://www.npmjs.com/package/multer-storage-cloudinary
- * 
  * https://cloudinary.com/documentation/solution_overview
  */
 import multer from 'multer';
