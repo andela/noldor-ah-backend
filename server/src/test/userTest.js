@@ -178,6 +178,24 @@ describe('Signup validation test', () => {
   });
 });
 
+it('Should return a token on successful signup', (done) => {
+  const values = {
+    email: 'fred@noldor.com',
+    username: 'fred',
+    password: 'password123',
+    confirmPassword: 'password123'
+  };
+  chai.request(app)
+    .post('/api/v1/users/register')
+    .send(values)
+    .end((err, res) => {
+      if (err) done(err);
+      expect(res.status).to.equal(200);
+      expect(res.body.user.success).to.equal(true);
+      done();
+    });
+});
+
 describe('Login validation test', () => {
   it('Should return 404 for unregistered user on login', (done) => {
     const values = {
@@ -250,7 +268,7 @@ describe('Login validation test', () => {
   });
   it('Should return 200 for successful login', (done) => {
     const values = {
-      email: 'uwa@noldor.com',
+      email: 'fred@noldor.com',
       password: 'password123',
     };
     chai.request(app)

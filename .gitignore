@@ -35,7 +35,7 @@ node_modules
 .node_repl_history
 
 # Production Folder
-server/dist/
+/dist/
 
 # coveralls file for repo_token
 .coveralls.yml
