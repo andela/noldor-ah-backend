@@ -264,9 +264,9 @@ describe('Login validation test', () => {
       .set('x-token', fakeToken)
       .end((err, res) => {
         if (err) done(err);
-        expect(res.status).to.equal(400);
+        expect(res.status).to.equal(401);
         expect(res.body.success).to.equal(false);
-        expect(res.body.message).to.equal('Invalid token provided.');
+        expect(res.body.message).to.equal('invalid token');
         done();
       });
   });
