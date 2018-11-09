@@ -93,7 +93,7 @@ class UserValidation {
     * Check if password has atleast a string, number and is upto 8 characters long
     * @param {string} password - User's password {x456As49#u4me}
     */
-    if (values.username && !checkPassword(values.password.toString())) {
+    if (values.password && !checkPassword(values.password.toString())) {
       errors.password = 'Password must be atleast 8 characters long and must be a combination of characters and numbers';
       pass = false;
     }
