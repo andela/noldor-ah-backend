@@ -1,18 +1,18 @@
 import Slug from 'slug';
 import Models from '../db/models';
-import helpers from '../helpers/helpers';
-import ArticleHelper from '../helpers/article';
+import ArticleWorker from '../workers/ArticleWorker';
+import Helpers from '../helpers/index';
+import TagWorker from '../workers/TagWorker';
 
 const {
   Sequelize, Article
 } = Models;
 const { Op } = Sequelize;
-const { addTags } = helpers;
 const {
-  checkArticle, getAllArticles,
-  slugDecoder, findArticle, publish,
+  checkArticle, getAllArticles, findArticle, publish,
   getUserArticles, deleteArticle, updateArticle
-} = ArticleHelper;
+} = ArticleWorker;
+const { addTags } = TagWorker;
 
 /**
  * @class { ArticleController }
@@ -259,7 +259,7 @@ class ArticleController {
    * @returns { object } JSON
    */
   static async updateTags(req, res) {
-    const articleId = slugDecoder(req);
+    const articleId = Helpers.slugDecoder(req);
     const userId = req.user.payload.id;
     const newTags = req.body.tags;
 

@@ -3,7 +3,7 @@ import model from '../db/models';
  * @class { UserController }
  * @description { Handles Users Requests }
  */
-class Paginator {
+class PaginatorController {
 /**
   *
   * @param { object } req
@@ -67,4 +67,4 @@ class Paginator {
   }
 }
 
-export default Paginator;
+export default PaginatorController;

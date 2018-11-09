@@ -1,8 +1,8 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
-import userToken from '../helpers/token';
-import app from '../../../index';
+import Helpers from '../../helpers/index';
+import app from '../../../../index';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -409,7 +409,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password123',
       confirmPassword: 'password123',
@@ -433,7 +433,7 @@ describe('Forgot Password Funtionality', () => {
       id: 'b33a1b70-a6de-4032-8f42-59b48846ef40',
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password123',
       confirmPassword: 'password123',
@@ -457,7 +457,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: 'jane.john@mail.co.uk',
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password123',
       confirmPassword: 'password123',
@@ -481,7 +481,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
     };
     chai.request(app)
@@ -503,7 +503,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password123',
     };
@@ -526,7 +526,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password',
       confirmPassword: 'password',
@@ -550,7 +550,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password123',
       confirmPassword: 'password234',

@@ -1,37 +1,15 @@
 import Sequelize from 'sequelize';
 import Models from '../db/models';
-
+import Helpers from '../helpers/index';
 
 const { Op } = Sequelize;
-
-
 const { Article } = Models;
-
 
 /**
  * @class { ReactionHelper }
  * @description { Handles for like and unlike helpers }
  */
-class ReactionHelper {
-  /**
-     * @description { decodes the slug }
-     * @param { object } req
-     * @returns { string } articleId
-     */
-  static slugDecoder(req) {
-    const { slug } = req.params;
-    const articleId = slug.split('-').pop();
-
-    // https://stackoverflow.com/questions/388996/regex-for-javascript-to-allow-only-alphanumeric/389022#389022
-    const pattern = new RegExp('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$');
-    const id = pattern.test(articleId);
-
-    if (articleId.length !== 12 || id !== true) {
-      return null;
-    }
-    return articleId;
-  }
-
+class ReactionWorker {
   /**
      * @description { Check if article has been reacted to by user }
      * @param { object } req
@@ -44,7 +22,7 @@ class ReactionHelper {
       const articleExist = await Article.findOne({
         where: {
           slug: {
-            [Op.like]: `%${ReactionHelper.slugDecoder(req)}`
+            [Op.like]: `%${Helpers.slugDecoder(req)}`
           }
         }
       });
@@ -62,7 +40,6 @@ class ReactionHelper {
         article: articleExist
       };
 
-      // console.log(status)
       return article;
     } catch (error) {
       return res.status(500).json({
@@ -75,4 +52,4 @@ class ReactionHelper {
   }
 }
 
-export default ReactionHelper;
+export default ReactionWorker;

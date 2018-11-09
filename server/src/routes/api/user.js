@@ -1,18 +1,9 @@
 import express from 'express';
 import UserController from '../../controllers/UserController';
-import Validation from '../../middlewares/validation';
-import userToken from '../../middlewares/token';
-import multifile from '../../helpers/multer';
+import Validators from '../../middlewares/validators';
+import multifile from '../../helpers/multifile';
 
 const router = express.Router();
-
-const {
-  signupValidation,
-  loginValidation,
-  forgotPasswordValidation,
-  resetPasswordValidation,
-} = Validation;
-
 const {
   register,
   login,
@@ -24,20 +15,15 @@ const {
   deactivateUser,
 } = UserController;
 
-const {
-  validateToken,
-
-} = userToken;
-
-router.post('/users/register', signupValidation, register);
-router.post('/users/login/', loginValidation, login);
-router.get('/users/', validateToken, getAllUser);
-router.put('/users/forgot', forgotPasswordValidation, forgetPassword);
-router.post('/users/forgot/:hash', resetPasswordValidation, resetPassword);
-router.post('/users/register', Validation.signupValidation, UserController.register);
-router.post('/users/login', Validation.loginValidation, UserController.login);
+router.post('/users/register', Validators.signup, register);
+router.post('/users/login/', Validators.login, login);
+router.get('/users/', Validators.token, getAllUser);
+router.put('/users/forgot', Validators.forgotPassword, forgetPassword);
+router.post('/users/forgot/:hash', Validators.resetPassword, resetPassword);
+router.post('/users/register', Validators.signup, UserController.register);
+router.post('/users/login', Validators.login, UserController.login);
 router.get('/users/:userId/profiles', viewUserProfile);
-router.put('/users/:userId/profiles', validateToken, multifile, editUserProfile);
-router.delete('/users/:userId/deactivate', validateToken, deactivateUser);
+router.put('/users/:userId/profiles', Validators.token, multifile, editUserProfile);
+router.delete('/users/:userId/deactivate', Validators.token, deactivateUser);
 
 export default router;

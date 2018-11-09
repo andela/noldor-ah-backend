@@ -15,6 +15,4 @@ const resetPasswordTemplate = (baseUrl, token) => {
 };
 
 
-export default {
-  resetPasswordTemplate,
-};
+export default resetPasswordTemplate;

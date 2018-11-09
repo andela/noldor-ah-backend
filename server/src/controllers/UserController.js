@@ -1,12 +1,11 @@
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import userToken from '../helpers/token';
 import Models from '../db/models';
-import template from '../helpers/sendMail/templates';
-import sendMail from '../helpers/sendMail/sendMail';
+import Helpers from '../helpers/index';
 
 const { User } = Models;
+
 dotenv.config();
 
 /**
@@ -59,7 +58,7 @@ class UserController {
             username: data.dataValues.username,
           };
 
-          const token = userToken.issue(payload);
+          const token = Helpers.issueToken(payload);
           return res.header('x-token', token).status(200).json({
             user: {
               success: true,
@@ -118,7 +117,7 @@ class UserController {
           email: user.dataValues.email,
           username: user.dataValues.username,
         };
-        const token = userToken.issue(payload);
+        const token = Helpers.issueToken(payload);
         return res.header('x-token', token).status(200).json({
           success: true,
           message: 'successfully logged in',
@@ -184,7 +183,7 @@ class UserController {
       id,
       email,
     };
-    const token = userToken.issue(payload, '1h');
+    const token = Helpers.issueToken(payload, '1h');
     User.update(
       { forgotPasswordHash: token },
       { where: { id } }
@@ -193,8 +192,8 @@ class UserController {
         if (data) {
           const sender = 'no-reply@authorshaven.com';
           const subject = 'Reset your password';
-          const resetPasswordTemplate = template.resetPasswordTemplate(req.headers.host, token);
-          sendMail(providedEmail, sender, subject, resetPasswordTemplate);
+          const resetPasswordTemplate = Helpers.resetPasswordTemplate(req.headers.host, token);
+          Helpers.sendMail(providedEmail, sender, subject, resetPasswordTemplate);
           return res.status(200).json({
             success: true,
             message: 'Check your email for further instructions',
