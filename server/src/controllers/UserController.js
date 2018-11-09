@@ -172,7 +172,10 @@ class UserController {
    */
   static async forgetPassword(req, res) {
     const providedEmail = req.body.email;
-    const foundEmail = await User.findOne({ where: { email: providedEmail }, attributes: ['id', 'email', 'forgotPasswordHash'] });
+    const foundEmail = await User.findOne({
+      where: { email: providedEmail },
+      attributes: ['id', 'email', 'forgotPasswordHash']
+    });
     if (!foundEmail) {
       return res.status(404).json({
         success: false,
