@@ -2,6 +2,8 @@
 logs
 *.log
 .DS_Store
+bin
+bin/Production
 
 npm-debug.log*
 
@@ -35,7 +37,7 @@ node_modules
 .node_repl_history
 
 # Production Folder
-/dist/
+./server/dist
 
 # coveralls file for repo_token
 .coveralls.yml

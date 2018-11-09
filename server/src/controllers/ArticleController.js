@@ -6,7 +6,7 @@ import TagWorker from '../workers/TagWorker';
 import RatingsHelper from '../helpers/articleRatings';
 
 const {
-  Sequelize, Article, Ratings, User
+  Sequelize, Article,
 } = Models;
 const { Op } = Sequelize;
 const {
