@@ -1,10 +1,18 @@
 import Slug from 'slug';
-import Sequelize from 'sequelize';
 import Models from '../db/models';
+import helpers from '../helpers/helpers';
+import ArticleHelper from '../helpers/article';
 
+const {
+  Sequelize, Article
+} = Models;
 const { Op } = Sequelize;
-
-const { Article, User } = Models;
+const { addTags } = helpers;
+const {
+  checkArticle, getAllArticles,
+  slugDecoder, findArticle, publish,
+  getUserArticles, deleteArticle, updateArticle
+} = ArticleHelper;
 
 /**
  * @class { ArticleController }
@@ -17,33 +25,26 @@ class ArticleController {
      * @param { object } res
      * @returns { object } Json
      */
-  static getAll(req, res) {
-    Article.findAll({
-      where: {
-        published: true
-      },
-      attributes: ['slug', 'title', 'description', 'content', 'published', 'createdAt', 'updatedAt'],
-      include: [{
-        model: User, attributes: ['username', 'bio', 'avatarUrl']
-      }]
-    })
-      .then((result) => {
-        if (result.length === 0) {
-          return res.status(404).json({
-            success: false,
-            error: {
-              message: 'article not found',
-            }
-          });
-        }
-        res.status(200).json({ articles: result });
-      })
-      .catch(error => res.status(500).json({
+  static async allArticles(req, res) {
+    try {
+      const allArticles = await getAllArticles();
+      if (allArticles.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            message: 'article not found',
+          }
+        });
+      }
+      res.status(200).json({ articles: allArticles });
+    } catch (error) {
+      res.status(500).json({
         success: false,
         error: {
           message: error.message,
         }
-      }));
+      });
+    }
   }
 
   /**
@@ -53,35 +54,31 @@ class ArticleController {
    * @param {object} res
    * @returns {object} Json
    */
-  static getUserArticles(req, res) { // need to check if user exist
+  static async userArticles(req, res) {
     const userId = req.user.payload.id;
 
-    Article.findAll({
-      where: {
-        userId
-      },
-      attributes: ['slug', 'title', 'description', 'published', 'content', 'createdAt', 'updatedAt']
-    })
-      .then((result) => {
-        if (result.length < 1) {
-          return res.status(404).json({
-            success: false,
-            error: {
-              message: 'article not found',
-            }
-          });
-        }
-        res.status(200).json({
-          success: true,
-          article: result
+    try {
+      const getArticle = await getUserArticles(userId, true);
+      if (getArticle.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            message: 'article not found',
+          }
         });
-      })
-      .catch(error => res.status(500).json({
+      }
+      return res.status(200).json({
+        success: true,
+        article: getArticle
+      });
+    } catch (error) {
+      res.status(500).json({
         success: false,
         error: {
           message: error.message,
         }
-      }));
+      });
+    }
   }
 
   /**
@@ -91,35 +88,31 @@ class ArticleController {
    * @param {object} res
    * @returns {object} Json
    */
-  static userDrafts(req, res) { // need to check if user exist
+  static async userDrafts(req, res) {
     const userId = req.user.payload.id;
-    Article.findAll({
-      where: {
-        userId,
-        published: false
-      },
-      attributes: ['slug', 'title', 'description', 'published', 'content', 'createdAt', 'updatedAt'],
-    })
-      .then((result) => {
-        if (result.length < 1) {
-          return res.status(404).json({
-            success: false,
-            error: {
-              msg: 'no draft found',
-            }
-          });
-        }
-        res.status(200).json({
-          success: true,
-          article: result
+
+    try {
+      const getArticle = await getUserArticles(userId, false);
+      if (getArticle.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            message: 'no draft found',
+          }
         });
-      })
-      .catch(error => res.status(500).json({
+      }
+      return res.status(200).json({
+        success: true,
+        article: getArticle
+      });
+    } catch (error) {
+      res.status(500).json({
         success: false,
         error: {
           message: error.message,
         }
-      }));
+      });
+    }
   }
 
   /**
@@ -130,40 +123,32 @@ class ArticleController {
    * @returns {object} Json
    * @name getAnArticle
    */
-  static getAnArticle(req, res) {
-    const articleId = ArticleController.slugDecoder(req, res);
-    Article.findAll({
-      where: {
-        slug: {
-          [Op.like]: `%${articleId}%`
-        }
-      },
-      attributes: ['slug', 'title', 'description', 'published', 'content', 'createdAt', 'updatedAt'],
-      include: [{
-        model: User, attributes: ['username', 'bio', 'avatarUrl']
-      }]
-    })
-      .then((result) => {
-        if (result.length < 1) {
-          return res.status(404).json({
-            success: false,
-            error: {
-              message: 'article not found',
-            }
-          });
-        }
+  static async getAnArticle(req, res) {
+    try {
+      const article = await findArticle(req, res);
+
+      if (article) {
+        const likes = await article.countUsers();
+        const tags = await article.getTags({ attributes: ['name'] });
+        article.dataValues.likes = likes;
+        const tagsArray = tags.map(x => x.name);
+        article.dataValues.tags = tagsArray;
+
         res.status(200).json({
           success: true,
-          article: result
+          article
         });
-      })
-      .catch(error => res.status(500).json({
+      }
+    } catch (error) {
+      res.status(500).json({
         success: false,
         error: {
           message: error.message,
         }
-      }));
+      });
+    }
   }
+
 
   /**
    * @description { create an article }
@@ -171,42 +156,32 @@ class ArticleController {
    * @param { object } res
    * @returns { object } JSON
    */
-  static postArticle(req, res) {
-    const userId = req.user.payload.id;
-    const {
-      title, description, content, featuredImg
-    } = req.body;
-    const slug = Slug(title, { lower: true, replacement: '-' });
-    const published = 0;
-    Article.create({
-      userId,
-      title,
-      description,
-      content,
-      slug,
-      featuredImg,
-      published
-    })
-      .then((result) => {
-        res.status(201).json({
-          success: true,
-          message: 'article was added successfully',
-          article: {
-            slug: result.slug,
-            title: result.title,
-            description: result.description,
-            content: result.content,
-            createdAt: result.createdAt,
-            updatedAt: result.updatedAt,
-            published: result.published
-          }
-        });
-      }).catch(error => res.status(500).json({
+  static async postArticle(req, res) {
+    req.body.userId = req.user.payload.id;
+    req.body.slug = Slug(req.body.title, { lower: true, replacement: '-' });
+    req.body.published = false;
+    const { tags } = req.body;
+
+    try {
+      const article = await Article.create(req.body, {
+        fields: Object.keys(req.body)
+      });
+
+      if (tags) addTags(tags, article);
+
+      return res.status(201).json({
+        success: true,
+        message: 'article was added successfully',
+        article,
+      });
+    } catch (error) {
+      return res.status(500).json({
         success: false,
         error: {
           message: error.message,
         }
-      }));
+      });
+    }
   }
 
   /**
@@ -215,62 +190,21 @@ class ArticleController {
    * @param { object } res
    * @returns { object } JSON
    */
-  static publishArticle(req, res) {
+  static async publishArticle(req, res) {
     const userId = req.user.payload.id;
-    const articleId = ArticleController.slugDecoder(req, res);
-    Article.findAll({
-      where: {
-        slug: {
-          [Op.like]: `%${articleId}`
-        }
-      }
-    })
-      .then((found) => {
-        if (found.length === 0) {
-          return res.status(404).json({
-            success: false,
-            error: {
-              message: 'article not found',
-            }
-          });
-        }
-
-        if (found[0].dataValues.userId !== userId) {
-          return res.status(401).json({
-            success: false,
-            message: 'Unauthorized'
-          });
-        }
-        Article.update(
-          {
-            published: true
-          },
-          {
-            where: {
-              slug: {
-                [Op.like]: `%${articleId}`
-              }
-            }
-          }
-        )
-          .then(() => {
-            res.status(201).json({
-              success: true,
-              message: 'article published successfully'
-            });
-          })
-          .catch(error => res.status(500).json({
-            success: false,
-            error: {
-              message: error.message,
-            }
-          }));
-      }).catch(error => res.status(500).json({
+    const foundArticle = await checkArticle(req, res);
+    if (foundArticle.dataValues.userId !== userId) {
+      return res.status(401).json({
         success: false,
-        error: {
-          message: error.message,
-        }
-      }));
+        message: 'unauthorized'
+      });
+    }
+    const { id } = foundArticle.dataValues;
+    await publish(id, res);
+    return res.status(201).json({
+      success: true,
+      message: 'article published successfully'
+    });
   }
 
   /**
@@ -280,73 +214,20 @@ class ArticleController {
    * @param { object } res - response body
    * @returns { object } JSON
    */
-  static updateArticle(req, res) {
+  static async updateArticle(req, res) {
     const userId = req.user.payload.id;
-
-    const articleId = ArticleController.slugDecoder(req, res);
-
-    Article.findAll({
-      where: {
-        slug: {
-          [Op.like]: `%${articleId}`
-        }
-      }
-    })
-      .then((found) => {
-        if (found.length === 0) {
-          return res.status(404).json({
-            success: false,
-            message: 'article not found'
-          });
-        }
-        if (found[0].dataValues.userId !== userId) {
-          return res.status(401).json({
-            success: false,
-            message: 'unauthorized'
-          });
-        }
-        const input = {};
-        // const { title, content, description } = found;
-
-        if (req.body.title !== undefined) {
-          input.title = req.body.title;
-        }
-        if (req.body.content !== undefined) {
-          input.content = req.body.content;
-        }
-        if (req.body.description !== undefined) {
-          input.description = req.body.description;
-        }
-        Article.update(
-          input,
-          {
-
-            where: {
-              slug: {
-                [Op.like]: `%${articleId}`
-              }
-            }
-
-          }
-        )
-          .then(() => {
-            res.status(201).json({
-              success: 'true',
-              message: 'article has been updated successfully'
-            });
-          })
-          .catch(error => res.status(500).json({
-            success: false,
-            error: {
-              message: error.message,
-            }
-          }));
-      }).catch(error => res.status(500).json({
+    const foundArticle = await checkArticle(req, res);
+    if (foundArticle.dataValues.userId !== userId) {
+      return res.status(401).json({
         success: false,
-        error: {
-          message: error.message,
-        }
-      }));
+        message: 'unauthorized'
+      });
+    }
+    await updateArticle(req, res);
+    return res.status(201).json({
+      success: 'true',
+      message: 'article has been updated successfully'
+    });
   }
 
   /**
@@ -355,77 +236,71 @@ class ArticleController {
    * @param { object } res
    * @returns { object } JSON
    */
-  static deleteArticle(req, res) {
+  static async deleteArticle(req, res) {
     const userId = req.user.payload.id;
-    const articleId = ArticleController.slugDecoder(req, res);
-
-    Article.findAll({
-      where: {
-        slug: {
-          [Op.like]: `%${articleId}`
-        }
-      }
-    })
-      .then((found) => {
-        if (found.length === 0) {
-          return res.status(404).json({
-            success: false,
-            message: 'Article not found'
-          });
-        }
-        if (found[0].dataValues.userId !== userId) {
-          return res.status(401).json({
-            success: false,
-            message: 'Unauthorized'
-          });
-        }
-        Article.destroy({
-          where: {
-            slug: {
-              [Op.like]: `%${articleId}`
-            }
-          }
-        })
-          .then(() => {
-            res.status(204).json({
-              success: true,
-              message: 'article deleted successfully'
-            });
-          }).catch(error => res.status(500).json({
-            success: false,
-            error: {
-              message: error.message,
-            }
-          }));
-      }).catch(error => res.status(500).json({
+    const foundArticle = await checkArticle(req, res);
+    if (foundArticle.dataValues.userId !== userId) {
+      return res.status(401).json({
         success: false,
-        error: {
-          message: error.message,
-        }
-      }));
+        message: 'unauthorized'
+      });
+    }
+    const { id } = foundArticle.dataValues;
+    await deleteArticle(id, res);
+    return res.status(204).json({
+    });
   }
 
-
   /**
-   *
-   * @description { decodes the slug }
+   * @description { updates article tags }
    * @param { object } req
    * @param { object } res
-   * @returns { string } articleId
+   * @returns { object } JSON
    */
-  static slugDecoder(req) {
-    const { slug } = req.params;
-    const articleId = slug.split('-').pop();
+  static async updateTags(req, res) {
+    const articleId = slugDecoder(req);
+    const userId = req.user.payload.id;
+    const newTags = req.body.tags;
 
-    // https://stackoverflow.com/questions/388996/regex-for-javascript-to-allow-only-alphanumeric/389022#389022
-    const pattern = new RegExp('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$');
-    const id = pattern.test(articleId);
-
-    if (articleId.length !== 12 || id !== true) {
-      return null;
+    if (!newTags) {
+      return res.status(400).json({
+        success: false,
+        message: 'tags field is required',
+      });
     }
 
-    return articleId;
+    const article = await Article.findOne({
+      where: {
+        slug: { [Op.like]: `%${articleId}` }
+      }
+    });
+
+    if (!article) {
+      return res.status(404).json({
+        success: false,
+        message: 'article not found',
+      });
+    }
+
+    if (article.dataValues.userId !== userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'unauthorized',
+      });
+    }
+
+    let results = await article.getTags({ attributes: ['id'] });
+    results = JSON.parse(JSON.stringify(results));
+
+    const oldTags = results.map(tag => tag.id);
+
+    await article.removeTags(oldTags);
+    addTags(newTags, article);
+
+    return res.status(200).json({
+      success: true,
+      message: 'tags updated successfully',
+    });
   }
 }
 

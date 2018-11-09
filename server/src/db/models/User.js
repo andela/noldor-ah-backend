@@ -47,6 +47,12 @@ const Users = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    forgotPasswordHash: {
+      required: false,
+      allowNull: true,
+      unique: true,
+      type: DataTypes.STRING
+    },
     avatarUrl: {
       required: false,
       allowNull: true,
@@ -54,8 +60,12 @@ const Users = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
   }, {});
-  User.associate = () => {
-
+  User.associate = (models) => {
+    User.belongsToMany(models.Article, {
+      through: 'userReactions',
+      as: 'articles',
+      foreignKey: 'userId'
+    });
   };
   return User;
 };

@@ -9,6 +9,7 @@ export default {
     userId: {
       required: true,
       type: Sequelize.UUID,
+      onDelete: 'CASCADE',
       references: {
         model: 'Users',
         key: 'id',

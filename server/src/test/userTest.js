@@ -1,9 +1,15 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import jwt from 'jsonwebtoken';
+import userToken from '../middlewares/token';
 import app from '../../../index';
 
 const { expect } = chai;
 chai.use(chaiHttp);
+
+const fakeToken = 'eyJhbGciO6IkpXVCJ9.eyJwYXiMDMODU4YS00NGEyLThhN2MtNmZmNiOiJvbHVzZXlpLmFuHAiOjE1NDE1NjI5ODB9.SArLW2nyj9I3S6yu-goP8T0iv2MqsD0ffff';
+
+const userOneDetails = {};
 
 describe('Sample API for test', () => {
   it('should return a welcome message', (done) => {
@@ -164,6 +170,7 @@ describe('Signup validation test', () => {
         expect(res.status).to.equal(200);
         expect(res.body.user.token).to.be.a('string');
         expect(res.body.user.message).to.equal('registration successful');
+        userOneDetails.token = res.body.user.token;
         done();
       });
   });
@@ -182,7 +189,7 @@ describe('Login validation test', () => {
         if (err) done(err);
         expect(res.status).to.equal(404);
         expect(res.body.success).to.equal(false);
-        expect(res.body.message).to.equal('email or password incorrect');
+        expect(res.body.message).to.equal('email does not exist');
         done();
       });
   });
@@ -203,6 +210,23 @@ describe('Login validation test', () => {
       });
   });
 
+  it('Should return 400 for unsuccessful login', (done) => {
+    const values = {
+      email: 'jane.john@mail.com',
+      password: 'password243',
+    };
+    chai.request(app)
+      .post('/api/v1/users/login')
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(400);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('email or password incorrect');
+        done();
+      });
+  });
+
   it('Should return 200 for successful login', (done) => {
     const values = {
       email: 'jane.john@mail.com',
@@ -218,6 +242,287 @@ describe('Login validation test', () => {
         expect(res.body.token).to.be.a('string');
         expect(res.header['x-token']).to.be.a('string');
         expect(res.body.message).to.equal('successfully logged in');
+        done();
+      });
+  });
+
+  it('Should return 401 for getting the list of all users', (done) => {
+    chai.request(app)
+      .get('/api/v1/users/')
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(401);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('Access denied. No token provided.');
+        done();
+      });
+  });
+
+  it('Should return 400 for getting the list of all users', (done) => {
+    chai.request(app)
+      .get('/api/v1/users/')
+      .set('x-token', fakeToken)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(400);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('Invalid token provided.');
+        done();
+      });
+  });
+
+  it('Should return 200 for getting the list of all users', (done) => {
+    chai.request(app)
+      .get('/api/v1/users/')
+      .set('x-token', userOneDetails.token)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.success).to.equal(true);
+        expect(res.body.message).to.equal('successfully retrieved users list');
+        done();
+      });
+  });
+});
+
+describe('Forgot Password Funtionality', () => {
+  it('Should return 400 for not providing user email', (done) => {
+    chai.request(app)
+      .put('/api/v1/users/forgot/')
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(400);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('email is required');
+        done();
+      });
+  });
+
+  it('Should return 400 for not providing valid user email', (done) => {
+    const values = {
+      email: '     ',
+    };
+    chai.request(app)
+      .put('/api/v1/users/forgot/')
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(400);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('invalid email');
+        done();
+      });
+  });
+
+  it('Should return 400 for not providing valid user email', (done) => {
+    const values = {
+      email: 'test@test.com.',
+    };
+    chai.request(app)
+      .put('/api/v1/users/forgot/')
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(400);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('invalid email');
+        done();
+      });
+  });
+
+  it('Should return 404 for email that does not exist in the database', (done) => {
+    const values = {
+      email: 'test@authorshaven.co.uk',
+    };
+    chai.request(app)
+      .put('/api/v1/users/forgot/')
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(404);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('Email does not exist');
+        done();
+      });
+  });
+
+  it('Should return 200 for successful email sent', (done) => {
+    const values = {
+      email: 'jane.john@mail.com',
+    };
+    chai.request(app)
+      .put('/api/v1/users/forgot/')
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.success).to.equal(true);
+        expect(res.body.message).to.equal('Check your email for further instructions');
+        done();
+      });
+  });
+
+  it('Should return 200 on successful update', (done) => {
+    const decodedUser = jwt.verify(userOneDetails.token, process.env.PRIVATE_KEY);
+    const decodedUserOneDetails = decodedUser;
+    const payload = {
+      id: decodedUserOneDetails.payload.id,
+      email: decodedUserOneDetails.payload.email,
+    };
+    const hash = userToken.issue(payload, '1m');
+    const values = {
+      password: 'password123',
+      confirmPassword: 'password123',
+    };
+    chai.request(app)
+      .post(`/api/v1/users/forgot/${hash}`)
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.success).to.equal(true);
+        expect(res.body.message).to.equal('password has been updated');
+        done();
+      });
+  });
+
+  it('Should return 404 for user does not exist', (done) => {
+    const decodedUser = jwt.verify(userOneDetails.token, process.env.PRIVATE_KEY);
+    const decodedUserOneDetails = decodedUser;
+    const payload = {
+      id: 'b33a1b70-a6de-4032-8f42-59b48846ef40',
+      email: decodedUserOneDetails.payload.email,
+    };
+    const hash = userToken.issue(payload, '1m');
+    const values = {
+      password: 'password123',
+      confirmPassword: 'password123',
+    };
+    chai.request(app)
+      .post(`/api/v1/users/forgot/${hash}`)
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(404);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('user does not exist');
+        done();
+      });
+  });
+
+  it('Should return 404 for user does not exist', (done) => {
+    const decodedUser = jwt.verify(userOneDetails.token, process.env.PRIVATE_KEY);
+    const decodedUserOneDetails = decodedUser;
+    const payload = {
+      id: decodedUserOneDetails.payload.id,
+      email: 'jane.john@mail.co.uk',
+    };
+    const hash = userToken.issue(payload, '1m');
+    const values = {
+      password: 'password123',
+      confirmPassword: 'password123',
+    };
+    chai.request(app)
+      .post(`/api/v1/users/forgot/${hash}`)
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(401);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('Email does not match');
+        done();
+      });
+  });
+
+  it('Should return 400 for no password provided', (done) => {
+    const decodedUser = jwt.verify(userOneDetails.token, process.env.PRIVATE_KEY);
+    const decodedUserOneDetails = decodedUser;
+    const payload = {
+      id: decodedUserOneDetails.payload.id,
+      email: decodedUserOneDetails.payload.email,
+    };
+    const hash = userToken.issue(payload, '1m');
+    const values = {
+    };
+    chai.request(app)
+      .post(`/api/v1/users/forgot/${hash}`)
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(400);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('password field is required');
+        done();
+      });
+  });
+
+  it('Should return 400 for not confirming password field', (done) => {
+    const decodedUser = jwt.verify(userOneDetails.token, process.env.PRIVATE_KEY);
+    const decodedUserOneDetails = decodedUser;
+    const payload = {
+      id: decodedUserOneDetails.payload.id,
+      email: decodedUserOneDetails.payload.email,
+    };
+    const hash = userToken.issue(payload, '1m');
+    const values = {
+      password: 'password123',
+    };
+    chai.request(app)
+      .post(`/api/v1/users/forgot/${hash}`)
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(400);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('confirmPassword field is required');
+        done();
+      });
+  });
+
+  it('Should return 400 for invalid password combination', (done) => {
+    const decodedUser = jwt.verify(userOneDetails.token, process.env.PRIVATE_KEY);
+    const decodedUserOneDetails = decodedUser;
+    const payload = {
+      id: decodedUserOneDetails.payload.id,
+      email: decodedUserOneDetails.payload.email,
+    };
+    const hash = userToken.issue(payload, '1m');
+    const values = {
+      password: 'password',
+      confirmPassword: 'password',
+    };
+    chai.request(app)
+      .post(`/api/v1/users/forgot/${hash}`)
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(400);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('Password must be atleast 8 characters long and must be a combination of characters and numbers');
+        done();
+      });
+  });
+
+  it('Should return 400 for non matching password', (done) => {
+    const decodedUser = jwt.verify(userOneDetails.token, process.env.PRIVATE_KEY);
+    const decodedUserOneDetails = decodedUser;
+    const payload = {
+      id: decodedUserOneDetails.payload.id,
+      email: decodedUserOneDetails.payload.email,
+    };
+    const hash = userToken.issue(payload, '1m');
+    const values = {
+      password: 'password123',
+      confirmPassword: 'password234',
+    };
+    chai.request(app)
+      .post(`/api/v1/users/forgot/${hash}`)
+      .send(values)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(400);
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('passwords does not match');
         done();
       });
   });
