@@ -110,7 +110,7 @@ describe('Article Rating test scripts', () => {
       .send(value)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -154,7 +154,7 @@ describe('Article Rating test scripts', () => {
   it('should return a 403 for rating value outside range bound of [1 - 5] above 5', (done) => {
     chai.request(app)
       .post(`/api/v1/articles/ratings/${data.id}`)
-      .set('X-Token', data.token)
+      .set('X-Token', data.token2)
       .send(value8)
       .end((error, response) => {
         if (error) done(error);
@@ -163,7 +163,7 @@ describe('Article Rating test scripts', () => {
         done();
       });
   });
-  it('should return a 403 if there is no rate value', (done) => {
+  it('should return a 403 for missing rate value', (done) => {
     chai.request(app)
       .post(`/api/v1/articles/ratings/${data.id}`)
       .set('X-Token', data.token2)
@@ -172,6 +172,18 @@ describe('Article Rating test scripts', () => {
         if (error) done(error);
         expect(response.status).to.equal(403);
         expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+  it('should return a successful response message on successful rating', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/ratings/${data.id}`)
+      .set('X-Token', data.token2)
+      .send(value)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(201);
+        expect(response.body.message).to.equal('You successfully rated this article');
         done();
       });
   });

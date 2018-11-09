@@ -3,10 +3,9 @@ import Models from '../db/models';
 import ArticleWorker from '../workers/ArticleWorker';
 import Helpers from '../helpers/index';
 import TagWorker from '../workers/TagWorker';
-import RatingsHelper from '../helpers/articleRatings';
 
 const {
-  Sequelize, Article, Ratings, User
+  Sequelize, Article,
 } = Models;
 const { Op } = Sequelize;
 const {
@@ -22,11 +21,11 @@ const { addTags } = TagWorker;
  */
 class ArticleController {
   /**
-     *
-     * @param { object } req
-     * @param { object } res
-     * @returns { object } Json
-     */
+   *
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } Json
+   */
   static async allArticles(req, res) {
     try {
       const allArticles = await getAllArticles();
@@ -310,21 +309,21 @@ class ArticleController {
   // Article ratings ----------------------
   /**
    *
-   * @description { Get all users articles }
+   * @description { rate published articles }
    * @param {object} req
    * @param {object} res
    * @returns {object} Json
    */
   static async rateArticles(req, res) {
-    await RatingsHelper.queryArticle(req, res).then((data) => {
+    await Helpers.articleRatings.queryArticle(req, res).then((data) => {
       if (data.count > 0) {
-        RatingsHelper.queryUserRatings(req).then((user) => {
+        Helpers.articleRatings.queryUserRatings(req).then((user) => {
           if (user.count > 0) {
             return res.status(403).json({ success: false, message: 'You already rated this article' });
           }
-          RatingsHelper.rateArticle(req, res);
+          Helpers.articleRatings.rateArticle(req, res);
           setTimeout(() => {
-            RatingsHelper.getArticleAverageRate(req, res);
+            Helpers.articleRatings.getArticleAverageRate(req, res);
           }, 3000);
         });
       } else {
