@@ -4,6 +4,7 @@ import searchTest from './integration tests/searchTest';
 import tagsTest from './integration tests/tagsTest';
 import paginationTest from './integration tests/paginationTest';
 import reactionTest from './integration tests/reactionTest';
+import ratingTest from './integration tests/ratingTest';
 
 export default {
   userTest,
@@ -11,5 +12,6 @@ export default {
   searchTest,
   tagsTest,
   paginationTest,
-  reactionTest
+  reactionTest,
+  ratingTest
 };

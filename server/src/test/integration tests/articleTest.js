@@ -577,8 +577,6 @@ describe('DELETE endpoint for an article', () => {
         done();
       });
   });
-
-
   it('should return 404 if article does not exist ', (done) => {
     chai.request(app)
       .delete(`/api/v1/articles/${data.slug}`)

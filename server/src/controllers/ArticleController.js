@@ -3,9 +3,10 @@ import Models from '../db/models';
 import ArticleWorker from '../workers/ArticleWorker';
 import Helpers from '../helpers/index';
 import TagWorker from '../workers/TagWorker';
+import RatingsHelper from '../helpers/articleRatings';
 
 const {
-  Sequelize, Article
+  Sequelize, Article, Ratings, User
 } = Models;
 const { Op } = Sequelize;
 const {
@@ -13,6 +14,7 @@ const {
   getUserArticles, deleteArticle, updateArticle
 } = ArticleWorker;
 const { addTags } = TagWorker;
+
 
 /**
  * @class { ArticleController }
@@ -302,6 +304,42 @@ class ArticleController {
       success: true,
       message: 'tags updated successfully',
     });
+  }
+
+
+  // Article ratings ----------------------
+  /**
+   *
+   * @description { Get all users articles }
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Json
+   */
+  static async rateArticles(req, res) {
+    await RatingsHelper.queryArticle(req, res).then((data) => {
+      if (data.count > 0) {
+        RatingsHelper.queryUserRatings(req).then((user) => {
+          if (user.count > 0) {
+            return res.status(403).json({ success: false, message: 'You already rated this article' });
+          }
+          RatingsHelper.rateArticle(req, res);
+          setTimeout(() => {
+            RatingsHelper.getArticleAverageRate(req, res);
+          }, 3000);
+        });
+      } else {
+        return res.status(404).json({
+          success: false,
+          message: 'Article with the specified ID was not found'
+        });
+      }
+    }).catch(error => res.status(500).json({
+      success: false,
+      error: {
+        message: 'Internal server error',
+        error: error.message
+      }
+    }));
   }
 }
 

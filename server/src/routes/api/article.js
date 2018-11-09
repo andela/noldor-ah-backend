@@ -7,7 +7,7 @@ import Validators from '../../middlewares/validators';
 const {
   allArticles, userArticles, userDrafts,
   getAnArticle, postArticle, publishArticle,
-  updateArticle, deleteArticle, updateTags
+  updateArticle, deleteArticle, updateTags, rateArticles
 } = ArticleController;
 const router = express.Router();
 
@@ -22,5 +22,8 @@ router.delete('/articles/:slug', Validators.token, deleteArticle);
 router.get('/articles/page/:source', Paginator.page);
 router.put('/articles/:slug/tags', Validators.token, Validators.tags, updateTags);
 router.put('/articles/:slug/likes', Validators.token, ReactionController.likeArticle);
+
+// Articles rating endpoints ---------------------
+router.post('/articles/ratings/:articleId', Validators.token, rateArticles);
 
 export default router;
