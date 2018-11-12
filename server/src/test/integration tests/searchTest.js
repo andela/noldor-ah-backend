@@ -34,6 +34,7 @@ describe('Search Initializations', () => {
         description: 'Sample description.',
         content: 'There is really no foo without bar.',
         featuredImg: 'image.com',
+        tags: 'foo,bar,philosophy',
       })
       .end((error, response) => {
         if (error) done(error);
@@ -101,34 +102,100 @@ describe('Search Initializations', () => {
   });
 
   describe('Search Articles With Filters', () => {
-    it('should return an array of results when successful', (done) => {
-      chai.request(app)
-        .post('/api/v1/search?author=userone')
-        .send({
-          keywords: 'bar',
-        })
-        .end((error, response) => {
-          if (error) done(error);
-          expect(response.status).to.equal(200);
-          expect(response.body).to.be.an('object');
-          expect(response.body.message).to.equal('articles matching that search term found');
-          done();
-        });
+    describe('Filtering by Author Only', () => {
+      it('should return an array of results when filtered successfully', (done) => {
+        chai.request(app)
+          .post('/api/v1/search?author=userone')
+          .send({
+            keywords: 'bar',
+          })
+          .end((error, response) => {
+            if (error) done(error);
+            expect(response.status).to.equal(200);
+            expect(response.body).to.be.an('object');
+            expect(response.body.message).to.equal('articles matching that search term found');
+            done();
+          });
+      });
+
+      it('should return an empty object when keywords aren\'t found', (done) => {
+        chai.request(app)
+          .post('/api/v1/search?author=erroruser')
+          .send({
+            keywords: 'bar',
+          })
+          .end((error, response) => {
+            if (error) done(error);
+            expect(response.status).to.equal(404);
+            expect(response.body).to.be.an('object');
+            expect(response.body.error.msg).to.be.equal('no article with that search term found');
+            done();
+          });
+      });
     });
 
-    it('should return an empty object when keywords aren\'t found', (done) => {
-      chai.request(app)
-        .post('/api/v1/search?author=erroruser')
-        .send({
-          keywords: 'bar',
-        })
-        .end((error, response) => {
-          if (error) done(error);
-          expect(response.status).to.equal(404);
-          expect(response.body).to.be.an('object');
-          expect(response.body.error.msg).to.be.equal('no article with that search term found');
-          done();
-        });
+    describe('Filtering by Tags Only', () => {
+      it('should return an array of results when filtered successfully', (done) => {
+        chai.request(app)
+          .post('/api/v1/search?tags=philosophy')
+          .send({
+            keywords: 'bar',
+          })
+          .end((error, response) => {
+            if (error) done(error);
+            expect(response.status).to.equal(200);
+            expect(response.body).to.be.an('object');
+            expect(response.body.message).to.equal('articles matching that search term found');
+            done();
+          });
+      });
+
+      it('should return an empty object when keywords aren\'t found', (done) => {
+        chai.request(app)
+          .post('/api/v1/search?tags=millenials')
+          .send({
+            keywords: 'bar',
+          })
+          .end((error, response) => {
+            if (error) done(error);
+            expect(response.status).to.equal(404);
+            expect(response.body).to.be.an('object');
+            expect(response.body.error.msg).to.be.equal('no article with that search term found');
+            done();
+          });
+      });
+    });
+
+    describe('Filtering by Both Tags and Authors', () => {
+      it('should return an array of results when filtered successfully', (done) => {
+        chai.request(app)
+          .post('/api/v1/search?author=userone&tags=philosophy')
+          .send({
+            keywords: 'bar',
+          })
+          .end((error, response) => {
+            if (error) done(error);
+            expect(response.status).to.equal(200);
+            expect(response.body).to.be.an('object');
+            expect(response.body.message).to.equal('articles matching that search term found');
+            done();
+          });
+      });
+
+      it('should return an empty object when keywords aren\'t found', (done) => {
+        chai.request(app)
+          .post('/api/v1/search?author=userone&tags=millenials')
+          .send({
+            keywords: 'bar',
+          })
+          .end((error, response) => {
+            if (error) done(error);
+            expect(response.status).to.equal(404);
+            expect(response.body).to.be.an('object');
+            expect(response.body.error.msg).to.be.equal('no article with that search term found');
+            done();
+          });
+      });
     });
   });
 });
