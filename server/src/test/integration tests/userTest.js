@@ -7,7 +7,7 @@ import app from '../../../../index';
 const { expect } = chai;
 chai.use(chaiHttp);
 
-const fakeToken = 'eyJhbGciO6IkpXVCJ9.eyJwYXiMDMODU4YS00NGEyLThhN2MtNmZmNiOiJvbHVzZXlpLmFuHAiOjE1NDE1NjI5ODB9.SArLW2nyj9I3S6yu-goP8T0iv2MqsD0ffff';
+const fakeToken = 'eyJhbGciO6IkpXVCJ9.eS00NGEyLThhN2NjI5ODB9.3S6yu-goP8T0iv2MqsD0ffff';
 
 const userOneDetails = {};
 let userParams = '';
@@ -25,7 +25,7 @@ describe('Sample API for test', () => {
 });
 
 describe('Signup validation test', () => {
-  it('should Return 400 (Bad request) for incomplete user details, missing email field in this case', (done) => {
+  it('should Return 400 for incomplete user details, missing email field in this case', (done) => {
     const values = {
       email: '',
       username: 'jane20',
@@ -41,7 +41,7 @@ describe('Signup validation test', () => {
         done();
       });
   });
-  it('should Return 400 (Bad request) for POST /users/register missing user details, missing username field in this case', (done) => {
+  it('should Return 400 for missing user details, missing username field in this case', (done) => {
     const values = {
       email: 'jane00@mail.com',
       password: 'password123',
@@ -73,7 +73,7 @@ describe('Signup validation test', () => {
         done();
       });
   });
-  it('should return 409 (Conflict) POST /users/register for signup using existing username', (done) => {
+  it('should return 409 for signup using existing username', (done) => {
     const values = {
       email: 'john.doe00@gmail.com',
       username: 'meeky',
@@ -89,7 +89,7 @@ describe('Signup validation test', () => {
         done();
       });
   });
-  it('should return 409 (Conflict) for POST /users/register for signup using existing email', (done) => {
+  it('should return 409 for signup using existing email', (done) => {
     const values = {
       email: 'jane.doe@mail.com',
       username: 'meeky00',

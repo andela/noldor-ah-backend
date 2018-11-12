@@ -171,7 +171,10 @@ class UserController {
    */
   static async forgetPassword(req, res) {
     const providedEmail = req.body.email;
-    const foundEmail = await User.findOne({ where: { email: providedEmail }, attributes: ['id', 'email', 'forgotPasswordHash'] });
+    const foundEmail = await User.findOne({
+      where: { email: providedEmail },
+      attributes: ['id', 'email', 'forgotPasswordHash']
+    });
     if (!foundEmail) {
       return res.status(404).json({
         success: false,
@@ -185,14 +188,13 @@ class UserController {
     };
     const token = Helpers.issueToken(payload, '1h');
     User.update(
-      { forgotPasswordHash: token },
-      { where: { id } }
+      { forgotPasswordHash: token }, { where: { id } }
     )
       .then((data) => {
         if (data) {
           const sender = 'no-reply@authorshaven.com';
           const subject = 'Reset your password';
-          const resetPasswordTemplate = Helpers.resetPasswordTemplate(req.headers.host, token);
+          const resetPasswordTemplate = Helpers.templates.resetPassword(req.headers.host, token);
           Helpers.sendMail(providedEmail, sender, subject, resetPasswordTemplate);
           return res.status(200).json({
             success: true,
@@ -266,6 +268,10 @@ class UserController {
               message: 'password cannot be updated. try again',
             });
           }
+          const notifyPasswordChange = Helpers.templates.notifyPaswordChange(req.headers.host);
+          const sender = 'no-reply@authorshaven.com';
+          const subject = 'Successful Password Reset';
+          Helpers.sendMail(email, sender, subject, notifyPasswordChange);
           return res.status(200).json({
             success: true,
             message: 'password has been updated'
