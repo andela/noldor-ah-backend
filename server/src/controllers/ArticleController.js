@@ -183,7 +183,7 @@ class ArticleController {
     }
     const { id } = foundArticle.dataValues;
     await publish(id, res);
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
       message: 'article published successfully'
     });
@@ -212,7 +212,7 @@ class ArticleController {
       });
     }
     await updateArticle(req, res);
-    return res.status(201).json({
+    return res.status(200).json({
       success: 'true',
       message: 'article has been updated successfully'
     });
@@ -241,7 +241,9 @@ class ArticleController {
     }
     const { id } = foundArticle.dataValues;
     await deleteArticle(id, res);
-    return res.status(204).json({
+    return res.status(200).json({
+      success: true,
+      message: 'article has been successfully deleted'
     });
   }
 

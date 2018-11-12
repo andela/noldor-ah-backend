@@ -27,7 +27,10 @@ class ReactionController {
         const removeLike = await check.article.removeUsers(req.user.payload.id);
 
         if (removeLike) {
-          res.status(204).json('deleted');
+          res.status(200).json({
+            success: true,
+            message: 'article has been unliked'
+          });
           return null;
         }
       }

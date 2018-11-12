@@ -385,7 +385,7 @@ describe('Update endpoint for articles', () => {
       .send(testArticle)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(201);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -401,7 +401,7 @@ describe('Update endpoint for articles', () => {
       })
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(201);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -417,7 +417,7 @@ describe('Update endpoint for articles', () => {
       })
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(201);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -433,7 +433,7 @@ describe('Update endpoint for articles', () => {
       })
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(201);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -497,7 +497,7 @@ describe('Update endpoint for publishing article', () => {
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(201);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -589,7 +589,7 @@ describe('DELETE endpoint for an article', () => {
       .delete(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token)
       .end((error, response) => {
-        expect(response.status).to.equal(204);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });

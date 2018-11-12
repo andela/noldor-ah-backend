@@ -121,7 +121,9 @@ class FollowingController {
       });
     }
     if (follow === null) {
-      return response.status(204).json({
+      return response.status(200).json({
+        success: true,
+        message: 'you have unfollowed this user'
       });
     }
     return response.status(200).json({

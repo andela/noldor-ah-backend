@@ -120,7 +120,7 @@ describe('like an article endpoint', () => {
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(204);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });

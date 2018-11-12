@@ -201,8 +201,8 @@ describe('follow a user', () => {
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(204);
-
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -213,7 +213,7 @@ describe('follow a user', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(200);
-
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -224,7 +224,7 @@ describe('follow a user', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(200);
-
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -237,7 +237,7 @@ describe('get a user following', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(404);
-
+        expect(response.body).to.be.an('object');
         done();
       });
   });
