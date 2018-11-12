@@ -68,6 +68,16 @@ const Users = (sequelize, DataTypes) => {
     }, {
       onDelete: 'CASCADE'
     });
+    User.belongsToMany(User, {
+      through: 'Followings',
+      as: 'Follower',
+      foreignKey: 'followingId',
+    });
+    User.belongsToMany(User, {
+      through: 'Followings',
+      as: 'Following',
+      foreignKey: 'followerId',
+    });
   };
   return User;
 };
