@@ -25,12 +25,19 @@ class SearchController {
       const q4 = 'ORDER BY "Articles"."createdAt" DESC';
       const query = `${q1}${q2}${q3}${q4}`;
 
-      const results = await sequelize.query(query, {
+      const results = {
+        success: true,
+        message: 'articles matching that search term found',
+      };
+
+      const response = await sequelize.query(query, {
         type: sequelize.QueryTypes.SELECT,
         model: Article,
       });
 
-      if (results.length === 0) {
+      results.articles = response;
+
+      if (response.length === 0) {
         return res.status(404).json({
           success: false,
           error: {
@@ -48,12 +55,19 @@ class SearchController {
     const q5 = 'ORDER BY "Articles"."createdAt" DESC';
     const query = `${q1}${q2}${q3}${q4}${q5}`;
 
-    const results = await sequelize.query(query, {
+    const results = {
+      success: true,
+      message: 'articles matching that search term found',
+    };
+
+    const response = await sequelize.query(query, {
       type: sequelize.QueryTypes.SELECT,
       model: Article,
     });
 
-    if (results.length === 0) {
+    results.articles = response;
+
+    if (response.length === 0) {
       return res.status(404).json({
         success: false,
         error: {
