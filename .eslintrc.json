@@ -22,7 +22,7 @@
         "requireParamDescription": false,
         "requireReturnDescription": true
         }],
-        "max-len": ["error", { "code": 100}],
+        "max-len": ["error", { "code": 100, "ignoreComments": true}],
         "require-jsdoc": ["error", {
             "require": {
                 "FunctionDeclaration": true,

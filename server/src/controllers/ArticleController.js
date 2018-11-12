@@ -320,7 +320,12 @@ class ArticleController {
       if (data.count > 0) {
         RatingsHelper.queryUserRatings(req).then((user) => {
           if (user.count > 0) {
-            return res.status(403).json({ success: false, message: 'You already rated this article' });
+            return res.status(403).json(
+              {
+                success: false,
+                message: 'You already rated this article'
+              }
+            );
           }
           RatingsHelper.rateArticle(req, res);
           setTimeout(() => {

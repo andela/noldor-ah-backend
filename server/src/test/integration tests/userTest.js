@@ -134,8 +134,10 @@ describe('Signup validation test', () => {
       .send(values)
       .end((err, res) => {
         if (err) done(err);
+        const mes1 = 'Password must be at least 8 characters long and';
+        const mes2 = 'must be a combination of characters and numbers';
         expect(res.status).to.equal(400);
-        expect(res.body.error.password).to.equal('Password must be atleast 8 characters long and must be a combination of characters and numbers');
+        expect(res.body.error.password).to.equal(`${mes1} ${mes2}`);
         done();
       });
   });
@@ -536,9 +538,11 @@ describe('Forgot Password Funtionality', () => {
       .send(values)
       .end((err, res) => {
         if (err) done(err);
+        const mes1 = 'Password must be at least 8 characters long and';
+        const mes2 = 'must be a combination of characters and numbers';
         expect(res.status).to.equal(400);
         expect(res.body.success).to.equal(false);
-        expect(res.body.message).to.equal('Password must be atleast 8 characters long and must be a combination of characters and numbers');
+        expect(res.body.message).to.equal(`${mes1} ${mes2}`);
         done();
       });
   });
@@ -616,7 +620,8 @@ describe('User Profile test', () => {
       firstName: 'Jane',
       username: 'Janny',
       bio: 'This is my test',
-      avatar: 'https://res.cloudinary.com/dstvcmycn/image/upload/v1541530550/Author%27s%20Haven/qtvmhyx8k4pfimdtsucs.jpg'
+      avatar: `https://res.cloudinary.com/dstvcmycn/image/upload/v1541530550
+      /Author%27s%20Haven/qtvmhyx8k4pfimdtsucs.jpg`
     };
     chai.request(app)
       .put(`/api/v1/users/${id}/profiles`)
