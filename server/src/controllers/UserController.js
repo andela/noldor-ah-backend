@@ -1,12 +1,11 @@
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import userToken from '../helpers/token';
 import Models from '../db/models';
-import template from '../helpers/sendMail/templates';
-import sendMail from '../helpers/sendMail/sendMail';
+import Helpers from '../helpers/index';
 
 const { User } = Models;
+
 dotenv.config();
 
 /**
@@ -58,14 +57,15 @@ class UserController {
             email: data.dataValues.email,
             username: data.dataValues.username,
           };
-          const token = userToken.issue(payload);
+
+          const token = Helpers.issueToken(payload);
           return res.header('x-token', token).status(200).json({
             user: {
               success: true,
               message: 'registration successful',
               email: data.dataValues.email,
               token,
-              username: data.dataValues.username,
+              username: data.dataValues.username
             }
           });
         });
@@ -117,7 +117,7 @@ class UserController {
           email: user.dataValues.email,
           username: user.dataValues.username,
         };
-        const token = userToken.issue(payload);
+        const token = Helpers.issueToken(payload);
         return res.header('x-token', token).status(200).json({
           success: true,
           message: 'successfully logged in',
@@ -186,7 +186,7 @@ class UserController {
       id,
       email,
     };
-    const token = userToken.issue(payload, '1h');
+    const token = Helpers.issueToken(payload, '1h');
     User.update(
       { forgotPasswordHash: token }, { where: { id } }
     )
@@ -194,8 +194,8 @@ class UserController {
         if (data) {
           const sender = 'no-reply@authorshaven.com';
           const subject = 'Reset your password';
-          const resetPasswordTemplate = template.resetPassword(req.headers.host, token);
-          sendMail(providedEmail, sender, subject, resetPasswordTemplate);
+          const resetPasswordTemplate = Helpers.templates.resetPassword(req.headers.host, token);
+          Helpers.sendMail(providedEmail, sender, subject, resetPasswordTemplate);
           return res.status(200).json({
             success: true,
             message: 'Check your email for further instructions',
@@ -268,10 +268,10 @@ class UserController {
               message: 'password cannot be updated. try again',
             });
           }
-          const notifyPasswordChangeTemplate = template.notifyPaswordChange(req.headers.host);
+          const notifyPasswordChange = Helpers.templates.notifyPaswordChange(req.headers.host);
           const sender = 'no-reply@authorshaven.com';
           const subject = 'Successful Password Reset';
-          sendMail(email, sender, subject, notifyPasswordChangeTemplate);
+          Helpers.sendMail(email, sender, subject, notifyPasswordChange);
           return res.status(200).json({
             success: true,
             message: 'password has been updated'
@@ -296,34 +296,22 @@ class UserController {
   static async viewUserProfile(req, res) {
     try {
       const { userId } = req.params;
+
       const noUser = await User.findByPk(userId);
-      if (!noUser) {
+      if (noUser === null) {
         return res.status(404).json({
           success: false,
           message: 'User does not exist'
         });
       }
+
       const profile = await User.findByPk(userId);
-      const {
-        id,
-        firstName,
-        lastName,
-        username,
-        email,
-        bio,
-        avatarUrl
-      } = profile;
+
       return res.status(200).json({
         success: true,
         message: 'Retrieval successful',
         data: {
-          id,
-          firstName,
-          lastName,
-          username,
-          email,
-          bio,
-          avatarUrl
+          profile,
         }
       });
     } catch (error) {
@@ -347,10 +335,12 @@ class UserController {
       if (req.file) {
         req.body.avatarUrl = req.file.secure_url;
       }
+
       const { userId } = req.params;
       const decodedId = req.user.payload.id;
+
       const noUser = await User.findByPk(userId);
-      if (!noUser) {
+      if (noUser === null) {
         return res.status(404).json({
           success: false,
           message: 'User does not exist'
@@ -361,28 +351,11 @@ class UserController {
         const editProfile = await userProfile.update(req.body, {
           fields: Object.keys(req.body)
         });
-        const {
-          id,
-          firstName,
-          lastName,
-          username,
-          email,
-          bio,
-          avatarUrl,
-          updatedAt
-        } = editProfile;
         return res.status(205).json({
           success: true,
           message: 'Your edits have been saved',
           data: {
-            id,
-            firstName,
-            lastName,
-            username,
-            email,
-            bio,
-            avatarUrl,
-            updatedAt
+            editProfile,
           }
         });
       }
@@ -393,8 +366,8 @@ class UserController {
     } catch (error) {
       res.status(409).json({
         success: false,
-        error: error.message,
         message: error.errors[0].message,
+        error: error.message
       });
     }
   }

@@ -1,7 +1,7 @@
 import chaiHttp from 'chai-http';
 import chai from 'chai';
-import app from '../../../index';
-import userToken from '../helpers/token';
+import app from '../../../../index';
+import Helpers from '../../helpers/index';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -12,7 +12,7 @@ const payload = {
   username: 'uwahope'
 };
 const wrongToken = 'dhgnahdbcmajnbscjkjadslkcjbandskjncbakdjshxmncbkamhnbckanbdsnxkchamdmcd';
-const fakeToken = userToken.issue(payload);
+const fakeToken = Helpers.issueToken(payload);
 
 const testArticle = {
   title: 'this is the title',
@@ -577,8 +577,6 @@ describe('DELETE endpoint for an article', () => {
         done();
       });
   });
-
-
   it('should return 404 if article does not exist ', (done) => {
     chai.request(app)
       .delete(`/api/v1/articles/${data.slug}`)

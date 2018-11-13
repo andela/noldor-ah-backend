@@ -1,4 +1,4 @@
-import ReactionHelper from '../helpers/reaction';
+import ReactionWorker from '../workers/ReactionWorker';
 
 /**
  * @class { ReactionController}
@@ -13,7 +13,7 @@ class ReactionController {
      * @return { object } JSON
      */
   static async likeArticle(req, res) {
-    const check = await ReactionHelper.findArticle(req, res);
+    const check = await ReactionWorker.findArticle(req, res);
     if (check.status === true) {
       try {
         const removeLike = await check.article.removeUsers(req.user.payload.id);

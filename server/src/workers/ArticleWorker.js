@@ -1,39 +1,17 @@
 import Sequelize from 'sequelize';
 import Models from '../db/models';
-
+import Helpers from '../helpers/index';
 
 const { Op } = Sequelize;
-
-
 const { User, Article } = Models;
 
-
 /**
- * @class { ReactionHelper }
- * @description { Handles for like and unlike helpers }
+ * @class { ArticleWorker }
+ * @description { Handles for like and unlike }
  */
-class ArticleHelper {
+class ArticleWorker {
   /**
-     * @description { decodes the slug }
-     * @param { object } req
-     * @returns { string } articleId
-     */
-  static slugDecoder(req) {
-    const { slug } = req.params;
-    const articleId = slug.split('-').pop();
-
-    // https://stackoverflow.com/questions/388996/regex-for-javascript-to-allow-only-alphanumeric/389022#389022
-    const pattern = new RegExp('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$');
-    const id = pattern.test(articleId);
-
-    if (articleId.length !== 12 || id !== true) {
-      return null;
-    }
-    return articleId;
-  }
-
-  /**
-   * @description { helper to get all articles }
+   * @description { worker to get all articles }
    * @returns { object } JSON
    */
   static async getAllArticles() {
@@ -72,7 +50,7 @@ class ArticleHelper {
    */
   static async updateArticle(req, res) {
     try {
-      const id = await ArticleHelper.slugDecoder(req);
+      const id = await Helpers.slugDecoder(req);
       const input = {};
 
       if (req.body.title !== undefined) {
@@ -111,7 +89,7 @@ class ArticleHelper {
    * @return { object } JSON
    */
   static async checkArticle(req, res) {
-    const id = await ArticleHelper.slugDecoder(req);
+    const id = await Helpers.slugDecoder(req);
     const articleExist = await Article.findOne({
       where: {
         slug: {
@@ -137,7 +115,7 @@ class ArticleHelper {
      *
      */
   static async findArticle(req, res) {
-    const id = await ArticleHelper.slugDecoder(req);
+    const id = await Helpers.slugDecoder(req);
     try {
       const articleExist = await Article.findOne({
         where: {
@@ -219,4 +197,4 @@ class ArticleHelper {
   }
 }
 
-export default ArticleHelper;
+export default ArticleWorker;

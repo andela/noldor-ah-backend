@@ -49,6 +49,11 @@ export default {
       allowNull: false,
       type: Sequelize.BOOLEAN
     },
+    ratings: {
+      required: false,
+      allowNull: true,
+      type: Sequelize.INTEGER
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

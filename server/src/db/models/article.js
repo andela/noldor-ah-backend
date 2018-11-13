@@ -49,6 +49,11 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.BOOLEAN
     },
+    ratings: {
+      required: false,
+      allowNull: true,
+      type: DataTypes.INTEGER
+    },
   }, {});
   Article.associate = (models) => {
     Article.belongsTo(models.User, { foreignKey: 'userId' });

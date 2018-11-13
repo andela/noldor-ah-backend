@@ -2,8 +2,8 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
-import userToken from '../helpers/token';
-import app from '../../../index';
+import Helpers from '../../helpers/index';
+import app from '../../../../index';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -135,8 +135,10 @@ describe('Signup validation test', () => {
       .send(values)
       .end((err, res) => {
         if (err) done(err);
+        const mes1 = 'Password must be at least 8 characters long and';
+        const mes2 = 'must be a combination of characters and numbers';
         expect(res.status).to.equal(400);
-        expect(res.body.error.password).to.equal('Password must be atleast 8 characters long and must be a combination of characters and numbers');
+        expect(res.body.error.password).to.equal(`${mes1} ${mes2}`);
         done();
       });
   });
@@ -177,6 +179,24 @@ describe('Signup validation test', () => {
         done();
       });
   });
+});
+
+it('Should return a token on successful signup', (done) => {
+  const values = {
+    email: 'fred@noldor.com',
+    username: 'fred',
+    password: 'password123',
+    confirmPassword: 'password123'
+  };
+  chai.request(app)
+    .post('/api/v1/users/register')
+    .send(values)
+    .end((err, res) => {
+      if (err) done(err);
+      expect(res.status).to.equal(200);
+      expect(res.body.user.success).to.equal(true);
+      done();
+    });
 });
 
 describe('Login validation test', () => {
@@ -251,7 +271,7 @@ describe('Login validation test', () => {
   });
   it('Should return 200 for successful login', (done) => {
     const values = {
-      email: 'uwa@noldor.com',
+      email: 'fred@noldor.com',
       password: 'password123',
     };
     chai.request(app)
@@ -392,7 +412,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password123',
       confirmPassword: 'password123',
@@ -416,7 +436,7 @@ describe('Forgot Password Funtionality', () => {
       id: 'b33a1b70-a6de-4032-8f42-59b48846ef40',
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password123',
       confirmPassword: 'password123',
@@ -440,7 +460,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: 'jane.john@mail.co.uk',
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password123',
       confirmPassword: 'password123',
@@ -464,7 +484,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
     };
     chai.request(app)
@@ -486,7 +506,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password123',
     };
@@ -509,7 +529,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password',
       confirmPassword: 'password',
@@ -519,9 +539,11 @@ describe('Forgot Password Funtionality', () => {
       .send(values)
       .end((err, res) => {
         if (err) done(err);
+        const mes1 = 'Password must be at least 8 characters long and';
+        const mes2 = 'must be a combination of characters and numbers';
         expect(res.status).to.equal(400);
         expect(res.body.success).to.equal(false);
-        expect(res.body.message).to.equal('Password must be atleast 8 characters long and must be a combination of characters and numbers');
+        expect(res.body.message).to.equal(`${mes1} ${mes2}`);
         done();
       });
   });
@@ -533,7 +555,7 @@ describe('Forgot Password Funtionality', () => {
       id: decodedUserOneDetails.payload.id,
       email: decodedUserOneDetails.payload.email,
     };
-    const hash = userToken.issue(payload, '1m');
+    const hash = Helpers.issueToken(payload, '1m');
     const values = {
       password: 'password123',
       confirmPassword: 'password234',
@@ -599,7 +621,8 @@ describe('User Profile test', () => {
       firstName: 'Jane',
       username: 'Janny',
       bio: 'This is my test',
-      avatar: 'https://res.cloudinary.com/dstvcmycn/image/upload/v1541530550/Author%27s%20Haven/qtvmhyx8k4pfimdtsucs.jpg'
+      avatar: `https://res.cloudinary.com/dstvcmycn/image/upload/v1541530550
+      /Author%27s%20Haven/qtvmhyx8k4pfimdtsucs.jpg`
     };
     chai.request(app)
       .put(`/api/v1/users/${id}/profiles`)

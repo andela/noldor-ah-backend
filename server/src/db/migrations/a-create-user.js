@@ -45,7 +45,7 @@ export default {
     confirmEmail: {
       allowNull: false,
       type: Sequelize.BOOLEAN,
-      defaultValue: Sequelize.FALSE,
+      defaultValue: false
     },
     forgotPasswordHash: {
       required: false,

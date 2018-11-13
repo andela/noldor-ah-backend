@@ -1,18 +1,20 @@
 import Slug from 'slug';
 import Models from '../db/models';
-import helpers from '../helpers/helpers';
-import ArticleHelper from '../helpers/article';
+import ArticleWorker from '../workers/ArticleWorker';
+import Helpers from '../helpers/index';
+import TagWorker from '../workers/TagWorker';
+import RatingsHelper from '../helpers/articleRatings';
 
 const {
-  Sequelize, Article
+  Sequelize, Article,
 } = Models;
 const { Op } = Sequelize;
-const { addTags } = helpers;
 const {
-  checkArticle, getAllArticles,
-  slugDecoder, findArticle, publish,
+  checkArticle, getAllArticles, findArticle, publish,
   getUserArticles, deleteArticle, updateArticle
-} = ArticleHelper;
+} = ArticleWorker;
+const { addTags } = TagWorker;
+
 
 /**
  * @class { ArticleController }
@@ -256,7 +258,7 @@ class ArticleController {
    * @returns { object } JSON
    */
   static async updateTags(req, res) {
-    const articleId = slugDecoder(req);
+    const articleId = Helpers.slugDecoder(req);
     const userId = req.user.payload.id;
     const newTags = req.body.tags;
 
@@ -299,6 +301,45 @@ class ArticleController {
       success: true,
       message: 'tags updated successfully',
     });
+  }
+
+
+  // Article ratings ----------------------
+  /**
+   *
+   * @description { Get all users articles }
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Json
+   */
+  static async rateArticles(req, res) {
+    await RatingsHelper.queryArticle(req, res).then((data) => {
+      if (data.count > 0) {
+        RatingsHelper.queryUserRatings(req).then((user) => {
+          if (user.count > 0) {
+            return res.status(403).json({
+              success: false,
+              message: 'You already rated this article'
+            });
+          }
+          RatingsHelper.rateArticle(req, res);
+          setTimeout(() => {
+            RatingsHelper.getArticleAverageRate(req, res);
+          }, 3000);
+        });
+      } else {
+        return res.status(404).json({
+          success: false,
+          message: 'Article with the specified ID was not found'
+        });
+      }
+    }).catch(error => res.status(500).json({
+      success: false,
+      error: {
+        message: 'Internal server error',
+        error: error.message
+      }
+    }));
   }
 }
 

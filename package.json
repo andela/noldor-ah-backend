@@ -4,14 +4,13 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production npm run build && cross-env NODE_ENV=production node server/bin/production",
-    "test-dev": "cross-env NODE_ENV=test npm run clean-db-test && cross-env NODE_ENV=test npm run migrate-test && cross-env NODE_ENV=test nyc --reporter=html --reporter=text mocha  --require babel-core/register ./server/src/test/ --recursive --exit",
+    "start": "cross-env NODE_ENV=production npm run build && cross-env NODE_ENV=production node ./bin/production",
+    "test": "npm run clean-db-test && npm run migrate-test && cross-env NODE_ENV=test nyc --reporter=text mocha --require babel-core/register ./server/src/test/index.js --timeout 15000 --recursive --exit",
     "migrate-test": "cross-env NODE_ENV=test sequelize db:migrate",
     "clean-db-test": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
-    "test": "npm run clean-db && npm run migrate && cross-env NODE_ENV=test npm run build && nyc --reporter=html --reporter=text mocha ./server/dist/src/test/ --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "clean-dist": "rm -rf ./server/dist/",
-    "build": "npm run clean-dist && mkdir ./server/dist/ && babel index.js -d ./server/dist/ && mkdir ./server/dist/src && babel ./server/src/ -d ./server/dist/src",
+    "clean-dist": "rm -rf ./dist/",
+    "build": "npm run clean-dist && mkdir ./dist/ && babel index.js -d ./dist/ && babel ./server/src/ -d ./dist/server/src",
     "dev": "nodemon --exec babel-node --presets env index.js",
     "migrate": "sequelize db:migrate",
     "clean-db": "sequelize db:migrate:undo:all"
