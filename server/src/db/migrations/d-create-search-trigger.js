@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const tableName = 'Articles';
 const columnName = 'searchVectors';
 

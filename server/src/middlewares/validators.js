@@ -7,6 +7,7 @@ import login from './userValidations/login';
 import resetPassword from './userValidations/resetPassword';
 import signup from './userValidations/signup';
 import token from './userValidations/token';
+import uuidChecker from './userValidations/uuidChecker';
 
 export default {
   postArticle,
@@ -18,4 +19,5 @@ export default {
   resetPassword,
   signup,
   token,
+  uuidChecker
 };

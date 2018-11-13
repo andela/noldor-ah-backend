@@ -347,12 +347,10 @@ class UserController {
         });
       }
       const userProfile = await User.findByPk(userId);
-
       if (userProfile.dataValues.id === decodedId) {
         const editProfile = await userProfile.update(req.body, {
           fields: Object.keys(req.body)
         });
-
         return res.status(205).json({
           success: true,
           message: 'Your edits have been saved',
@@ -384,7 +382,6 @@ class UserController {
     try {
       const { userId } = req.params;
       const decodedId = req.user.payload.id;
-
       const softDeletingUser = await User.findByPk(userId);
       if (!softDeletingUser) {
         return res.status(404).json({
@@ -392,12 +389,10 @@ class UserController {
           message: 'User does not exist'
         });
       }
-
       if (softDeletingUser.id === decodedId) {
         await softDeletingUser.destroy();
         return res.status(204).json({});
       }
-
       if (softDeletingUser.id !== decodedId) {
         return res.status(401).json({
           success: false,
