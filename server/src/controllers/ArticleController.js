@@ -16,7 +16,7 @@ const {
 } = ArticleWorker;
 const { addTags } = TagWorker;
 
-const { postValidation } = Helpers.articleValidation;
+const { postValidation } = Helpers.ArticleValidation;
 
 /**
  * @class { ArticleController }
@@ -52,7 +52,7 @@ class ArticleController {
   static async userArticles(req, res) {
     const userId = req.user.payload.id;
 
-    const getArticle = await getUserArticles(userId, true, res);
+    const getArticle = await getUserArticles(userId, true, req);
     if (getArticle.length === 0) {
       return res.status(404).json({
         success: false,

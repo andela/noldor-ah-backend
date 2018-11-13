@@ -1,6 +1,6 @@
 import chaiHttp from 'chai-http';
 import chai from 'chai';
-import app from '../../../index';
+import app from '../../../../index';
 
 
 const { expect } = chai;
@@ -131,6 +131,7 @@ describe('follow a user', () => {
         done();
       });
   });
+
   it(' it should return 201 to follow ', (done) => {
     chai.request(app)
       .post(`/api/v1/users/${data.user2}/follow`)
@@ -144,7 +145,33 @@ describe('follow a user', () => {
       });
   });
 
-  it(' it should return 200 if already following', (done) => {
+  it(' it should return an object ', (done) => {
+    chai.request(app)
+      .get(`/api/v1/users/${data.user}/followings`)
+      .set('X-Token', data.token)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('object');
+
+        done();
+      });
+  });
+
+  it(' it should return an object ', (done) => {
+    chai.request(app)
+      .get(`/api/v1/users/${data.user2}/followers`)
+      .set('X-Token', data.token)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('object');
+
+        done();
+      });
+  });
+
+  it(' it should return 200 to unfollow', (done) => {
     chai.request(app)
       .post(`/api/v1/users/${data.user2}/follow`)
       .set('X-Token', data.token)
@@ -182,63 +209,8 @@ describe('follow a user', () => {
         done();
       });
   });
-
-  it(' it should return 403 if user follows self', (done) => {
-    chai.request(app)
-      .delete(`/api/v1/users/${data.user}/unfollow`)
-      .set('X-Token', data.token)
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(403);
-
-        done();
-      });
-  });
-
-  it(' it should return 204 to unfollow ', (done) => {
-    chai.request(app)
-      .delete(`/api/v1/users/${data.user2}/unfollow`)
-      .set('X-Token', data.token)
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(200);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
-  it(' it should return 200 if already unfollowed ', (done) => {
-    chai.request(app)
-      .delete(`/api/v1/users/${data.user2}/unfollow`)
-      .set('X-Token', data.token)
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(200);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
-  it(' it should return 200 if already unfollowed ', (done) => {
-    chai.request(app)
-      .delete(`/api/v1/users/${data.user2}/unfollow`)
-      .set('X-Token', data.token)
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(200);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
 });
 describe('get a user following', () => {
-  it(' it should return 200 if already unfollowed ', (done) => {
-    chai.request(app)
-      .delete('/api/v1/users/hgfhgfyh/unfollow')
-      .set('X-Token', data.token)
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(404);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
+
+
 });

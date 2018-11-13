@@ -1,7 +1,9 @@
 import FollowerHelper from '../helpers/following';
 
 const {
-  getUserFollower, getUserFollowing, postFollowing, deleteFollowing
+  getUserFollower,
+  getUserFollowing,
+  following
 } = FollowerHelper;
 
 
@@ -75,20 +77,20 @@ class FollowingController {
     if (followingName === username) {
       return response.status(403).json({
         success: false,
-        message: 'Forbidden'
+        message: 'you can follow yourself'
       });
     }
-    const follow = await postFollowing(followingName, id, response);
+    const follow = await following(followingName, id, response);
     if (follow === 'notAUser') {
       return response.status(404).json({
         success: false,
         message: 'user not found'
       });
     }
-    if (follow === null) {
+    if (follow.action === 'unfollow') {
       return response.status(200).json({
         success: true,
-        message: 'you are following this user already'
+        message: `you have unfollow ${follow.username}`
       });
     }
     return response.status(201).json({
@@ -103,33 +105,5 @@ class FollowingController {
    * @param { object } response
    * @return { object } JSON
    */
-  static async unfollowUser(request, response) {
-    const followingName = request.params.userName;
-    const { username, id } = request.user.payload;
-
-    if (followingName === username) {
-      return response.status(403).json({
-        success: false,
-        message: 'Forbidden'
-      });
-    }
-    const follow = await deleteFollowing(followingName, id, response);
-    if (follow === 'notAUser') {
-      return response.status(404).json({
-        success: false,
-        message: 'user not found'
-      });
-    }
-    if (follow === null) {
-      return response.status(200).json({
-        success: true,
-        message: 'you have unfollowed this user'
-      });
-    }
-    return response.status(200).json({
-      success: true,
-      message: 'you are not following this user'
-    });
-  }
 }
 export default FollowingController;

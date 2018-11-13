@@ -233,7 +233,7 @@ describe('GET endpoint for logged-in user articles', () => {
       .set('X-Token', wrongToken)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -470,7 +470,7 @@ describe('Update endpoint for publishing article', () => {
       .set('X-Token', wrongToken)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -567,7 +567,7 @@ describe('DELETE endpoint for an article', () => {
       .set('X-Token', wrongToken)
       .send(testArticle)
       .end((error, response) => {
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         expect(response.body).to.be.an('object');
         done();
       });

@@ -2,10 +2,16 @@ import express from 'express';
 import UserController from '../../controllers/UserController';
 import Validators from '../../middlewares/validators';
 import multifile from '../../helpers/multifile';
-import userToken from '../../middlewares/token';
 import FollowingController from '../../controllers/FollowingController';
 
 const router = express.Router();
+
+const {
+  userFollower,
+  userFollowing,
+  followUser,
+} = FollowingController;
+
 const {
   register,
   login,
@@ -17,17 +23,6 @@ const {
   deactivateUser,
 } = UserController;
 
-const {
-  userFollower,
-  userFollowing,
-  followUser,
-  unfollowUser
-} = FollowingController;
-
-const {
-  validateToken,
-
-} = userToken;
 
 router.post('/users/register', Validators.signup, register);
 router.post('/users/login/', Validators.login, login);
@@ -41,9 +36,8 @@ router.put('/users/:userId/profiles', Validators.token, multifile, editUserProfi
 router.delete('/users/:userId/deactivate', Validators.token, deactivateUser);
 
 
-router.get('/users/:userName/followings', validateToken, userFollowing);
-router.get('/users/:userName/followers', validateToken, userFollower);
-router.post('/users/:userName/follow', validateToken, followUser);
-router.delete('/users/:userName/unfollow', validateToken, unfollowUser);
+router.get('/users/:userName/followings', Validators.token, userFollowing);
+router.get('/users/:userName/followers', Validators.token, userFollower);
+router.post('/users/:userName/follow', Validators.token, followUser);
 
 export default router;

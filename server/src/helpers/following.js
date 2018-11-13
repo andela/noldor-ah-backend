@@ -55,12 +55,6 @@ class FollowingHelper {
 
         return followers.map(x => x.username);
       }
-      if (!user) {
-        return res.status(404).json({
-          success: false,
-          message: 'User not found'
-        });
-      }
     } catch (error) {
       return res.status(500).json({
         success: false,
@@ -76,55 +70,25 @@ class FollowingHelper {
    * @param { object } res
    * @return { object } JSON
    */
-  static async postFollowing(followingName, followerId, res) {
+  static async following(followingName, followerId, res) {
     try {
-      const following = await User.findOne({
+      const user = await User.findOne({
         where: { username: followingName },
         attributes: ['id', 'username']
       });
-      if (!following) {
+      if (!user) {
         return 'notAUser';
       }
-      const checkFollowing = await following.countFollower({ followerId });
-      if (checkFollowing === 1) {
-        return null;
+      const checkFollowing = await user.countFollower({ followerId });
+      const deleteFollowing = await user.removeFollower(followerId);
+      if (checkFollowing === 1 && deleteFollowing) {
+        user.action = 'unfollow';
+        return user;
       }
-      const add = await following.addFollower(followerId);
+      const add = await user.addFollower(followerId);
       if (checkFollowing === 0 && add) {
-        return following;
-      }
-    } catch (error) {
-      return res.status(500).json({
-        success: true,
-        error: error.message
-      });
-    }
-  }
-
-  /**
-   * @description { unfollow a user }
-   * @param { string } followingName
-   * @param { string } followerId
-   * @param { object } res
-   * @return { object } JSON
-   */
-  static async deleteFollowing(followingName, followerId, res) {
-    try {
-      const following = await User.findOne({
-        where: { username: followingName },
-        attributes: ['id', 'username']
-      });
-      if (!following) {
-        return 'notAUser';
-      }
-      const checkFollowing = await following.countFollower({ followerId });
-      const deleteFollowing = await following.removeFollower(followerId);
-      if (checkFollowing === 1) {
-        return null;
-      }
-
-      if (checkFollowing === 0 && deleteFollowing) {
-        return following;
+        user.action = 'follow';
+        return user;
       }
     } catch (error) {
       return res.status(500).json({
