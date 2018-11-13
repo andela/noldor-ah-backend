@@ -29,9 +29,11 @@ const resetPasswordValidation = (req, res, next) => {
   }
 
   if (typeof password !== 'string' || !checkPassword(password)) {
+    const mes1 = 'Password must be at least 8 characters long and';
+    const mes2 = 'must be a combination of characters and numbers';
     return res.status(400).json({
       success: false,
-      message: 'Password must be atleast 8 characters long and must be a combination of characters and numbers'
+      message: `${mes1} ${mes2}`
     });
   }
 

@@ -85,7 +85,9 @@ const signupValidation = (req, res, next) => {
   * @param {string} password - User's password {x456As49#u4me}
   */
   if (values.password && !checkPassword(values.password.toString())) {
-    errors.password = 'Password must be atleast 8 characters long and must be a combination of characters and numbers';
+    const mes1 = 'Password must be at least 8 characters long and';
+    const mes2 = 'must be a combination of characters and numbers';
+    errors.password = `${mes1} ${mes2}`;
     pass = false;
   }
 

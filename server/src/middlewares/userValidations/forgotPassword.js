@@ -17,7 +17,9 @@ const forgotPasswordValidation = (req, res, next) => {
       message: 'email is required',
     });
   }
-  if (typeof email !== 'string' || email.trim() === '' || emailFilter.test(email.toLocaleLowerCase()) === false) {
+  if (typeof email !== 'string'
+  || email.trim() === ''
+  || emailFilter.test(email.toLocaleLowerCase()) === false) {
     return res.status(400).json({
       success: false,
       message: 'invalid email'

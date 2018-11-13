@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../../../index';
@@ -82,21 +83,21 @@ describe('Tags Test Initializations', () => {
         });
     });
 
-    // it('should update an article tags successfully', (done) => {
-    //   chai.request(app)
-    //     .put(`/api/v1/articles/${articleSlug}/tags`)
-    //     .set({ 'x-token': userOneToken })
-    //     .send({
-    //       tags: 'bars,foos,philosophical,smart,brainiac',
-    //     })
-    //     .end((error, response) => {
-    //       if (error) done(error);
-    //       expect(response.status).to.equal(200);
-    //       expect(response.body).to.be.an('object');
-    //       expect(response.body.message).to.equal('tags updated successfully');
-    //       done();
-    //     });
-    // });
+    it('should update an article tags successfully', (done) => {
+      chai.request(app)
+        .put(`/api/v1/articles/${articleSlug}/tags`)
+        .set({ 'x-token': userOneToken })
+        .send({
+          tags: 'bars,foos,philosophical,smart,brainiac',
+        })
+        .end((error, response) => {
+          if (error) done(error);
+          expect(response.status).to.equal(200);
+          expect(response.body).to.be.an('object');
+          expect(response.body.message).to.equal('tags updated successfully');
+          done();
+        });
+    });
 
     it('should fail to update an article tags if tags field is empty', (done) => {
       chai.request(app)
@@ -116,7 +117,7 @@ describe('Tags Test Initializations', () => {
 
     it('should fail to update an article tags if the article is nonexistent', (done) => {
       chai.request(app)
-        .put(`/api/v1/articles/${articleSlug}s/tags`) // extra 's' on the slug ensures the article will never be found
+        .put(`/api/v1/articles/${articleSlug}s/tags`)
         .set({ 'x-token': userOneToken })
         .send({
           tags: 'bars,foos,philosophical,smart,brainiac',

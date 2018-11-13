@@ -66,7 +66,8 @@ describe('Search Initializations', () => {
         .end((error, response) => {
           if (error) done(error);
           expect(response.status).to.equal(200);
-          expect(response.body).to.be.an('array');
+          expect(response.body).to.be.an('object');
+          expect(response.body.message).to.equal('articles matching that search term found');
           done();
         });
     });
@@ -109,7 +110,8 @@ describe('Search Initializations', () => {
         .end((error, response) => {
           if (error) done(error);
           expect(response.status).to.equal(200);
-          expect(response.body).to.be.an('array');
+          expect(response.body).to.be.an('object');
+          expect(response.body.message).to.equal('articles matching that search term found');
           done();
         });
     });
