@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../../index';
@@ -116,7 +117,7 @@ describe('Tags Test Initializations', () => {
 
     it('should fail to update an article tags if the article is nonexistent', (done) => {
       chai.request(app)
-        .put(`/api/v1/articles/${articleSlug}s/tags`) // extra 's' on the slug ensures the article will never be found
+        .put(`/api/v1/articles/${articleSlug}s/tags`)
         .set({ 'x-token': userOneToken })
         .send({
           tags: 'bars,foos,philosophical,smart,brainiac',

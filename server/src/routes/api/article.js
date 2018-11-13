@@ -10,6 +10,11 @@ const {
   getAnArticle, postArticle, publishArticle,
   updateArticle, deleteArticle, updateTags
 } = ArticleController;
+
+const {
+  tagsValidation,
+  postValidation
+} = articlesValidation;
 const authorization = tokenMiddleware.validateToken;
 const router = express.Router();
 
@@ -17,7 +22,7 @@ router.get('/articles', allArticles);
 router.get('/users/articles', authorization, userArticles);
 router.get('/articles/drafts', authorization, userDrafts);
 router.get('/articles/:slug', getAnArticle);
-router.post('/articles', authorization, articlesValidation.postArticle, articlesValidation.tagsValidation, postArticle);
+router.post('/articles', authorization, postValidation, tagsValidation, postArticle);
 router.put('/articles/:slug/publish', authorization, publishArticle);
 router.put('/articles/:slug', authorization, updateArticle);
 router.delete('/articles/:slug', authorization, deleteArticle);

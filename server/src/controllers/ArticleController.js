@@ -161,14 +161,11 @@ class ArticleController {
     req.body.slug = Slug(req.body.title, { lower: true, replacement: '-' });
     req.body.published = false;
     const { tags } = req.body;
-
     try {
       const article = await Article.create(req.body, {
         fields: Object.keys(req.body)
       });
-
       if (tags) addTags(tags, article);
-
       return res.status(201).json({
         success: true,
         message: 'article was added successfully',
@@ -250,6 +247,7 @@ class ArticleController {
     return res.status(204).json({
     });
   }
+
 
   /**
    * @description { updates article tags }

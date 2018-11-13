@@ -1,7 +1,7 @@
 import chaiHttp from 'chai-http';
 import chai from 'chai';
 import app from '../../../index';
-import userToken from '../middlewares/token';
+import userToken from '../helpers/token';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -106,7 +106,7 @@ describe('POST endpoint for creating articles', () => {
       .send(testArticle)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         expect(response.body).to.be.an('object');
 
         done();
@@ -215,7 +215,7 @@ describe('GET endpoint for logged-in user articles', () => {
       .set('X-Token', wrongToken)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         // expect(response.body.errors).to.be.an('object');
         // expect(response.body.errors.message).to.equal.to.an('object');
         done();
@@ -264,7 +264,7 @@ describe('GET endpoint for logged-in user drafts', () => {
       .set('X-Token', wrongToken)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         expect(response.body).to.be.an('object');
 
         done();
@@ -340,7 +340,7 @@ describe('Update endpoint for articles', () => {
       .send(testArticle)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -453,7 +453,7 @@ describe('Update endpoint for publishing article', () => {
       .set('X-Token', wrongToken)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         // expect(response.body.errors).to.be.an('object');
         done();
       });
@@ -550,7 +550,7 @@ describe('DELETE endpoint for an article', () => {
       .set('X-Token', wrongToken)
       .send(testArticle)
       .end((error, response) => {
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         // expect(response.body.errors).to.equal('object');
         done();
       });

@@ -25,10 +25,10 @@ if (!isProduction) {
 }
 
 // catch 404 and forward to error handler
-app.all('*', (req, res) => {
+app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
-    message: 'endpoint does not exist',
+    message: 'Endpoint does not exist',
   });
 });
 

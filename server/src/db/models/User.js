@@ -45,7 +45,7 @@ const Users = (sequelize, DataTypes) => {
     confirmEmail: {
       allowNull: true,
       type: DataTypes.BOOLEAN,
-      defaultValue: false
+      defaultValue: false,
     },
     forgotPasswordHash: {
       required: false,
@@ -59,12 +59,14 @@ const Users = (sequelize, DataTypes) => {
       unique: false,
       type: DataTypes.STRING
     },
-  }, {});
+  }, { paranoid: true });
   User.associate = (models) => {
     User.belongsToMany(models.Article, {
       through: 'userReactions',
       as: 'articles',
       foreignKey: 'userId'
+    }, {
+      onDelete: 'CASCADE'
     });
   };
   return User;
