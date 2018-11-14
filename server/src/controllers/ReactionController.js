@@ -14,26 +14,28 @@ class ReactionController {
      */
   static async likeArticle(req, res) {
     const check = await ReactionWorker.findArticle(req, res);
-    if (check.status === true) {
-      try {
+    if (check === null) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          message: 'article not found',
+        }
+      });
+    }
+    try {
+      if (check.status === true) {
         const removeLike = await check.article.removeUsers(req.user.payload.id);
 
         if (removeLike) {
-          res.status(204).json('deleted');
+          res.status(200).json({
+            success: true,
+            message: 'article has been unliked'
+          });
           return null;
         }
-      } catch (error) {
-        return res.status(500).json({
-          success: false,
-          error: {
-            msg: error.message,
-          }
-        });
       }
-    }
 
-    if (check.status === false) {
-      try {
+      if (check.status === false) {
         const addLike = check.article.addUsers(req.user.payload.id);
         if (addLike) {
           return res.status(201).json({
@@ -41,14 +43,14 @@ class ReactionController {
             message: 'article has been liked'
           });
         }
-      } catch (error) {
-        return res.status(500).json({
-          success: false,
-          error: {
-            msg: error.message,
-          }
-        });
       }
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        error: {
+          msg: error.message,
+        }
+      });
     }
   }
 }

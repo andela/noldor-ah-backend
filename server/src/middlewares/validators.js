@@ -1,4 +1,3 @@
-import postArticle from './articleValidations/postArticle';
 import search from './articleValidations/search';
 import tags from './articleValidations/tags';
 import forgotPassword from './userValidations/forgotPassword';
@@ -9,7 +8,6 @@ import token from './userValidations/token';
 import uuidChecker from './userValidations/uuidChecker';
 
 export default {
-  postArticle,
   search,
   tags,
   forgotPassword,

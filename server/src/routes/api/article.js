@@ -9,21 +9,24 @@ const {
   getAnArticle, postArticle, publishArticle,
   updateArticle, deleteArticle, updateTags, rateArticles
 } = ArticleController;
+
+const { token: authorization, tags: tagsValidation } = Validators;
 const router = express.Router();
 
 router.get('/articles', allArticles);
-router.get('/users/articles', Validators.token, userArticles);
-router.get('/articles/drafts', Validators.token, userDrafts);
+router.get('/users/articles', authorization, userArticles);
+router.get('/articles/drafts', authorization, userDrafts);
 router.get('/articles/:slug', getAnArticle);
-router.post('/articles', Validators.token, Validators.postArticle, Validators.tags, postArticle);
-router.put('/articles/:slug/publish', Validators.token, publishArticle);
-router.put('/articles/:slug', Validators.token, updateArticle);
-router.delete('/articles/:slug', Validators.token, deleteArticle);
+
+router.post('/articles', authorization, tagsValidation, postArticle);
+router.put('/articles/:slug/publish', authorization, publishArticle);
+router.put('/articles/:slug', authorization, updateArticle);
+router.delete('/articles/:slug', authorization, deleteArticle);
 router.get('/articles/page/:source', Paginator.page);
-router.put('/articles/:slug/tags', Validators.token, Validators.tags, updateTags);
-router.put('/articles/:slug/likes', Validators.token, ReactionController.likeArticle);
+router.put('/articles/:slug/tags', authorization, tagsValidation, updateTags);
+router.put('/articles/:slug/likes', authorization, ReactionController.likeArticle);
 
 // Articles rating endpoints ---------------------
-router.post('/articles/ratings/:articleId', Validators.token, rateArticles);
+router.post('/articles/ratings/:articleId', authorization, rateArticles);
 
 export default router;

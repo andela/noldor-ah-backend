@@ -2,23 +2,17 @@ import chaiHttp from 'chai-http';
 import chai from 'chai';
 import app from '../../../../index';
 
+
 const { expect } = chai;
 chai.use(chaiHttp);
 
-const value = { rateValue: 3 };
-const value0 = { rateValue: 0 };
-const valueNull = {};
-const value8 = { rateValue: 8 };
-
 const data = {};
 
-const wrongToken = 'dhgnahdbcmajnbscjkjadslkcjbandskjncbakdjshxmncbkamhnbckanbdsnxkchamdmcd';
-
-describe('Article Rating test scripts', () => {
+describe('Create a user for test', () => {
   it('Register a user, when all the required parameters is in good standing', (done) => {
     const values = {
-      email: 'meeky88.ae@mail.com',
-      username: 'meeky88',
+      email: 'follow@noldor.com',
+      username: 'follow01',
       password: 'password123',
       confirmPassword: 'password123'
     };
@@ -28,15 +22,17 @@ describe('Article Rating test scripts', () => {
       .end((err, res) => {
         if (err) done(err);
         expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
         expect(res.body.user.success).to.equal(true);
         data.token = res.body.user.token;
+        data.user = res.body.user.username;
         done();
       });
   });
   it('Register a 2nd user, when all the required parameters is in good standing', (done) => {
     const values = {
-      email: 'jane@noldor.com',
-      username: 'jane',
+      email: 'follow2@noldor.com',
+      username: 'follow2',
       password: 'password123',
       confirmPassword: 'password123'
     };
@@ -48,143 +44,173 @@ describe('Article Rating test scripts', () => {
         expect(res.status).to.equal(200);
         expect(res.body.user.success).to.equal(true);
         data.token2 = res.body.user.token;
+        data.user2 = res.body.user.username;
         done();
       });
   });
-  const api = '/api/v1/articles/';
-  it('should return 201 if article is added successfully', (done) => {
+});
+describe('get a user following', () => {
+  it(' it should return an object ', (done) => {
     chai.request(app)
-      .post(api)
-      .set('X-Token', data.token)
-      .send({
-        title: 'this is the title',
-        description: 'this is the description',
-        content: 'this is the content',
-        featuredImg: 'ahghgkjag.jpg'
-      })
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(201);
-        expect(response.body).to.be.an('object');
-        data.id = response.body.article.id;
-        data.slug = response.body.article.slug;
-        done();
-      });
-  });
-  it('should return 404 if article is not found ', (done) => {
-    chai.request(app)
-      .post('/api/v1/articles/ratings/8c557dab-b981-4602-979a-19bc16cdb8eb')
-      .set('X-Token', data.token)
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(404);
-        done();
-      });
-  });
-  it('should return 404 if article is not published ', (done) => {
-    chai.request(app)
-      .post(`/api/v1/articles/ratings/${data.id}`)
-      .set('X-Token', data.token)
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(404);
-
-        done();
-      });
-  });
-  it('should return a 201', (done) => {
-    chai.request(app)
-      .put(`/api/v1/articles/${data.slug}/publish`)
+      .get(`/api/v1/users/${data.user}/followings`)
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
+
         done();
       });
   });
-  it('should require a token for authorisation', (done) => {
+
+  it(' it should return an object ', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/ratings/${data.id}`)
-      .set('X-Token', wrongToken)
-      .send(value)
+      .get('/api/v1/users/xuxuxuyashuaysb/followings')
+      .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(401);
+        expect(response.status).to.equal(404);
         expect(response.body).to.be.an('object');
+
         done();
       });
   });
-  it('should return a 201 for rating published article', (done) => {
+});
+
+describe('get a user following', () => {
+  it(' it should return an object ', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/ratings/${data.id}`)
+      .get(`/api/v1/users/${data.user}/followers`)
       .set('X-Token', data.token)
-      .send(value)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('object');
+
+        done();
+      });
+  });
+
+  it(' it should return an object ', (done) => {
+    chai.request(app)
+      .get('/api/v1/users/xuxuxuyashuaysb/followers')
+      .set('X-Token', data.token)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(404);
+        expect(response.body).to.be.an('object');
+
+        done();
+      });
+  });
+});
+
+describe('follow a user', () => {
+  it(' it should return 403 if user follows self ', (done) => {
+    chai.request(app)
+      .post(`/api/v1/users/${data.user}/follow`)
+      .set('X-Token', data.token)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(403);
+        expect(response.body).to.be.an('object');
+
+        done();
+      });
+  });
+
+  it(' it should return a 404 if user is not found ', (done) => {
+    chai.request(app)
+      .post('/api/v1/users/xuxuxuyashuaysb/follow')
+      .set('X-Token', data.token)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(404);
+        expect(response.body).to.be.an('object');
+
+        done();
+      });
+  });
+
+  it(' it should return 201 to follow ', (done) => {
+    chai.request(app)
+      .post(`/api/v1/users/${data.user2}/follow`)
+      .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(201);
         expect(response.body).to.be.an('object');
+
         done();
       });
   });
-  it('should return a 403 for article already rated by user', (done) => {
+
+  it(' it should return an object ', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/ratings/${data.id}`)
+      .get(`/api/v1/users/${data.user}/followings`)
       .set('X-Token', data.token)
-      .send(value)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(403);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
+
         done();
       });
   });
-  it('should return a 403 for rating value outside range bound of [1 - 5] below 1', (done) => {
+
+  it(' it should return an object ', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/ratings/${data.id}`)
+      .get(`/api/v1/users/${data.user2}/followers`)
       .set('X-Token', data.token)
-      .send(value0)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(403);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
+
         done();
       });
   });
-  it('should return a 403 for rating value outside range bound of [1 - 5] above 5', (done) => {
+
+  it(' it should return 200 to unfollow', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/ratings/${data.id}`)
-      .set('X-Token', data.token2)
-      .send(value8)
+      .post(`/api/v1/users/${data.user2}/follow`)
+      .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(403);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
+
         done();
       });
   });
-  it('should return a 403 for missing rate value', (done) => {
+
+  it(' it should return a 200 to get followings ', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/ratings/${data.id}`)
-      .set('X-Token', data.token2)
-      .send(valueNull)
+      .get(`/api/v1/users/${data.user}/followings`)
+      .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(403);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
+
         done();
       });
   });
-  it('should return a successful response message on successful rating', (done) => {
+
+  it(' it should return a 200 to get followings ', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/ratings/${data.id}`)
-      .set('X-Token', data.token2)
-      .send(value)
+      .get(`/api/v1/users/${data.user2}/followers`)
+      .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(201);
-        expect(response.body.message).to.equal('You successfully rated this article');
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('object');
+
         done();
       });
   });
+});
+describe('get a user following', () => {
+
+
 });
