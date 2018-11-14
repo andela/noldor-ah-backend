@@ -57,7 +57,6 @@ class UserController {
             email: data.dataValues.email,
             username: data.dataValues.username,
           };
-
           const token = Helpers.issueToken(payload);
           return res.header('x-token', token).status(200).json({
             user: {
@@ -65,7 +64,7 @@ class UserController {
               message: 'registration successful',
               email: data.dataValues.email,
               token,
-              username: data.dataValues.username
+              username: data.dataValues.username,
             }
           });
         });
@@ -296,22 +295,34 @@ class UserController {
   static async viewUserProfile(req, res) {
     try {
       const { userId } = req.params;
-
       const noUser = await User.findByPk(userId);
-      if (noUser === null) {
+      if (!noUser) {
         return res.status(404).json({
           success: false,
           message: 'User does not exist'
         });
       }
-
       const profile = await User.findByPk(userId);
-
+      const {
+        id,
+        firstName,
+        lastName,
+        username,
+        email,
+        bio,
+        avatarUrl
+      } = profile;
       return res.status(200).json({
         success: true,
         message: 'Retrieval successful',
         data: {
-          profile,
+          id,
+          firstName,
+          lastName,
+          username,
+          email,
+          bio,
+          avatarUrl
         }
       });
     } catch (error) {
@@ -335,12 +346,10 @@ class UserController {
       if (req.file) {
         req.body.avatarUrl = req.file.secure_url;
       }
-
       const { userId } = req.params;
       const decodedId = req.user.payload.id;
-
       const noUser = await User.findByPk(userId);
-      if (noUser === null) {
+      if (!noUser) {
         return res.status(404).json({
           success: false,
           message: 'User does not exist'
@@ -351,11 +360,28 @@ class UserController {
         const editProfile = await userProfile.update(req.body, {
           fields: Object.keys(req.body)
         });
+        const {
+          id,
+          firstName,
+          lastName,
+          username,
+          email,
+          bio,
+          avatarUrl,
+          updatedAt
+        } = editProfile;
         return res.status(205).json({
           success: true,
           message: 'Your edits have been saved',
           data: {
-            editProfile,
+            id,
+            firstName,
+            lastName,
+            username,
+            email,
+            bio,
+            avatarUrl,
+            updatedAt
           }
         });
       }
@@ -366,8 +392,8 @@ class UserController {
     } catch (error) {
       res.status(409).json({
         success: false,
+        error: error.message,
         message: error.errors[0].message,
-        error: error.message
       });
     }
   }

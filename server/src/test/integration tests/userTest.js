@@ -680,7 +680,7 @@ describe('Soft Delete users', () => {
         done();
       });
   });
-  it('Should return 401(Not Found) if user does not exist', (done) => {
+  it('Should return 401(Unauthorized) if user is unauthorized', (done) => {
     const id = userTwoParams;
     chai.request(app)
       .delete(`/api/v1/users/${id}/deactivate`)
