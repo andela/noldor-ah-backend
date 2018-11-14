@@ -27,10 +27,7 @@ class UserController {
         username,
       } = req.body;
 
-      const salt = bcrypt.genSaltSync(10);
-      const hashed = bcrypt.hashSync(password, salt);
-      const hashedPassword = hashed;
-
+      const hashedPassword = Helpers.decodePassword(password);
       const foundUsername = await User.findOne({ where: { username } });
       const foundUserEmail = await User.findOne({ where: { email } });
       if (foundUsername) {
@@ -56,6 +53,7 @@ class UserController {
             id: data.dataValues.id,
             email: data.dataValues.email,
             username: data.dataValues.username,
+            role: data.dataValues.role
           };
           const token = Helpers.issueToken(payload);
           return res.header('x-token', token).status(200).json({
@@ -115,6 +113,7 @@ class UserController {
           id: user.dataValues.id,
           email: user.dataValues.email,
           username: user.dataValues.username,
+          role: user.dataValues.role
         };
         const token = Helpers.issueToken(payload);
         return res.header('x-token', token).status(200).json({

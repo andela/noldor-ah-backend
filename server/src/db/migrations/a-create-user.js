@@ -42,6 +42,14 @@ export default {
       unique: false,
       type: Sequelize.TEXT
     },
+    role: {
+      required: false,
+      allowNull: false,
+      unique: false,
+      type: Sequelize.ENUM,
+      values: ['0', '1', '2'],
+      defaultValue: '0',
+    },
     confirmEmail: {
       allowNull: false,
       type: Sequelize.BOOLEAN,

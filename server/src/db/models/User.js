@@ -42,6 +42,10 @@ const Users = (sequelize, DataTypes) => {
       unique: false,
       type: DataTypes.TEXT
     },
+    role: {
+      type: DataTypes.ENUM('0', '1', '2'),
+      defaultValue: '0',
+    },
     confirmEmail: {
       allowNull: true,
       type: DataTypes.BOOLEAN,
