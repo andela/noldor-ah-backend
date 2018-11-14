@@ -33,5 +33,5 @@ export default {
   decodePassword,
   roleDefinition,
   UserHelper,
-  httpResponseHelper
+  httpResponseHelper,
 };
