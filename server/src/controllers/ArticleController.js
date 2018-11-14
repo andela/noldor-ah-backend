@@ -3,7 +3,7 @@ import Models from '../db/models';
 import ArticleWorker from '../workers/ArticleWorker';
 import Helpers from '../helpers/index';
 import TagWorker from '../workers/TagWorker';
-import RatingsHelper from '../helpers/articleRatings';
+
 
 const {
   Sequelize, Article,
@@ -15,6 +15,7 @@ const {
 } = ArticleWorker;
 const { addTags } = TagWorker;
 
+const { postValidation } = Helpers.ArticleValidation;
 
 /**
  * @class { ArticleController }
@@ -22,31 +23,22 @@ const { addTags } = TagWorker;
  */
 class ArticleController {
   /**
-     *
-     * @param { object } req
-     * @param { object } res
-     * @returns { object } Json
-     */
+   *
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } Json
+   */
   static async allArticles(req, res) {
-    try {
-      const allArticles = await getAllArticles();
-      if (allArticles.length === 0) {
-        return res.status(404).json({
-          success: false,
-          error: {
-            message: 'article not found',
-          }
-        });
-      }
-      res.status(200).json({ articles: allArticles });
-    } catch (error) {
-      res.status(500).json({
+    const allArticles = await getAllArticles(res);
+    if (allArticles.length === 0) {
+      return res.status(404).json({
         success: false,
         error: {
-          message: error.message,
+          message: 'article not found',
         }
       });
     }
+    res.status(200).json({ articles: allArticles });
   }
 
   /**
@@ -59,28 +51,19 @@ class ArticleController {
   static async userArticles(req, res) {
     const userId = req.user.payload.id;
 
-    try {
-      const getArticle = await getUserArticles(userId, true);
-      if (getArticle.length === 0) {
-        return res.status(404).json({
-          success: false,
-          error: {
-            message: 'article not found',
-          }
-        });
-      }
-      return res.status(200).json({
-        success: true,
-        article: getArticle
-      });
-    } catch (error) {
-      res.status(500).json({
+    const getArticle = await getUserArticles(userId, true, req);
+    if (getArticle.length === 0) {
+      return res.status(404).json({
         success: false,
         error: {
-          message: error.message,
+          message: 'article not found',
         }
       });
     }
+    return res.status(200).json({
+      success: true,
+      article: getArticle
+    });
   }
 
   /**
@@ -93,28 +76,19 @@ class ArticleController {
   static async userDrafts(req, res) {
     const userId = req.user.payload.id;
 
-    try {
-      const getArticle = await getUserArticles(userId, false);
-      if (getArticle.length === 0) {
-        return res.status(404).json({
-          success: false,
-          error: {
-            message: 'no draft found',
-          }
-        });
-      }
-      return res.status(200).json({
-        success: true,
-        article: getArticle
-      });
-    } catch (error) {
-      res.status(500).json({
+    const getArticle = await getUserArticles(userId, false, req);
+    if (getArticle.length === 0) {
+      return res.status(404).json({
         success: false,
         error: {
-          message: error.message,
+          message: 'no draft found',
         }
       });
     }
+    return res.status(200).json({
+      success: true,
+      article: getArticle
+    });
   }
 
   /**
@@ -126,29 +100,25 @@ class ArticleController {
    * @name getAnArticle
    */
   static async getAnArticle(req, res) {
-    try {
-      const article = await findArticle(req, res);
-
-      if (article) {
-        const likes = await article.countUsers();
-        const tags = await article.getTags({ attributes: ['name'] });
-        article.dataValues.likes = likes;
-        const tagsArray = tags.map(x => x.name);
-        article.dataValues.tags = tagsArray;
-
-        res.status(200).json({
-          success: true,
-          article
-        });
-      }
-    } catch (error) {
-      res.status(500).json({
+    const article = await findArticle(req, res);
+    if (article === null) {
+      return res.status(404).json({
         success: false,
         error: {
-          message: error.message,
+          message: 'article not found',
         }
       });
     }
+    const likes = await article.countUsers();
+    const tags = await article.getTags({ attributes: ['name'] });
+    article.dataValues.likes = likes;
+    const tagsArray = tags.map(x => x.name);
+    article.dataValues.tags = tagsArray;
+
+    return res.status(200).json({
+      success: true,
+      article
+    });
   }
 
 
@@ -159,30 +129,33 @@ class ArticleController {
    * @returns { object } JSON
    */
   static async postArticle(req, res) {
-    req.body.userId = req.user.payload.id;
-    req.body.slug = Slug(req.body.title, { lower: true, replacement: '-' });
-    req.body.published = false;
-    const { tags } = req.body;
+    const validationError = await postValidation(req, res);
 
-    try {
-      const article = await Article.create(req.body, {
-        fields: Object.keys(req.body)
-      });
+    if (validationError === null) {
+      req.body.userId = req.user.payload.id;
+      req.body.slug = Slug(req.body.title, { lower: true, replacement: '-' });
+      req.body.published = false;
+      const { tags } = req.body;
+      try {
+        const article = await Article.create(req.body, {
+          fields: Object.keys(req.body)
+        });
 
-      if (tags) addTags(tags, article);
+        if (tags) addTags(tags, article);
 
-      return res.status(201).json({
-        success: true,
-        message: 'article was added successfully',
-        article,
-      });
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        error: {
-          message: error.message,
-        }
-      });
+        return res.status(201).json({
+          success: true,
+          message: 'article was added successfully',
+          article,
+        });
+      } catch (error) {
+        return res.status(500).json({
+          success: false,
+          error: {
+            message: error.message,
+          }
+        });
+      }
     }
   }
 
@@ -195,6 +168,12 @@ class ArticleController {
   static async publishArticle(req, res) {
     const userId = req.user.payload.id;
     const foundArticle = await checkArticle(req, res);
+    if (foundArticle === null) {
+      return res.status(404).json({
+        success: false,
+        message: 'article not found'
+      });
+    }
     if (foundArticle.dataValues.userId !== userId) {
       return res.status(401).json({
         success: false,
@@ -203,7 +182,7 @@ class ArticleController {
     }
     const { id } = foundArticle.dataValues;
     await publish(id, res);
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
       message: 'article published successfully'
     });
@@ -219,6 +198,12 @@ class ArticleController {
   static async updateArticle(req, res) {
     const userId = req.user.payload.id;
     const foundArticle = await checkArticle(req, res);
+    if (foundArticle === null) {
+      return res.status(404).json({
+        success: false,
+        message: 'article not found'
+      });
+    }
     if (foundArticle.dataValues.userId !== userId) {
       return res.status(401).json({
         success: false,
@@ -226,7 +211,7 @@ class ArticleController {
       });
     }
     await updateArticle(req, res);
-    return res.status(201).json({
+    return res.status(200).json({
       success: 'true',
       message: 'article has been updated successfully'
     });
@@ -241,6 +226,12 @@ class ArticleController {
   static async deleteArticle(req, res) {
     const userId = req.user.payload.id;
     const foundArticle = await checkArticle(req, res);
+    if (foundArticle === null) {
+      return res.status(404).json({
+        success: false,
+        message: 'article not found'
+      });
+    }
     if (foundArticle.dataValues.userId !== userId) {
       return res.status(401).json({
         success: false,
@@ -249,7 +240,9 @@ class ArticleController {
     }
     const { id } = foundArticle.dataValues;
     await deleteArticle(id, res);
-    return res.status(204).json({
+    return res.status(200).json({
+      success: true,
+      message: 'article has been successfully deleted'
     });
   }
 
@@ -310,24 +303,24 @@ class ArticleController {
   // Article ratings ----------------------
   /**
    *
-   * @description { Get all users articles }
+   * @description { rate published articles }
    * @param {object} req
    * @param {object} res
    * @returns {object} Json
    */
   static async rateArticles(req, res) {
-    await RatingsHelper.queryArticle(req, res).then((data) => {
+    await Helpers.articleRatings.queryArticle(req, res).then((data) => {
       if (data.count > 0) {
-        RatingsHelper.queryUserRatings(req).then((user) => {
+        Helpers.articleRatings.queryUserRatings(req).then((user) => {
           if (user.count > 0) {
             return res.status(403).json({
               success: false,
               message: 'You already rated this article'
             });
           }
-          RatingsHelper.rateArticle(req, res);
+          Helpers.articleRatings.rateArticle(req, res);
           setTimeout(() => {
-            RatingsHelper.getArticleAverageRate(req, res);
+            Helpers.articleRatings.getArticleAverageRate(req, res);
           }, 3000);
         });
       } else {

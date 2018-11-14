@@ -5,6 +5,7 @@ import tagsTest from './integration tests/tagsTest';
 import paginationTest from './integration tests/paginationTest';
 import reactionTest from './integration tests/reactionTest';
 import ratingTest from './integration tests/ratingTest';
+import followTest from './integration tests/followTest';
 
 export default {
   userTest,
@@ -13,5 +14,6 @@ export default {
   tagsTest,
   paginationTest,
   reactionTest,
-  ratingTest
+  ratingTest,
+  followTest
 };

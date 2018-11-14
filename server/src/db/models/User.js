@@ -45,7 +45,7 @@ const Users = (sequelize, DataTypes) => {
     confirmEmail: {
       allowNull: true,
       type: DataTypes.BOOLEAN,
-      defaultValue: false
+      defaultValue: false,
     },
     forgotPasswordHash: {
       required: false,
@@ -67,6 +67,16 @@ const Users = (sequelize, DataTypes) => {
       foreignKey: 'userId'
     }, {
       onDelete: 'CASCADE'
+    });
+    User.belongsToMany(User, {
+      through: 'Followings',
+      as: 'Follower',
+      foreignKey: 'followingId',
+    });
+    User.belongsToMany(User, {
+      through: 'Followings',
+      as: 'Following',
+      foreignKey: 'followerId',
     });
   };
   return User;

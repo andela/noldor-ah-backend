@@ -12,34 +12,60 @@ const { User, Article } = Models;
 class ArticleWorker {
   /**
    * @description { worker to get all articles }
+   * @param { object } res
    * @returns { object } JSON
    */
-  static async getAllArticles() {
-    return Article.findAll({
-      where: {
-        published: true
-      },
-      attributes: ['slug', 'title', 'description', 'content', 'published', 'createdAt', 'updatedAt'],
-      include: [{
-        model: User, attributes: ['username', 'bio', 'avatarUrl']
-      }]
-    });
+  static async getAllArticles(res) {
+    try {
+      const article = await Article.findAll({
+        where: {
+          published: true
+        },
+        attributes: ['slug', 'title',
+          'description', 'content', 'published',
+          'createdAt', 'updatedAt'],
+        include: [{
+          model: User, attributes: ['username', 'bio', 'avatarUrl']
+        }]
+      });
+      return article;
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: {
+          message: error.message,
+        }
+      });
+    }
   }
 
   /**
    *
    * @param { string } id
-   * @param { string } publish
+   * @param { boolean } publish
+   * @param { string } res
    * @return { object } JSON
    */
-  static async getUserArticles(id, publish) {
-    return Article.findAll({
-      where: {
-        userId: id,
-        published: publish
-      },
-      attributes: ['slug', 'title', 'description', 'published', 'content', 'createdAt', 'updatedAt']
-    });
+  static async getUserArticles(id, publish, res) {
+    try {
+      const article = await Article.findAll({
+        where: {
+          userId: id,
+          published: publish
+        },
+        attributes: ['slug', 'title',
+          'description', 'published', 'content',
+          'createdAt', 'updatedAt']
+      });
+      return article;
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        error: {
+          msg: error.message,
+        }
+      });
+    }
   }
 
   /**
@@ -89,21 +115,27 @@ class ArticleWorker {
    * @return { object } JSON
    */
   static async checkArticle(req, res) {
-    const id = await Helpers.slugDecoder(req);
-    const articleExist = await Article.findOne({
-      where: {
-        slug: {
-          [Op.like]: `%${id}`
-        },
+    try {
+      const id = await Helpers.slugDecoder(req);
+      const articleExist = await Article.findOne({
+        where: {
+          slug: {
+            [Op.like]: `%${id}`
+          },
+        }
+      });
+      if (!articleExist) {
+        return null;
       }
-    });
-    if (!articleExist) {
-      return res.status(404).json({
+      return articleExist;
+    } catch (error) {
+      return res.status(500).json({
         success: false,
-        message: 'article not found'
+        error: {
+          msg: error.message,
+        }
       });
     }
-    return articleExist;
   }
 
 
@@ -124,19 +156,16 @@ class ArticleWorker {
           },
           published: true
         },
-        attributes: ['id', 'slug', 'title', 'description', 'published', 'content', 'createdAt', 'updatedAt'],
+        attributes: ['id', 'slug', 'title',
+          'description', 'published', 'content',
+          'createdAt', 'updatedAt'],
         include: [
           {
             model: User, attributes: ['id', 'username', 'bio', 'avatarUrl']
           }]
       });
       if (!articleExist) {
-        return res.status(404).json({
-          success: false,
-          error: {
-            message: 'article not found',
-          }
-        });
+        return null;
       }
       return articleExist;
     } catch (error) {

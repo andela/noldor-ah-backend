@@ -62,6 +62,7 @@ describe('POST endpoint for creating articles', () => {
       .end((err, res) => {
         if (err) done(err);
         expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('object');
         expect(res.body.user.success).to.equal(true);
         data.token = res.body.user.token;
         done();
@@ -93,8 +94,7 @@ describe('POST endpoint for creating articles', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(401);
-        // expect(response.body.error).to.be.an('object');
-        // expect(response.body.errors).to.equal('You are unauthorised to make this request');
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -140,11 +140,28 @@ describe('POST endpoint for creating articles', () => {
       });
   });
 
+
   it('should not add an article with no description ', (done) => {
     chai.request(app)
       .post(api)
       .set('X-Token', data.token)
       .send(noDescriptionArticle)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(400);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+  it('should 400 if request body is not present', (done) => {
+    chai.request(app)
+      .post(api)
+      .set('X-Token', data.token)
+      .send({
+        titles: 'this is the title',
+        descriptions: 'this is the description',
+        contents: 'this is the content',
+      })
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(400);
@@ -174,6 +191,7 @@ describe('POST endpoint for creating articles', () => {
         done();
       });
   });
+
 
   it('should return 500 if userId doesnt exist', (done) => {
     chai.request(app)
@@ -216,8 +234,7 @@ describe('GET endpoint for logged-in user articles', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(401);
-        // expect(response.body.errors).to.be.an('object');
-        // expect(response.body.errors.message).to.equal.to.an('object');
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -368,7 +385,7 @@ describe('Update endpoint for articles', () => {
       .send(testArticle)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(201);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -384,7 +401,7 @@ describe('Update endpoint for articles', () => {
       })
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(201);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -400,7 +417,7 @@ describe('Update endpoint for articles', () => {
       })
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(201);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -416,7 +433,7 @@ describe('Update endpoint for articles', () => {
       })
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(201);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -443,7 +460,7 @@ describe('Update endpoint for publishing article', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(401);
-        // expect(response.body.errors).to.be.an('object');
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -454,7 +471,7 @@ describe('Update endpoint for publishing article', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(401);
-        // expect(response.body.errors).to.be.an('object');
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -468,7 +485,7 @@ describe('Update endpoint for publishing article', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(404);
-        // expect(response.body.errors).to.be.an('object');
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -480,7 +497,7 @@ describe('Update endpoint for publishing article', () => {
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(201);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });
@@ -494,7 +511,7 @@ describe('Update endpoint for publishing article', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(401);
-        // expect(response.body.errors).to.be('object');
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -539,7 +556,7 @@ describe('DELETE endpoint for an article', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(401);
-        // expect(response.body.errors).to.equal.an('object');
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -551,7 +568,7 @@ describe('DELETE endpoint for an article', () => {
       .send(testArticle)
       .end((error, response) => {
         expect(response.status).to.equal(401);
-        // expect(response.body.errors).to.equal('object');
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -562,18 +579,18 @@ describe('DELETE endpoint for an article', () => {
       .set('X-Token', data.token2)
       .end((error, response) => {
         expect(response.status).to.equal(401);
-        // expect(response.body.errors).to.equal('object');
+        expect(response.body).to.be.an('object');
         done();
       });
   });
 
-  it('should return a status 200', (done) => {
+  it('should return a status 204', (done) => {
     chai.request(app)
       .delete(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token)
       .end((error, response) => {
-        expect(response.status).to.equal(204);
-        // expect(response.body).to.equal('object');
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('object');
         done();
       });
   });
@@ -584,7 +601,18 @@ describe('DELETE endpoint for an article', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(404);
-        // expect(response.body.errors).to.equal.an('object');
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+  it('should return 404 if article does not exist ', (done) => {
+    chai.request(app)
+      .patch('/api/v1/articles/happy')
+      .set('X-Token', data.token)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(404);
+        expect(response.body).to.be.an('object');
         done();
       });
   });

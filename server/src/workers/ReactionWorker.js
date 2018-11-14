@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 import Sequelize from 'sequelize';
 import Models from '../db/models';
 import Helpers from '../helpers/index';
@@ -27,12 +28,7 @@ class ReactionWorker {
         }
       });
       if (!articleExist) {
-        return res.status(404).json({
-          success: false,
-          error: {
-            message: 'article not found',
-          }
-        });
+        return null;
       }
       const status = await articleExist.hasUsers(req.user.payload.id);
       const article = {

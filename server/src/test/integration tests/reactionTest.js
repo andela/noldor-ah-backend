@@ -70,8 +70,6 @@ describe('add articles for test', () => {
         .end((error, response) => {
           if (error) done(error);
           expect(response.status).to.equal(401);
-          // expect(response.body.error).to.be.an('object');
-          // expect(response.body.errors).to.equal('You are unauthorised to make this request');
           done();
         });
     });
@@ -122,7 +120,7 @@ describe('like an article endpoint', () => {
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(204);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
         done();
       });
