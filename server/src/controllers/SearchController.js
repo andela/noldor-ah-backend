@@ -1,6 +1,4 @@
-import Models from '../db/models';
-
-const { Article, sequelize } = Models;
+import Helpers from '../helpers/index';
 
 /**
  * @class { SearchController }
@@ -8,81 +6,73 @@ const { Article, sequelize } = Models;
  */
 class SearchController {
   /**
-     *
-     * @param { object } req
-     * @param { object } res
-     * @returns { object } Json
-     */
+   *
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } Json
+   */
   static async search(req, res) {
     const { keywords } = req.body;
     const filters = req.query;
     const searchTerm = keywords.split(' ').join(',');
-
-    if (Object.keys(filters).length === 0 && filters.constructor === Object) {
-      const q1 = 'SELECT "Articles".id, "Articles"."userId", "Articles".title';
-      const q2 = ', "Articles".description,  "Articles".content, ';
-      const q3 = '"Articles".slug, "Articles"."featuredImg", "Articles"."createdAt",';
-      const q4 = ' "Articles"."updatedAt" FROM "Articles" INNER JOIN "Users"';
-      const q5 = ' ON "Articles"."userId" = "Users"."id" AND "Articles".published = \'TRUE\'';
-      const q6 = ` WHERE "Articles"."searchVectors" @@ to_tsquery('${searchTerm}')`;
-      const q7 = 'ORDER BY "Articles"."createdAt" DESC';
-      const query = `${q1}${q2}${q3}${q4}${q5}${q6}${q7}`;
-
-      const results = {
-        success: true,
-        message: 'articles matching that search term found',
-      };
-
-      const response = await sequelize.query(query, {
-        type: sequelize.QueryTypes.SELECT,
-        model: Article,
-      });
-
-      results.articles = response;
-
-      if (response.length === 0) {
-        return res.status(404).json({
-          success: false,
-          error: {
-            msg: 'no article with that search term found',
-          },
-        });
-      }
-      return res.status(200).json(results);
-    }
-
-    const q1 = 'SELECT "Articles".id, "Articles"."userId", "Articles".title,';
-    const q2 = ' "Articles".description, "Articles".content, "Articles".slug,';
-    const q3 = ' "Articles"."featuredImg", "Articles"."createdAt", ';
-    const q4 = '"Articles"."createdAt", "Articles"."updatedAt" FROM "Articles"';
-    const q5 = ' INNER JOIN "Users" ON "Articles"."userId" = "Users"."id" AND ';
-    const q6 = '"Articles".published = \'TRUE\' WHERE "Users"."username" =';
-    const q7 = ` '${filters.author}' AND "Articles"."searchVectors" @@ to_tsquery('${searchTerm}')`;
-    const q8 = 'ORDER BY "Articles"."createdAt" DESC';
-    const query = `${q1}${q2}${q3}${q4}${q5}${q6}${q7}${q8}`;
-
-    const results = {
+    const response = {
       success: true,
       message: 'articles matching that search term found',
     };
+    const failureResponse = {
+      success: false,
+      error: {
+        msg: 'no article with that search term found',
+      },
+    };
 
-    const response = await sequelize.query(query, {
-      type: sequelize.QueryTypes.SELECT,
-      model: Article,
-    });
+    if (Object.keys(filters).length === 0 && filters.constructor === Object) { // no filters
+      const query = Helpers.buildQuery(null, null, searchTerm);
+      const results = await Helpers.searchFor(query);
 
-    results.articles = response;
+      if (results.length === 0) return res.status(404).json(failureResponse);
 
-    if (response.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          msg: 'no article with that search term found',
-        },
-      });
+      await Helpers.appendAuthor(results);
+      response.articles = results;
+
+      return res.status(200).json(response);
     }
 
-    return res.status(200).json(results);
+    if (filters.tags && !filters.author) { // filter by tags only
+      const query = Helpers.buildQuery(filters.tags, null, searchTerm);
+      const results = await Helpers.searchFor(query);
+
+      if (results.length === 0) return res.status(404).json(failureResponse);
+
+      await Helpers.appendAuthor(results);
+      response.articles = results;
+
+      return res.status(200).json(response);
+    }
+
+    if (filters.author && !filters.tags) { // filter by author only
+      const query = Helpers.buildQuery(null, filters.author, searchTerm);
+      const results = await Helpers.searchFor(query);
+
+      if (results.length === 0) return res.status(404).json(failureResponse);
+
+      await Helpers.appendAuthor(results);
+      response.articles = results;
+
+      return res.status(200).json(response);
+    }
+
+    if (filters.author && filters.tags) { // filter by both tags and author
+      const query = Helpers.buildQuery(filters.tags, filters.author, searchTerm);
+      const results = await Helpers.searchFor(query);
+
+      if (results.length === 0) return res.status(404).json(failureResponse);
+
+      await Helpers.appendAuthor(results);
+      response.articles = results;
+
+      return res.status(200).json(response);
+    }
   }
 }
 

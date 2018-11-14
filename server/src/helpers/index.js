@@ -1,8 +1,10 @@
+import appendAuthor from './appendAuthor';
 import addTags from '../workers/TagWorker';
 import ArticleValidation from './articleValidation';
 import issueToken from './issueToken';
 import multifile from './multifile';
-import RatingHelper from './articleRatings';
+import buildQuery from './searchQueries';
+import searchFor from './searchFor';
 import sendMail from './sendMail';
 import slugDecoder from './slugDecoder';
 import articleRatings from './articleRatings';
@@ -10,10 +12,12 @@ import templates from './templates';
 
 
 export default {
+  appendAuthor,
   addTags,
   issueToken,
   multifile,
-  RatingHelper,
+  buildQuery,
+  searchFor,
   sendMail,
   slugDecoder,
   articleRatings,
