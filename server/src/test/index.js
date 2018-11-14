@@ -4,7 +4,6 @@ import searchTest from './integration tests/searchTest';
 import paginationTest from './integration tests/paginationTest';
 import reactionTest from './integration tests/reactionTest';
 import ratingTest from './integration tests/ratingTest';
-<<<<<<< HEAD
 import followTest from './integration tests/followTest';
 import categoryTest from './integration tests/categoryTest';
 import tagsTest from './integration tests/tagsTest';
@@ -14,9 +13,7 @@ import highlightTest from './integration tests/highlightTest';
 import report from './integration tests/report';
 import response from './unitTests/response';
 import bookmarkTest from './integration tests/bookmarkTest';
-=======
 import roleTest from './integration tests/roleTest';
->>>>>>> feat(roleAccess): create role based functionality
 
 export default {
   userTest,
