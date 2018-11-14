@@ -5,16 +5,10 @@ import search from './search';
 import category from './category';
 import comment from './comments';
 import reply from './reply';
-<<<<<<< HEAD
 import highlight from './highlight';
-=======
->>>>>>> feat(roleAccess): create role based functionality
 import bookmark from './bookmark';
 import role from './role';
-<<<<<<< HEAD
 import admin from './admin';
-=======
->>>>>>> feat(roleAccess): create role based functionality
 
 const router = express.Router();
 
@@ -24,16 +18,10 @@ router.use('/api/v1', search);
 router.use('/api/v1', category);
 router.use('/api/v1', comment);
 router.use('/api/v1', reply);
-<<<<<<< HEAD
 router.use('/api/v1', highlight);
-=======
->>>>>>> feat(roleAccess): create role based functionality
 router.use('/api/v1', bookmark);
 router.use('/api/v1', role);
-<<<<<<< HEAD
 router.use('/api/v1', admin);
-=======
->>>>>>> feat(roleAccess): create role based functionality
 
 /**
  * Home route
