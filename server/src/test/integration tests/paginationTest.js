@@ -10,8 +10,8 @@ const data = {};
 describe('GET all articles endpoint', () => {
   it('Register a user, when all the required parameters is in good standing', (done) => {
     const values = {
-      email: 'hopes@noldor.com',
-      username: 'elpiss',
+      email: 'hopes00@noldor.com',
+      username: 'elpiss00',
       password: 'password123',
       confirmPassword: 'password123'
     };
