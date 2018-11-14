@@ -15,6 +15,7 @@ import response from './unitTests/response';
 import bookmarkTest from './integration tests/bookmarkTest';
 import roleTest from './integration tests/roleTest';
 import adminTest from './integration tests/adminTest';
+import reportComment from './integration tests/reportComment';
 
 export default {
   userTest,
@@ -33,5 +34,6 @@ export default {
   response,
   bookmarkTest,
   roleTest,
-  adminTest
+  adminTest,
+  reportComment,
 };

@@ -11,7 +11,10 @@ import highlight from './highlight';
 >>>>>>> feat(roleAccess): create role based functionality
 import bookmark from './bookmark';
 import role from './role';
+<<<<<<< HEAD
 import admin from './admin';
+=======
+>>>>>>> feat(roleAccess): create role based functionality
 
 const router = express.Router();
 
@@ -27,7 +30,10 @@ router.use('/api/v1', highlight);
 >>>>>>> feat(roleAccess): create role based functionality
 router.use('/api/v1', bookmark);
 router.use('/api/v1', role);
+<<<<<<< HEAD
 router.use('/api/v1', admin);
+=======
+>>>>>>> feat(roleAccess): create role based functionality
 
 /**
  * Home route

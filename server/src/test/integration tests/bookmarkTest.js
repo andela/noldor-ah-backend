@@ -54,7 +54,7 @@ describe('/BookMark an article', () => {
 
   it('should return 401 for no token provided', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmark`)
+      .post(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmarks`)
       .end((err, res) => {
         if (err) done(err);
         expect(res.status).to.equal(401);
@@ -66,7 +66,7 @@ describe('/BookMark an article', () => {
 
   it('should return 401 for Invalid token', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmark`)
+      .post(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmarks`)
       .set('x-token', wrongToken)
       .end((err, res) => {
         if (err) done(err);
@@ -78,7 +78,7 @@ describe('/BookMark an article', () => {
   });
   it('should return 200 for bookmarked article', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmark`)
+      .post(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmarks`)
       .set('x-token', data.userOneDetails.token)
       .end((err, res) => {
         if (err) done(err);
@@ -91,7 +91,7 @@ describe('/BookMark an article', () => {
 
   it('should return 200 for already bookmarked article', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmark`)
+      .post(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmarks`)
       .set('x-token', data.userOneDetails.token)
       .end((err, res) => {
         if (err) done(err);
@@ -104,7 +104,7 @@ describe('/BookMark an article', () => {
 
   it('should return 404 for article not found', (done) => {
     chai.request(app)
-      .post(`/api/v1/articles/${fakeSlug}/bookmark`)
+      .post(`/api/v1/articles/${fakeSlug}/bookmarks`)
       .set('x-token', data.userOneDetails.token)
       .end((err, res) => {
         if (err) done(err);
@@ -117,7 +117,7 @@ describe('/BookMark an article', () => {
 
   it('should return 401 for /GET bookmarks', (done) => {
     chai.request(app)
-      .get('/api/v1/users/articles/bookmark')
+      .get('/api/v1/users/articles/bookmarks')
       .end((err, res) => {
         if (err) done(err);
         expect(res.status).to.equal(401);
@@ -129,7 +129,7 @@ describe('/BookMark an article', () => {
 
   it('should return 401 for /GET bookmarks', (done) => {
     chai.request(app)
-      .get('/api/v1/users/articles/bookmark')
+      .get('/api/v1/users/articles/bookmarks')
       .set('x-token', wrongToken)
       .end((err, res) => {
         if (err) done(err);
@@ -142,7 +142,7 @@ describe('/BookMark an article', () => {
 
   it('should return 200 for /GET bookmarks', (done) => {
     chai.request(app)
-      .get('/api/v1/users/articles/bookmark')
+      .get('/api/v1/users/articles/bookmarks')
       .set('x-token', data.userOneDetails.token)
       .end((err, res) => {
         if (err) done(err);
@@ -155,7 +155,7 @@ describe('/BookMark an article', () => {
 
   it('should return 401 /DELETE for no token provided', (done) => {
     chai.request(app)
-      .delete(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmark`)
+      .delete(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmarks`)
       .end((err, res) => {
         if (err) done(err);
         expect(res.status).to.equal(401);
@@ -167,7 +167,7 @@ describe('/BookMark an article', () => {
 
   it('should return 401 /DELETE for Invalid token', (done) => {
     chai.request(app)
-      .delete(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmark`)
+      .delete(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmarks`)
       .set('x-token', wrongToken)
       .end((err, res) => {
         if (err) done(err);
@@ -179,7 +179,7 @@ describe('/BookMark an article', () => {
   });
   it('should return 200 /DETETE to remove bookmark', (done) => {
     chai.request(app)
-      .delete(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmark`)
+      .delete(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmarks`)
       .set('x-token', data.userOneDetails.token)
       .end((err, res) => {
         if (err) done(err);
@@ -192,7 +192,7 @@ describe('/BookMark an article', () => {
 
   it('should return 404 /DELETE for already deleted bookmark', (done) => {
     chai.request(app)
-      .delete(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmark`)
+      .delete(`/api/v1/articles/${data.userOneDetails.article.slug}/bookmarks`)
       .set('x-token', data.userOneDetails.token)
       .end((err, res) => {
         if (err) done(err);
@@ -205,7 +205,7 @@ describe('/BookMark an article', () => {
 
   it('should return 404 on /GET for no bookmarks', (done) => {
     chai.request(app)
-      .get('/api/v1/users/articles/bookmark')
+      .get('/api/v1/users/articles/bookmarks')
       .set('x-token', data.userOneDetails.token)
       .end((err, res) => {
         if (err) done(err);

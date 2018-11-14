@@ -22,7 +22,7 @@ export default (sequelize, DataTypes) => {
       unique: false,
       type: DataTypes.TEXT
     },
-  }, {});
+  }, { paranoid: true });
   Comment.associate = (models) => {
     Comment.belongsTo(models.User, { foreignKey: 'userId' });
     Comment.belongsTo(models.Article, { foreignKey: 'articleId' });

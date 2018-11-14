@@ -14,8 +14,8 @@ const {
   removeBookmark,
 } = BookmarkController;
 
-router.post('/articles/:slug/bookmark', authorization, addBookmark);
-router.get('/users/articles/bookmark', authorization, getBookmark);
-router.delete('/articles/:slug/bookmark', authorization, removeBookmark);
+router.post('/articles/:slug/bookmarks', authorization, addBookmark);
+router.get('/users/articles/bookmarks', authorization, getBookmark);
+router.delete('/articles/:slug/bookmarks', authorization, removeBookmark);
 
 export default router;

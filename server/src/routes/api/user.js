@@ -35,10 +35,15 @@ router.get('/users/', Validators.token, getAllUser);
 router.put('/users/forgot', Validators.forgotPassword, forgetPassword);
 router.post('/users/forgot/:hash', Validators.resetPassword, resetPassword);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 router.get('/users/:userId/profiles', userIdChecker, viewUserProfile);
 router.put('/users/:userId/profiles', userIdChecker, Validators.token, multifile, editUserProfile);
 =======
+=======
+
+
+>>>>>>> feat(roleAccess): create role based functionality
 router.get('/users/:userId/profiles', userIdChecker, viewUserProfile);
 router.put('/users/:userId/profiles', userIdChecker, Validators.token, multifile, editUserProfile);
 router.get('/users/:userId/profiles', Validators.uuidChecker, viewUserProfile);
