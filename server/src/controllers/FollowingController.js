@@ -1,10 +1,10 @@
-import FollowerHelper from '../helpers/following';
+import FolloweWorker from '../workers/FollowingWorker';
 
 const {
   getUserFollower,
   getUserFollowing,
   following
-} = FollowerHelper;
+} = FolloweWorker;
 
 
 /**
@@ -20,13 +20,13 @@ class FollowingController {
      */
   static async userFollowing(request, response) {
     const data = await getUserFollowing(request.params.userName, response);
-    if (data === null) {
+    if (!data) {
       return response.status(404).json({
         success: false,
         message: 'User not found'
       });
     }
-    if (data.length === 0) {
+    if (!data.length) {
       return response.status(200).json({
         success: true,
         following: 'none'
@@ -46,13 +46,13 @@ class FollowingController {
    */
   static async userFollower(request, response) {
     const data = await getUserFollower(request.params.userName, response);
-    if (data === null) {
+    if (!data) {
       return response.status(404).json({
         success: false,
         message: 'User not found'
       });
     }
-    if (data.length === 0) {
+    if (!data.length) {
       return response.status(200).json({
         success: true,
         following: 'none'
@@ -77,7 +77,7 @@ class FollowingController {
     if (followingName === username) {
       return response.status(403).json({
         success: false,
-        message: 'you can follow yourself'
+        message: 'you can not follow yourself'
       });
     }
     const follow = await following(followingName, id, response);
@@ -93,10 +93,12 @@ class FollowingController {
         message: `you have unfollow ${follow.username}`
       });
     }
-    return response.status(201).json({
-      success: true,
-      message: `you are now following ${follow.username}`
-    });
+    if (follow.action === 'follow') {
+      return response.status(201).json({
+        success: true,
+        message: `you are now following ${follow.username}`
+      });
+    }
   }
 
   /**
