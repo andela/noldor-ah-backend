@@ -17,7 +17,8 @@ const fakeToken = Helpers.issueToken(payload);
 const testArticle = {
   title: 'this is the title',
   description: 'this is the description',
-  content: 'this is the content'
+  content: 'this is the content',
+  category: 'life'
 };
 
 const data = {};
@@ -50,8 +51,8 @@ describe('add articles for test', () => {
         title: 'this is the title',
         description: 'this is the description',
         content: 'this is the content',
-        featuredImg: 'ahghgkjag.jpg'
-
+        featuredImg: 'ahghgkjag.jpg',
+        category: 'life'
       })
       .end((error, response) => {
         if (error) done(error);

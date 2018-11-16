@@ -44,6 +44,16 @@ export default {
       unique: false,
       type: Sequelize.TEXT
     },
+    category: {
+      required: true,
+      allowNull: false,
+      unique: false,
+      type: Sequelize.STRING,
+      references: {
+        model: 'Categories',
+        key: 'name',
+      }
+    },
     published: {
       required: false,
       allowNull: false,

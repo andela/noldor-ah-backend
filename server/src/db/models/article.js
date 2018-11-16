@@ -44,6 +44,12 @@ export default (sequelize, DataTypes) => {
       unique: false,
       type: DataTypes.TEXT
     },
+    category: {
+      equired: true,
+      allowNull: false,
+      unique: false,
+      type: DataTypes.STRING,
+    },
     published: {
       required: false,
       allowNull: false,
@@ -69,6 +75,10 @@ export default (sequelize, DataTypes) => {
       through: 'userReactions',
       as: 'users',
       foreignKey: 'articleId'
+    });
+
+    Article.belongsTo(models.Category, {
+      foreignKey: 'category'
     });
   };
   return Article;

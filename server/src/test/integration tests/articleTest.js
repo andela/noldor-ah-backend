@@ -180,8 +180,8 @@ describe('POST endpoint for creating articles', () => {
         description: 'this is the description',
         content: 'this is the content',
         featuredImg: 'ahghgkjag.jpg',
-        tags: 'bars,foos,philosophical,smart'
-
+        tags: 'bars,foos,philosophical,smart',
+        category: 'life',
       })
       .end((error, response) => {
         if (error) done(error);
@@ -201,8 +201,9 @@ describe('POST endpoint for creating articles', () => {
         title: 'this is the title',
         description: 'this is the description',
         content: 'this is the content',
-        featuredImg: 'ahghgkjag.jpg'
-
+        featuredImg: 'ahghgkjag.jpg',
+        tags: 'test,life',
+        category: 'life'
       })
       .end((error, response) => {
         if (error) done(error);
@@ -283,7 +284,6 @@ describe('GET endpoint for logged-in user drafts', () => {
         if (error) done(error);
         expect(response.status).to.equal(401);
         expect(response.body).to.be.an('object');
-
         done();
       });
   });
