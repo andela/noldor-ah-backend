@@ -1,16 +1,43 @@
-import sgMail from '@sendgrid/mail';
+import dotEnv from 'dotenv';
+import nodemailer from 'nodemailer';
+import UpdateWorker from '../workers/UpdateWorker';
 
-const sendEmail = (receiver, sender, subject, htmlTemplate) => {
-// using SendGrid's v3 Node.js Library
-// https://github.com/sendgrid/sendgrid-nodejs
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  const message = {
-    to: receiver,
-    from: sender,
-    subject,
-    html: htmlTemplate,
-  };
-  sgMail.send(message);
+dotEnv.config();
+
+const sendEmail = (mailOption) => {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    secure: false,
+    port: 25,
+    auth: {
+      user: process.env.MAIL,
+      pass: process.env.PASS
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
+  transporter.sendMail(mailOption);
 };
 
-export default sendEmail;
+const sendVerificationEmail = (mailOption) => {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    secure: false,
+    port: 25,
+    auth: {
+      user: process.env.MAIL,
+      pass: process.env.PASS
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
+  transporter.sendMail(mailOption, () => {
+    setTimeout(() => {
+      UpdateWorker.updateUserDetails(mailOption);
+    }, 1000);
+  });
+};
+
+export default { sendEmail, sendVerificationEmail };

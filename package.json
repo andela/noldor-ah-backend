@@ -4,7 +4,7 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production npm run build && cross-env NODE_ENV=production node ./bin/production",
+    "start": "cross-env NODE_ENV=production npm run build && cross-env NODE_ENV=production node ./dist/index.js",
     "test": "npm run clean-db-test && npm run migrate-test && cross-env NODE_ENV=test nyc --reporter=text mocha --require babel-core/register ./server/src/test/index.js --timeout 20000 --recursive --exit",
     "migrate-test": "cross-env NODE_ENV=test sequelize db:migrate && cross-env NODE_ENV=test sequelize db:seed:all",
     "clean-db-test": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
@@ -42,6 +42,7 @@
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "multer-storage-cloudinary": "^2.2.1",
+    "nodemailer": "^4.6.8",
     "passport": "^0.4.0",
     "pg": "^7.5.0",
     "pg-hstore": "^2.3.2",
