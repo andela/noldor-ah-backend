@@ -79,14 +79,14 @@ class FollowingHelper {
       if (!user) {
         return 'notAUser';
       }
-      const checkFollowing = await user.countFollower({ followerId });
+      const checkFollowing = await user.hasFollower(followerId);
       const deleteFollowing = await user.removeFollower(followerId);
-      if (checkFollowing === 1 && deleteFollowing) {
+      if (checkFollowing && deleteFollowing) {
         user.action = 'unfollow';
         return user;
       }
       const add = await user.addFollower(followerId);
-      if (checkFollowing === 0 && add) {
+      if (!checkFollowing && add) {
         user.action = 'follow';
         return user;
       }

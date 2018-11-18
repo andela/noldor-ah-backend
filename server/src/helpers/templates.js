@@ -160,6 +160,27 @@ width:100%;font-size:12px;font-family:verdana;border-radius:5px;color:#444">
 
 <span style="font-family:sans-serif;font-size:10px">&copy; 2018, Authors Haven</span>
 </div>`;
+const newArticleNotification = (articlePage, message, title, optout) => {
+  const html = `
+  <div style="background:#f0f0f0;margin:0 auto;
+  padding-top:50px;padding-bottom:50px;text-align:center;
+  width:100%;font-size:12px;font-family:verdana;border-radius:5px;color:#444">
+  <div>
+    <img src=https://pli.io/2ptTUa.png width="70px" height="70px">
+  </div>
+      <p> ${message} </p>
+       <p> Click below to view </p>
+       <a style="background:#E66869; color:white;text-decoration:none;
+       text-align:center;padding:5px;";
+       href="http://${articlePage}/"> ${title} </a> </br> 
+       <p> <a style=" color:#E66869; " href="http://${optout}">Click Here</a> to opt-out of recieving notification
+       </p>
+    </div>
+    `;
+
+  return html;
+};
+
 
 export default {
   resetPassword,
@@ -167,5 +188,6 @@ export default {
   articleTakedown,
   profileTakedown,
   profileReactivation,
-  verifyEmailTemplate
+  verifyEmailTemplate,
+  newArticleNotification
 };

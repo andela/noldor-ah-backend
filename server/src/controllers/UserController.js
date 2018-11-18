@@ -502,6 +502,39 @@ class UserController {
       });
     }
   }
+
+  /**
+ * @param {*} req
+ * @param {*} res
+ * @return {*} json
+ */
+  static async notifications(req, res) {
+    const { id } = req.user.payload;
+    const optStatus = await User.findOne({
+      where: {
+        id,
+        notification: true
+      }
+    });
+    if (!optStatus) {
+      await User.update({
+        notification: true
+      }, { where: { id } });
+      return res.status(200).json({
+        success: true,
+        message: 'you have opted in for notifications'
+      });
+    }
+    if (optStatus) {
+      await User.update({
+        notification: false
+      }, { where: { id } });
+      return res.status(200).json({
+        success: true,
+        message: 'you have opted out for notifications'
+      });
+    }
+  }
 }
 
 export default UserController;

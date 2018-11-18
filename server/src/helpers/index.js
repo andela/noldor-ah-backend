@@ -15,6 +15,8 @@ import decodePassword from './hashPassword';
 import roleDefinition from './defineRole';
 import UserHelper from './user';
 import httpResponseHelper from './httpResponse';
+import NotificationHelper from './notification';
+
 
 export default {
   appendAuthor,
@@ -34,4 +36,5 @@ export default {
   roleDefinition,
   UserHelper,
   httpResponseHelper,
+  NotificationHelper
 };

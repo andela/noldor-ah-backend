@@ -89,6 +89,11 @@ export default {
       allowNull: true,
       type: Sequelize.BIGINT
     },
+    notification: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: true
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

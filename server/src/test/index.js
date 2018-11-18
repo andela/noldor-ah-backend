@@ -1,9 +1,9 @@
 import articleTest from './integrationTests/articleTest';
+import highlightTest from './integrationTests/highlightTest';
 import categoryTest from './integrationTests/categoryTest';
 import userTest from './integrationTests/userTest';
 import tagsTest from './integrationTests/tagsTest';
 import searchTest from './integrationTests/searchTest';
-import highlightTest from './integrationTests/highlightTest';
 import roleTest from './integrationTests/roleTest';
 import bookmarkTest from './integrationTests/bookmarkTest';
 import commentTest from './integrationTests/commentTest';
@@ -21,6 +21,7 @@ import logger from './unitTests/loggerTest';
 import likeCommentTest from './integrationTests/likeCommentTest';
 import uuidTest from './unitTests/uuidTest';
 import socialmediaTest from './integrationTests/socialmediaTest';
+import notificationTest from './integration tests/notificationTest';
 
 export default {
   userTest,
@@ -45,5 +46,6 @@ export default {
   logger,
   likeCommentTest,
   uuidTest,
-  socialmediaTest
+  socialmediaTest,
+  notificationTest,
 };

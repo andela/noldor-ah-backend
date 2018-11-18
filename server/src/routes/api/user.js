@@ -8,6 +8,7 @@ import EmailVerification from '../../workers/VerificationWorker';
 import faceBookOauthInfo from '../../helpers/Oauth/facebookOAuth';
 import googleRoutes from '../../helpers/Oauth/googleOAuth';
 import SocialMedia from '../../controllers/SocialMediaLogin';
+import NotificationController from '../../controllers/NotificationController';
 
 const router = express.Router();
 
@@ -26,7 +27,8 @@ const {
   viewUserProfile,
   editUserProfile,
   deactivateUser,
-  verifyEmail
+  verifyEmail,
+  notifications,
 } = UserController;
 
 const {
@@ -95,5 +97,10 @@ login page.  Otherwise, the primary route function function will be called,
 which, in this example, will redirect the user to the home page.
  */
 router.get('/auth/google/callback', googleRoutes.callback(), google);
+router.get('/notifications', Validators.token, NotificationController.getNotification);
+
+
+// notifications endpoints ----------------------
+router.put('/users/notifications/opt', Validators.token, notifications);
 
 export default router;
