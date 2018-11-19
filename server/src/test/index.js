@@ -9,6 +9,9 @@ import followTest from './integration tests/followTest';
 import commentTest from './integration tests/commentTest';
 import replyTest from './integration tests/replyTest';
 import highlightTest from './integration tests/highlightTest';
+import report from './integration tests/report';
+import response from './unitTests/response';
+
 
 export default {
   userTest,
@@ -21,5 +24,7 @@ export default {
   followTest,
   commentTest,
   replyTest,
-  highlightTest
+  highlightTest,
+  report,
+  response
 };

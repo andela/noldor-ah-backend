@@ -103,7 +103,7 @@ describe('Test CRUD comments being threaded', () => {
         .end((error, response) => {
           if (error) done(error);
           expect(response.status).to.equal(400);
-          expect(response.body.message).to.equal('Please say something...');
+          expect(response.body.message).to.equal('Please provide a reply');
           done();
         });
     });
@@ -323,7 +323,7 @@ describe('Test CRUD comments being threaded', () => {
         .end((error, response) => {
           if (error) done(error);
           expect(response.status).to.equal(400);
-          expect(response.body.message).to.equal('Please say something...');
+          expect(response.body.message).to.equal('Please provide a reply');
           done();
         });
     });

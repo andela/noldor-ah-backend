@@ -15,5 +15,5 @@ export default {
   resetPassword,
   signup,
   token,
-  add
+  add,
 };

@@ -6,7 +6,7 @@ const replyValidation = (req, res, next) => {
     if (typeof validReply !== 'string' || validReply === undefined || validReply === '') {
       return res.status(400).json({
         success: false,
-        message: 'Please say something...'
+        message: 'Please provide a reply'
       });
     }
     return next();

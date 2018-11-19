@@ -9,6 +9,7 @@ import sendMail from './sendMail';
 import slugDecoder from './slugDecoder';
 import articleRatings from './articleRatings';
 import templates from './templates';
+import ReportValidation from './reportValidation';
 
 
 export default {
@@ -22,5 +23,6 @@ export default {
   slugDecoder,
   articleRatings,
   templates,
-  ArticleValidation
+  ArticleValidation,
+  ReportValidation
 };

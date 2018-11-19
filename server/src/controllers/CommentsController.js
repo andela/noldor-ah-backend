@@ -39,7 +39,10 @@ class CommentController {
           message: 'There are no comments...'
         });
       }
-
+      await Promise.all(availableComment.map(async (comment) => {
+        const replies = await comment.getReplies();
+        comment.dataValues.replies = replies.length;
+      }));
       return res.status(200).json({
         success: true,
         message: 'Comments retrieved successfully',

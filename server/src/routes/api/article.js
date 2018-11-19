@@ -3,6 +3,7 @@ import ArticleController from '../../controllers/ArticleController';
 import ReactionController from '../../controllers/ReactionController';
 import Paginator from '../../controllers/paginationController';
 import Validators from '../../middlewares/validators';
+import ReportController from '../../controllers/ReportController';
 
 const {
   allArticles, userArticles, userDrafts,
@@ -11,6 +12,9 @@ const {
 } = ArticleController;
 
 const { token: authorization, tags: tagsValidation } = Validators;
+const {
+  getAllReports, reportArticle, reviewReport
+} = ReportController;
 const router = express.Router();
 
 router.get('/articles', allArticles);
@@ -24,9 +28,14 @@ router.put('/articles/:slug', authorization, updateArticle);
 router.delete('/articles/:slug', authorization, deleteArticle);
 router.get('/articles/page/:source', Paginator.page);
 router.put('/articles/:slug/tags', authorization, tagsValidation, updateTags);
-router.put('/articles/:slug/likes', authorization, ReactionController.likeArticle);
+router.post('/articles/:slug/likes', authorization, ReactionController.likeArticle);
 
 // Articles rating endpoints ---------------------
 router.post('/articles/ratings/:articleId', authorization, rateArticles);
+
+// Article report endpoints ----------------------
+router.post('/articles/:slug/report', Validators.token, reportArticle);
+router.get('/reports', Validators.token, getAllReports);
+router.put('/reports/:reportId/resolve', Validators.token, reviewReport);
 
 export default router;
