@@ -27,10 +27,7 @@ export default (sequelize, DataTypes) => {
     Comment.belongsTo(models.User, { foreignKey: 'userId' });
     Comment.belongsTo(models.Article, { foreignKey: 'articleId' });
     Comment.hasMany(models.Reply, { foreignKey: 'commentId' });
-<<<<<<< HEAD
     Comment.hasOne(models.Highlights, { foreignKey: 'commentId' });
-=======
->>>>>>> develop
   };
   return Comment;
 };
