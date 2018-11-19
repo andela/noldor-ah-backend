@@ -3,12 +3,16 @@ import express from 'express';
 import user from './user';
 import article from './article';
 import search from './search';
+import comment from './comments';
+import reply from './reply';
 
 const router = express.Router();
 
 router.use('/api/v1', user);
 router.use('/api/v1', article);
 router.use('/api/v1', search);
+router.use('/api/v1', comment);
+router.use('/api/v1', reply);
 
 /**
  * Home route

@@ -78,6 +78,7 @@ const Users = (sequelize, DataTypes) => {
       as: 'Following',
       foreignKey: 'followerId',
     });
+    User.hasMany(models.Reply, { foreignKey: 'userId' });
   };
   return User;
 };

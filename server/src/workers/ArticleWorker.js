@@ -138,7 +138,6 @@ class ArticleWorker {
     }
   }
 
-
   /**
      * @description { Check if article has been reacted to by user }
      * @param { object } req
