@@ -16,7 +16,7 @@ const config = {
   test: {
     username: 'root',
     password: 'password',
-    database: 'noldor-ah-test',
+    database: 'noldor_ah_test',
     host: '127.0.0.1',
     port: '5432',
     dialect: 'postgres',
