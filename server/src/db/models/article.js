@@ -70,6 +70,8 @@ export default (sequelize, DataTypes) => {
       as: 'users',
       foreignKey: 'articleId'
     });
+
+    Article.hasMany(models.Highlights, { foreignKey: 'articleId' });
   };
   return Article;
 };

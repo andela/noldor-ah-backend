@@ -5,6 +5,7 @@ import login from './userValidations/login';
 import resetPassword from './userValidations/resetPassword';
 import signup from './userValidations/signup';
 import token from './userValidations/token';
+import add from './highlightValidations/add';
 
 export default {
   search,
@@ -13,5 +14,6 @@ export default {
   login,
   resetPassword,
   signup,
-  token
+  token,
+  add
 };

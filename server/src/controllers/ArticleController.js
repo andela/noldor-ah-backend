@@ -114,6 +114,9 @@ class ArticleController {
     article.dataValues.likes = likes;
     const tagsArray = tags.map(x => x.name);
     article.dataValues.tags = tagsArray;
+    article.dataValues.highlights = await article.getHighlights({
+      attributes: ['id', 'commentId', 'highlight']
+    });
 
     return res.status(200).json({
       success: true,

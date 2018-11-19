@@ -8,6 +8,7 @@ import ratingTest from './integration tests/ratingTest';
 import followTest from './integration tests/followTest';
 import commentTest from './integration tests/commentTest';
 import replyTest from './integration tests/replyTest';
+import highlightTest from './integration tests/highlightTest';
 
 export default {
   userTest,
@@ -19,5 +20,6 @@ export default {
   ratingTest,
   followTest,
   commentTest,
-  replyTest
+  replyTest,
+  highlightTest
 };
