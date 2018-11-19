@@ -9,6 +9,9 @@ import categoryTest from './integration tests/categoryTest';
 import tagsTest from './integration tests/tagsTest';
 import commentTest from './integration tests/commentTest';
 import replyTest from './integration tests/replyTest';
+import report from './integration tests/report';
+import response from './unitTests/response';
+
 
 export default {
   userTest,
@@ -21,5 +24,7 @@ export default {
   categoryTest,
   tagsTest,
   commentTest,
-  replyTest
+  replyTest,
+  report,
+  response
 };

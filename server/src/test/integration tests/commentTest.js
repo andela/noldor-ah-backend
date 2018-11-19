@@ -82,7 +82,6 @@ describe('Test CRUD Comments for articles', () => {
           featuredImg: 'ahghgkjag.jpg',
           tags: 'bars,foos,philosophical,smart',
           category: 'life'
-          
         })
         .end((error, response) => {
           if (error) done(error);

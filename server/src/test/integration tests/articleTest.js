@@ -153,7 +153,7 @@ describe('POST endpoint for creating articles', () => {
         done();
       });
   });
-  it('should 400 if request body is not present', (done) => {
+  it('should return 400 if request body is not present', (done) => {
     chai.request(app)
       .post(api)
       .set('X-Token', data.token)
@@ -166,6 +166,9 @@ describe('POST endpoint for creating articles', () => {
         if (error) done(error);
         expect(response.status).to.equal(400);
         expect(response.body).to.be.an('object');
+        expect(response.body.error.title).to.equal('title is required');
+        expect(response.body.error.description).to.equal('description is required');
+        expect(response.body.error.content).to.equal('content is required');
         done();
       });
   });
@@ -187,6 +190,7 @@ describe('POST endpoint for creating articles', () => {
         if (error) done(error);
         expect(response.status).to.equal(201);
         expect(response.body).to.be.an('object');
+        expect(response.body.message).to.equal('article was added successfully');
         data.slug = response.body.article.slug;
         done();
       });
@@ -378,7 +382,7 @@ describe('Update endpoint for articles', () => {
   });
 
 
-  it('should return a 201', (done) => {
+  it('should return a 200', (done) => {
     chai.request(app)
       .put(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token)
@@ -407,7 +411,7 @@ describe('Update endpoint for articles', () => {
       });
   });
 
-  it('should return a 201', (done) => {
+  it('should return a 200', (done) => {
     chai.request(app)
       .put(`/api/v1/articles/${data.slug}`)
       .set('X-Token', data.token)

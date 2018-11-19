@@ -16,28 +16,18 @@ class ArticleWorker {
    * @param { object } res
    * @returns { object } JSON
    */
-  static async getAllArticles(res) {
-    try {
-      const article = await Article.findAll({
-        where: {
-          published: true
-        },
-        attributes: ['slug', 'title',
-          'description', 'content', 'published',
-          'createdAt', 'updatedAt'],
-        include: [{
-          model: User, attributes: ['username', 'bio', 'avatarUrl']
-        }]
-      });
-      return article;
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        error: {
-          message: error.message,
-        }
-      });
-    }
+  static async getAllArticles() {
+    return Article.findAll({
+      where: {
+        published: true
+      },
+      attributes: ['slug', 'title',
+        'description', 'content', 'published',
+        'createdAt', 'updatedAt'],
+      include: [{
+        model: User, attributes: ['username', 'bio', 'avatarUrl']
+      }]
+    });
   }
 
   /**

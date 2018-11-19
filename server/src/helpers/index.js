@@ -10,6 +10,7 @@ import slugDecoder from './slugDecoder';
 import articleRatings from './articleRatings';
 import templates from './templates';
 import format from './format';
+import ReportValidation from './reportValidation';
 
 
 export default {
@@ -25,4 +26,5 @@ export default {
   templates,
   ArticleValidation,
   format,
+  ReportValidation
 };
