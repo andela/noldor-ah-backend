@@ -66,7 +66,7 @@ describe('add articles for test', () => {
   describe('authorize users only', () => {
     it('should require a token for authorisation ', (done) => {
       chai.request(app)
-        .put('/api/v1/articles/43d65tf76f7/likes')
+        .post('/api/v1/articles/43d65tf76f7/likes')
         .send(testArticle)
         .end((error, response) => {
           if (error) done(error);
@@ -77,7 +77,7 @@ describe('add articles for test', () => {
 
     it('should require the correct token for authorisation ', (done) => {
       chai.request(app)
-        .put('/api/v1/articles/43d65tf76f7/likes')
+        .post('/api/v1/articles/43d65tf76f7/likes')
         .set('X-Token', wrongToken)
         .send(testArticle)
         .end((error, response) => {
@@ -93,7 +93,7 @@ describe('add articles for test', () => {
 describe('like an article endpoint', () => {
   it('should return 201 when article is liked', (done) => {
     chai.request(app)
-      .put(`/api/v1/articles/${data.slug}/likes`)
+      .post(`/api/v1/articles/${data.slug}/likes`)
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
@@ -105,7 +105,7 @@ describe('like an article endpoint', () => {
 
   it('should return 500 when article is liked', (done) => {
     chai.request(app)
-      .put(`/api/v1/articles/${data.slug}/likes`)
+      .post(`/api/v1/articles/${data.slug}/likes`)
       .set('X-Token', fakeToken)
       .end((error, response) => {
         if (error) done(error);
@@ -117,7 +117,7 @@ describe('like an article endpoint', () => {
 
   it('should return 204 when article is unliked', (done) => {
     chai.request(app)
-      .put(`/api/v1/articles/${data.slug}/likes`)
+      .post(`/api/v1/articles/${data.slug}/likes`)
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
@@ -129,7 +129,7 @@ describe('like an article endpoint', () => {
 
   it('should return 500 when article is liked', (done) => {
     chai.request(app)
-      .put(`/api/v1/articles/${data.slug}/likes`)
+      .post(`/api/v1/articles/${data.slug}/likes`)
       .set('X-Token', fakeToken)
       .end((error, response) => {
         if (error) done(error);
@@ -141,7 +141,7 @@ describe('like an article endpoint', () => {
 
   it('should return 404 when article is not found', (done) => {
     chai.request(app)
-      .put('/api/v1/articles/sdkjsn9wn4sldjd98/likes')
+      .post('/api/v1/articles/sdkjsn9wn4sldjd98/likes')
       .set('X-Token', fakeToken)
       .end((error, response) => {
         if (error) done(error);

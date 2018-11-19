@@ -55,3 +55,6 @@ server/src/db/seeder
 
 # Will be regenerated everytime we run NPM i
 package-lock.json
+
+# vscode settings
+.vscode

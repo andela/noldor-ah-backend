@@ -24,6 +24,7 @@ router.put('/articles/:slug', authorization, tagsValidation, updateArticle);
 router.delete('/articles/:slug', authorization, deleteArticle);
 router.get('/articles/page/:source', Paginator.page);
 router.put('/articles/:slug/likes', authorization, ReactionController.likeArticle);
+router.post('/articles/:slug/likes', authorization, ReactionController.likeArticle);
 
 // Articles rating endpoints ---------------------
 router.post('/articles/ratings/:articleId', authorization, rateArticles);
