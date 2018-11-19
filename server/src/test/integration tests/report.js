@@ -1,7 +1,6 @@
 import chaiHttp from 'chai-http';
 import chai from 'chai';
 import app from '../../../../index';
-import CategoryController from '../../controllers/CategoryController';
 
 const { expect } = chai;
 chai.use(chaiHttp);
