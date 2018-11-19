@@ -302,7 +302,10 @@ class UserController {
           message: 'User does not exist'
         });
       }
+
       const profile = await User.findByPk(userId);
+      const followings = await profile.countFollower();
+      const followers = await profile.countFollowing();
       const {
         id,
         firstName,
@@ -322,7 +325,9 @@ class UserController {
           username,
           email,
           bio,
-          avatarUrl
+          avatarUrl,
+          followers,
+          followings
         }
       });
     } catch (error) {
