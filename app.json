@@ -1,12 +1,43 @@
 {
     "name": "noldor-ah-backend",
     "scripts": {},
-    "env": {},
-    "formation": {
-        "web": {
-        "quantity": 1
+    "env": {
+        "CLOUDINARY_URL": {
+            "required": true
+        },
+        "DATABASE_URL": {
+            "required": true
+        },
+        "NPM_CONFIG_PRODUCTION": {
+            "required": true
+        },
+        "PRIVATE_KEY": {
+            "required": true
+        },
+        "SENDGRID_API_KEY": {
+            "required": true
+        },
+        "SUPER_USER_EMAIL": {
+            "required": true
+        },
+        "SUPER_USERNAME": {
+            "required": true
+        },
+        "SUPER_USER_PASSWORD": {
+            "required": true
         }
     },
-    "addons": [],
-    "buildpacks": []
+    "formation": {
+        "web": {
+            "quantity": 1
+        }
+    },
+    "addons": [
+        "heroku-postgresql"
+    ],
+    "buildpacks": [
+        {
+            "url": "heroku/nodejs"
+        }
+    ]
 }
