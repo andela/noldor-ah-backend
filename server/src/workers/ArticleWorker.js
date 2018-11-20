@@ -1,9 +1,10 @@
 import Sequelize from 'sequelize';
 import Models from '../db/models';
 import Helpers from '../helpers/index';
+import TagWorker from './TagWorker';
 
 const { Op } = Sequelize;
-const { User, Article } = Models;
+const { User, Article, Category } = Models;
 
 /**
  * @class { ArticleWorker }
@@ -62,23 +63,51 @@ class ArticleWorker {
    *
    * @param { object } req
    * @param { object } res
+   * @param { object } article
    * @returns { object } JSON
    */
-  static async updateArticle(req, res) {
+  static async updateArticle(req, res, article) {
     try {
       const id = await Helpers.slugDecoder(req);
       const input = {};
 
-      if (req.body.title !== undefined) {
+      if (req.body.title) {
         input.title = req.body.title;
       }
-      if (req.body.content !== undefined) {
+      if (req.body.content) {
         input.content = req.body.content;
       }
-      if (req.body.description !== undefined) {
+      if (req.body.description) {
         input.description = req.body.description;
       }
-      return Article.update(
+      if (req.body.category) {
+        req.body.category = req.body.category.toLowerCase();
+        const category = await Category.findOne({ where: { name: req.body.category } });
+
+        if (!category) {
+          const availableCategories = await Category.findAll({
+            attributes: ['name']
+          }).map(res => res.name);
+
+          return res.status(400).json({
+            success: false,
+            message: 'selected category does not exist',
+            availableCategories
+          });
+        }
+
+        input.category = req.body.category;
+      }
+      if (req.body.tags) {
+        const oldTags = await article.getTags({ attributes: ['id'] })
+          .then(res => JSON.parse(JSON.stringify(res)))
+          .map(tag => tag.id);
+
+        await article.removeTags(oldTags)
+          .then(() => TagWorker.addTags(req.body.tags, article));
+      }
+
+      await Article.update(
         input,
         {
           where: {
@@ -88,6 +117,11 @@ class ArticleWorker {
           }
         }
       );
+
+      return res.status(200).json({
+        success: 'true',
+        message: 'article has been updated successfully'
+      });
     } catch (error) {
       return res.status(500).json({
         success: false,

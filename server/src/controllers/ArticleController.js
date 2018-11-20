@@ -4,11 +4,9 @@ import ArticleWorker from '../workers/ArticleWorker';
 import Helpers from '../helpers/index';
 import TagWorker from '../workers/TagWorker';
 
-
 const {
-  Sequelize, Article,
+  Article, Category
 } = Models;
-const { Op } = Sequelize;
 const {
   checkArticle, getAllArticles, findArticle, publish,
   getUserArticles, deleteArticle, updateArticle
@@ -131,17 +129,33 @@ class ArticleController {
   static async postArticle(req, res) {
     const validationError = await postValidation(req, res);
 
-    if (validationError === null) {
+    if (!validationError) {
       req.body.userId = req.user.payload.id;
       req.body.slug = Slug(req.body.title, { lower: true, replacement: '-' });
       req.body.published = false;
+      req.body.category = req.body.category.toLowerCase();
       const { tags } = req.body;
       try {
+        const existingCategory = await Category.findOne({ where: { name: req.body.category } })
+          .then(res => Helpers.format(res));
+
+        if (!existingCategory) {
+          const availableCategories = await Category.findAll({
+            attributes: ['name']
+          }).map(category => category.name);
+
+          return res.status(400).json({
+            success: false,
+            message: 'selected category does not exist',
+            availableCategories
+          });
+        }
+
         const article = await Article.create(req.body, {
           fields: Object.keys(req.body)
         });
 
-        if (tags) addTags(tags, article);
+        if (tags) await addTags(tags, article);
 
         return res.status(201).json({
           success: true,
@@ -210,11 +224,7 @@ class ArticleController {
         message: 'unauthorized'
       });
     }
-    await updateArticle(req, res);
-    return res.status(200).json({
-      success: 'true',
-      message: 'article has been updated successfully'
-    });
+    updateArticle(req, res, foundArticle);
   }
 
   /**
@@ -246,61 +256,6 @@ class ArticleController {
     });
   }
 
-
-  /**
-   * @description { updates article tags }
-   * @param { object } req
-   * @param { object } res
-   * @returns { object } JSON
-   */
-  static async updateTags(req, res) {
-    const articleId = Helpers.slugDecoder(req);
-    const userId = req.user.payload.id;
-    const newTags = req.body.tags;
-
-    if (!newTags) {
-      return res.status(400).json({
-        success: false,
-        message: 'tags field is required',
-      });
-    }
-
-    const article = await Article.findOne({
-      where: {
-        slug: { [Op.like]: `%${articleId}` }
-      }
-    });
-
-    if (!article) {
-      return res.status(404).json({
-        success: false,
-        message: 'article not found',
-      });
-    }
-
-    if (article.dataValues.userId !== userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'unauthorized',
-      });
-    }
-
-    let results = await article.getTags({ attributes: ['id'] });
-    results = JSON.parse(JSON.stringify(results));
-
-    const oldTags = results.map(tag => tag.id);
-
-    await article.removeTags(oldTags);
-    addTags(newTags, article);
-
-    return res.status(200).json({
-      success: true,
-      message: 'tags updated successfully',
-    });
-  }
-
-
-  // Article ratings ----------------------
   /**
    *
    * @description { rate published articles }

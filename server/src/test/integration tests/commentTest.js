@@ -60,7 +60,8 @@ describe('Test CRUD Comments for articles', () => {
           description: 'Pastry fruitcake gingerbread',
           content: 'Croissant fruitcake jelly muffin chocolate cake lollipop pudding gummi bears',
           featuredImg: 'ahghgkjag.jpg',
-          tags: 'bars,foos,philosophical,smart'
+          tags: 'bars,foos,philosophical,smart',
+          category: 'life'
         })
         .end((error, response) => {
           if (error) done(error);
@@ -79,7 +80,8 @@ describe('Test CRUD Comments for articles', () => {
           description: 'Powder cotton candy',
           content: 'Candy canes macaroon chocolate cake donut. Chupa chups candy dragée.',
           featuredImg: 'ahghgkjag.jpg',
-          tags: 'bars,foos,philosophical,smart'
+          tags: 'bars,foos,philosophical,smart',
+          category: 'life'
         })
         .end((error, response) => {
           if (error) done(error);
