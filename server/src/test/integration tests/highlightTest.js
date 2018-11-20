@@ -39,6 +39,7 @@ describe('Highlights Tests', () => {
         content: 'There is really no foo without bar.',
         featuredImg: 'image.com',
         tags: 'foo,bar,philosophy',
+        category: 'life'
       })
       .end((error, response) => {
         if (error) done(error);

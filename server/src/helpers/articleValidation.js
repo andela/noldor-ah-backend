@@ -13,7 +13,7 @@ class ArticleValidation {
   static postValidation(req, res) {
     const values = req.body;
     const errors = {};
-    const required = ['title', 'description', 'content'];
+    const required = ['title', 'description', 'content', 'category'];
     let pass = true;
 
     for (let i = 0; i < required.length; i += 1) {
@@ -23,7 +23,7 @@ class ArticleValidation {
       }
     }
     for (let i = 0; i < required.length; i += 1) {
-      if (values[required[i]] === '') {
+      if (values[required[i]] && (values[required[i]] === '' || values[required[i]].trim() < 1)) {
         errors[required[i]] = `${required[i]} can not be an empty field`;
         pass = false;
       }

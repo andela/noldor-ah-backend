@@ -34,7 +34,8 @@ describe('GET all articles endpoint', () => {
         title: 'this is the title',
         description: 'this is the description',
         content: 'this is the content',
-        featuredImg: 'ahghgkjag.jpg'
+        featuredImg: 'ahghgkjag.jpg',
+        category: 'life'
 
       })
       .end((error, response) => {
