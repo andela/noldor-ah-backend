@@ -11,7 +11,7 @@ import commentTest from './integration tests/commentTest';
 import replyTest from './integration tests/replyTest';
 import report from './integration tests/report';
 import response from './unitTests/response';
-
+import bookmarkTest from './integration tests/bookmarkTest';
 
 export default {
   userTest,
@@ -26,5 +26,6 @@ export default {
   commentTest,
   replyTest,
   report,
-  response
+  response,
+  bookmarkTest
 };
