@@ -9,6 +9,7 @@ import categoryTest from './integration tests/categoryTest';
 import tagsTest from './integration tests/tagsTest';
 import commentTest from './integration tests/commentTest';
 import replyTest from './integration tests/replyTest';
+import highlightTest from './integration tests/highlightTest';
 import report from './integration tests/report';
 import response from './unitTests/response';
 import bookmarkTest from './integration tests/bookmarkTest';
@@ -25,6 +26,7 @@ export default {
   tagsTest,
   commentTest,
   replyTest,
+  highlightTest,
   report,
   response,
   bookmarkTest

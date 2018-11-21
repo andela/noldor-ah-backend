@@ -77,6 +77,8 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId'
     });
 
+    Article.hasMany(models.Highlights, { foreignKey: 'articleId' });
+
     Article.belongsTo(models.Category, {
       foreignKey: 'category'
     });
