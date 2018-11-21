@@ -1,5 +1,5 @@
 import Models from '../db/models';
-import CommentWorker from '../workers/CommentWorker';
+import CommentQueries from '../workers/CommentQueries';
 
 const { Reply } = Models;
 
@@ -8,7 +8,7 @@ const {
   confirmUser,
   getCommentReplies,
   getReply
-} = CommentWorker;
+} = CommentQueries;
 
 /**
  * @class { Reply to a Comment Controller }
@@ -86,6 +86,11 @@ class ReplyController {
           message: 'There are no replies...'
         });
       }
+      const totalReplies = availableReplies[0].Replies;
+      totalReplies.map((reply) => {
+        reply.dataValues.ReplyLikes = reply.dataValues.ReplyLikes.length;
+        return reply.dataValues.ReplyLikes;
+      });
       return res.status(200).json({
         success: true,
         message: 'Replies retrieved successfully',
