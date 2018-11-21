@@ -14,6 +14,7 @@ import ReportValidation from './reportValidation';
 import decodePassword from './hashPassword';
 import roleDefinition from './defineRole';
 import UserHelper from './user';
+import httpResponseHelper from './httpResponse';
 
 export default {
   appendAuthor,
@@ -31,5 +32,6 @@ export default {
   ReportValidation,
   decodePassword,
   roleDefinition,
-  UserHelper
+  UserHelper,
+  httpResponseHelper
 };

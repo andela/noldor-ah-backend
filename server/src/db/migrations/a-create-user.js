@@ -78,6 +78,11 @@ export default {
     deletedAt: {
       allowNull: true,
       type: Sequelize.DATE
+    },
+    deactivatedByAdmin: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     }
   }, { paranoid: true }),
   down: queryInterface => queryInterface.dropTable('Users')

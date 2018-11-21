@@ -63,6 +63,10 @@ const Users = (sequelize, DataTypes) => {
       unique: false,
       type: DataTypes.STRING
     },
+    deactivatedByAdmin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   }, { paranoid: true });
   User.associate = (models) => {
     User.belongsToMany(models.Article, {

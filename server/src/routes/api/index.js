@@ -11,6 +11,7 @@ import highlight from './highlight';
 >>>>>>> feat(roleAccess): create role based functionality
 import bookmark from './bookmark';
 import role from './role';
+import admin from './admin';
 
 const router = express.Router();
 
@@ -26,6 +27,7 @@ router.use('/api/v1', highlight);
 >>>>>>> feat(roleAccess): create role based functionality
 router.use('/api/v1', bookmark);
 router.use('/api/v1', role);
+router.use('/api/v1', admin);
 
 /**
  * Home route
