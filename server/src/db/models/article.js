@@ -77,11 +77,8 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId'
     });
 
-<<<<<<< HEAD
     Article.hasMany(models.Highlights, { foreignKey: 'articleId' });
 
-=======
->>>>>>> feat(roleAccess): create role based functionality
     Article.belongsTo(models.Category, {
       foreignKey: 'category'
     });
