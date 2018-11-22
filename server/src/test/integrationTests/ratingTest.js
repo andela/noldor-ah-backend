@@ -93,7 +93,7 @@ describe('Article Rating test scripts', () => {
         done();
       });
   });
-  it('should return a 201', (done) => {
+  it('should return a 201, if articles is successfully published', (done) => {
     chai.request(app)
       .put(`/api/v1/articles/${data.slug}/publish`)
       .set('X-Token', data.token)

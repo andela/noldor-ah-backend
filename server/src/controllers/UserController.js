@@ -3,8 +3,13 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import Models from '../db/models';
 import Helpers from '../helpers/index';
+import Mailer from '../helpers/sendMail';
+import UpdateWorker from '../workers/UpdateWorker';
+import templates from '../helpers/templates';
+import httpResponse from '../helpers/response';
 
 const { User } = Models;
+const html = templates.verifyEmailTemplate;
 
 dotenv.config();
 
@@ -14,11 +19,10 @@ dotenv.config();
  */
 class UserController {
   /**
-     *
-     * @param { object } req
-     * @param { object } res
-     * @returns { object } Json
-     */
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } Json
+   */
   static async register(req, res) {
     try {
       const {
@@ -45,7 +49,6 @@ class UserController {
           message: `Email ${email} aready exist`,
         });
       }
-
       User.create({
         username,
         email,
@@ -58,10 +61,22 @@ class UserController {
             username: data.dataValues.username,
           };
           const token = Helpers.issueToken(payload);
+          const mailOption = {
+            from: 'Authors Haven <no-reply@authorshaven.com>',
+            to: email,
+            subject: 'Welcome to Authors Haven',
+            html: html(username, req.headers.host, UpdateWorker.hashGenerator(email))
+          };
+          try {
+            Mailer.sendVerificationEmail(mailOption);
+          } catch (err) {
+            throw err;
+          }
           return res.header('x-token', token).status(200).json({
             user: {
               success: true,
-              message: 'registration successful',
+              message: 'Registration successful',
+              id: data.dataValues.id,
               email: data.dataValues.email,
               token,
               username: data.dataValues.username,
@@ -78,12 +93,13 @@ class UserController {
     }
   }
 
+
   /**
- *
- * @param { object } req
- * @param { object } res
- * @returns { object } json
- */
+   *
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } json
+   */
   static login(req, res) {
     const {
       email,
@@ -133,6 +149,34 @@ class UserController {
   }
 
   /**
+   *
+   * @param { object } req
+   * @param { object } res
+   * @returns { object } json
+   */
+  static async verifyEmail(req, res) {
+    const user = await User.findAndCountAll({
+      where: { emailVerificationHash: req.query.id }
+    });
+    try {
+      if (user.count > 0) {
+        User.update({
+          confirmEmail: true,
+          emailVerificationHash: 'Verified'
+        }, {
+          where: {
+            emailVerificationHash: req.query.id,
+          }
+        });
+        return httpResponse.goodResponse(res, 200, 'Email verified successfully');
+      }
+      return httpResponse.badResponse(res, 404, 'Verification failed, could not find user');
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  /**
    * @description { get the list of users information }
    * @param { object } req
    * @param { object } res
@@ -147,19 +191,9 @@ class UserController {
         data.forEach((info) => {
           users.push(info.dataValues);
         });
-        return res.status(200).json({
-          success: true,
-          message: 'successfully retrieved users list',
-          users,
-        });
+        return httpResponse.goodResponse(res, 200, 'successfully retrieved users list', users);
       })
-      .catch(err => res.status(500).json({
-        success: false,
-        message: 'internal server error',
-        error: {
-          messgae: err.message,
-        }
-      }));
+      .catch(err => httpResponse.badResponse(res, 200, 'Internal server error', err.message));
   }
 
   /**
@@ -191,10 +225,14 @@ class UserController {
     )
       .then((data) => {
         if (data) {
-          const sender = 'no-reply@authorshaven.com';
-          const subject = 'Reset your password';
           const resetPasswordTemplate = Helpers.templates.resetPassword(req.headers.host, token);
-          Helpers.sendMail(providedEmail, sender, subject, resetPasswordTemplate);
+          const mailOptions = {
+            to: providedEmail,
+            from: 'Authors Haven <no-reply@authorshaven.com>',
+            subject: 'Reset your password',
+            html: resetPasswordTemplate,
+          };
+          Helpers.sendMail.sendEmail(mailOptions);
           return res.status(200).json({
             success: true,
             message: 'Check your email for further instructions',
@@ -268,9 +306,13 @@ class UserController {
             });
           }
           const notifyPasswordChange = Helpers.templates.notifyPaswordChange(req.headers.host);
-          const sender = 'no-reply@authorshaven.com';
-          const subject = 'Successful Password Reset';
-          Helpers.sendMail(email, sender, subject, notifyPasswordChange);
+          const mailOptions = {
+            to: email,
+            from: 'Authors Haven <no-reply@authorshaven.com>',
+            subject: 'Reset your password',
+            html: notifyPasswordChange,
+          };
+          Helpers.sendMail.sendEmail(mailOptions);
           return res.status(200).json({
             success: true,
             message: 'password has been updated'

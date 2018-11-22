@@ -1,18 +1,19 @@
-import userTest from './integration tests/userTest';
-import articleTest from './integration tests/articleTest';
-import searchTest from './integration tests/searchTest';
-import paginationTest from './integration tests/paginationTest';
-import reactionTest from './integration tests/reactionTest';
-import ratingTest from './integration tests/ratingTest';
-import followTest from './integration tests/followTest';
-import categoryTest from './integration tests/categoryTest';
-import tagsTest from './integration tests/tagsTest';
-import commentTest from './integration tests/commentTest';
-import replyTest from './integration tests/replyTest';
-import highlightTest from './integration tests/highlightTest';
-import report from './integration tests/report';
+import highlightTest from './integrationTests/highlightTest';
+import categoryTest from './integrationTests/categoryTest';
+import bookmarkTest from './integrationTests/bookmarkTest';
+import commentTest from './integrationTests/commentTest';
+import replyTest from './integrationTests/replyTest';
+import report from './integrationTests/report';
 import response from './unitTests/response';
-import bookmarkTest from './integration tests/bookmarkTest';
+import userTest from './integrationTests/userTest';
+import articleTest from './integrationTests/articleTest';
+import searchTest from './integrationTests/searchTest';
+import tagsTest from './integrationTests/tagsTest';
+import paginationTest from './integrationTests/paginationTest';
+import reactionTest from './integrationTests/reactionTest';
+import ratingTest from './integrationTests/ratingTest';
+import followTest from './integrationTests/followTest';
+import verificationTest from './unitTests/verificationTest';
 
 export default {
   userTest,
@@ -23,11 +24,12 @@ export default {
   ratingTest,
   followTest,
   categoryTest,
+  bookmarkTest,
   tagsTest,
   commentTest,
   replyTest,
   highlightTest,
   report,
   response,
-  bookmarkTest
+  verificationTest
 };

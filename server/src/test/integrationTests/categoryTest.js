@@ -72,7 +72,7 @@ describe('Category Tests', () => {
           if (error) done(error);
           expect(response.status).to.equal(200);
           expect(response.body).to.be.an('object');
-          expect(response.body.message).to.equal('retrieved all articles of life');
+          expect(response.body.message).to.equal('life does not have any articles yet');
           done();
         });
     });
