@@ -349,6 +349,6 @@ describe('Test CRUD Comments for articles', () => {
 export default {
   data,
   dataII,
-  commentId,
-  article
+  article,
+  commentId
 };

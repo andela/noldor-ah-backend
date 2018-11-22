@@ -26,6 +26,7 @@ export default (sequelize, DataTypes) => {
   Reply.associate = (models) => {
     Reply.belongsTo(models.User, { foreignKey: 'userId' });
     Reply.belongsTo(models.Comment, { foreignKey: 'commentId' });
+    Reply.hasMany(models.ReplyLike, { foreignKey: 'replyId' });
   };
   return Reply;
 };

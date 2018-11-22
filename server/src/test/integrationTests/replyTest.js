@@ -8,6 +8,7 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 const replyId = {};
+const replyIdII = {};
 const {
   data,
   dataII,
@@ -72,6 +73,23 @@ describe('Test CRUD comments being threaded', () => {
           expect(response.status).to.equal(201);
           expect(response.body.message).to.equal('Reply has been posted successfully');
           replyId.id = response.body.data.id;
+          done();
+        });
+    });
+    it('Should return 201(Created) on successful creating on a reply to a comment', (done) => {
+      const values = {
+        userId: data.userId,
+        reply: 'Fruitcake carrot cake jelly-o cookie jelly-o croissant wafer icing toffee.'
+      };
+      chai.request(app)
+        .post(`/api/v1/comments/${commentIdII.id}/replies`)
+        .set('x-token', data.token)
+        .send(values)
+        .end((error, response) => {
+          if (error) done(error);
+          expect(response.status).to.equal(201);
+          expect(response.body.message).to.equal('Reply has been posted successfully');
+          replyIdII.id = response.body.data.id;
           done();
         });
     });
@@ -385,3 +403,9 @@ describe('Test CRUD comments being threaded', () => {
     });
   });
 });
+
+export default {
+  commentIdII,
+  commentIdIII,
+  replyIdII
+};

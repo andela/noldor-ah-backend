@@ -14,8 +14,11 @@ const config = {
     operatorsAliases: false,
   },
   test: {
-    use_env_variable: 'DATABASE_URL_TEST',
-    port: '5433',
+    username: 'root',
+    password: 'password',
+    database: 'noldor_ah_test',
+    host: '127.0.0.1',
+    port: '5432',
     dialect: 'postgres',
     logging: false,
     operatorsAliases: false,
