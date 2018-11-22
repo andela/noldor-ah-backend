@@ -60,7 +60,20 @@ export default (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.INTEGER
     },
-  }, {});
+  }, {
+
+    getterMethods: {
+      readingTime() {
+        if (this.getDataValue('content')) {
+          const readingTime = Math.round((this.content.split(' ').length) / 200);
+          if (readingTime === 0) {
+            return 'less than 1 minute';
+          }
+          return `${readingTime} min read`;
+        }
+      }
+    },
+  });
   Article.associate = (models) => {
     Article.belongsTo(models.User, { foreignKey: 'userId' });
 

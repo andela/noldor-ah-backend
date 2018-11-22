@@ -138,7 +138,6 @@ describe('like an article endpoint', () => {
         done();
       });
   });
-
   it('should return 404 when article is not found', (done) => {
     chai.request(app)
       .post('/api/v1/articles/sdkjsn9wn4sldjd98/likes')

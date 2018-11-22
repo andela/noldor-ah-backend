@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
@@ -57,7 +56,7 @@ describe('Signup validation test', () => {
         done();
       });
   });
-  it('Register a user, when all the required parameters is in good standing', (done) => {
+  it('Register a user, when all the required parameters are in good standing', (done) => {
     const values = {
       email: 'jane.doe@mail.com',
       username: 'meeky',
@@ -174,7 +173,7 @@ describe('Signup validation test', () => {
         if (err) done(err);
         expect(res.status).to.equal(200);
         expect(res.body.user.token).to.be.a('string');
-        expect(res.body.user.message).to.equal('registration successful');
+        expect(res.body.user.message).to.equal('Registration successful');
         userOneDetails.token = res.body.user.token;
         done();
       });
@@ -322,7 +321,7 @@ describe('Login validation test', () => {
         if (err) done(err);
         expect(res.status).to.equal(200);
         expect(res.body.success).to.equal(true);
-        expect(res.body.message).to.equal('successfully retrieved users list');
+        expect(res.body.message[0]).to.equal('successfully retrieved users list');
         done();
       });
   });
@@ -619,7 +618,7 @@ describe('User Profile test', () => {
     const id = userParams;
     const values = {
       firstName: 'Jane',
-      username: 'Janny',
+      username: 'Fanny',
       bio: 'This is my test',
       avatar: `https://res.cloudinary.com/dstvcmycn/image/upload/v1541530550
       /Author%27s%20Haven/qtvmhyx8k4pfimdtsucs.jpg`

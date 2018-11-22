@@ -10,15 +10,14 @@ const fakeSlug = 'this-is-the-title-7f261883cy59';
 const data = {};
 const category = 'technology';
 
-describe('/BookMark an article', () => {
+describe('BookMark an article', () => {
   it('should return 200 to login an existing user', (done) => {
-    const values = {
-      email: 'hope@noldor.com',
-      password: 'password123',
-    };
     chai.request(app)
       .post('/api/v1/users/login')
-      .send(values)
+      .send({
+        email: 'papa@smurf.com',
+        password: 'BigBlue5ky'
+      })
       .end((err, res) => {
         if (err) done(err);
         expect(res.status).to.equal(200);

@@ -15,7 +15,7 @@ describe('Test CRUD Comments for articles', () => {
   describe('Signup users for commenting on articles', () => {
     it('Login first user for testing comments on article', (done) => {
       const values = {
-        email: 'uwa@noldor.com',
+        email: 'jane.doe@mail.com',
         password: 'password123',
       };
       chai.request(app)

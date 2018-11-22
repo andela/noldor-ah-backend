@@ -28,7 +28,7 @@ const Users = (sequelize, DataTypes) => {
       required: true,
       allowNull: false,
       unique: true,
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     password: {
       required: true,
@@ -46,10 +46,28 @@ const Users = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('0', '1', '2'),
       defaultValue: '0',
     },
-    confirmEmail: {
+    confirmEmail: () => {
+      let variable;
+      if (process.env.NODE_ENV === 'test') {
+        variable = {
+          allowNull: false,
+          type: DataTypes.BOOLEAN,
+          defaultValue: true,
+        };
+      } else {
+        variable = {
+          allowNull: false,
+          type: DataTypes.BOOLEAN,
+          defaultValue: false
+        };
+      }
+      return variable;
+    },
+    emailVerificationHash: {
+      required: true,
       allowNull: true,
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      unique: true,
+      type: DataTypes.STRING
     },
     forgotPasswordHash: {
       required: false,

@@ -1,3 +1,21 @@
+const variableTest = (Sequelize) => {
+  let variable;
+  if (process.env.NODE_ENV === 'test') {
+    variable = {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: true
+    };
+  } else {
+    variable = {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    };
+  }
+  return variable;
+};
+
 export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Users', {
     id: {
@@ -28,7 +46,7 @@ export default {
       required: true,
       allowNull: false,
       unique: true,
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
     },
     password: {
       required: true,
@@ -50,10 +68,11 @@ export default {
       values: ['0', '1', '2'],
       defaultValue: '0',
     },
-    confirmEmail: {
-      allowNull: false,
-      type: Sequelize.BOOLEAN,
-      defaultValue: false
+    confirmEmail: variableTest(Sequelize),
+    emailVerificationHash: {
+      allowNull: true,
+      unique: true,
+      type: Sequelize.STRING
     },
     forgotPasswordHash: {
       required: false,

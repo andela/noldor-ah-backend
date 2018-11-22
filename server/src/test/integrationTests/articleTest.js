@@ -2,6 +2,7 @@ import chaiHttp from 'chai-http';
 import chai from 'chai';
 import app from '../../../../index';
 import Helpers from '../../helpers/index';
+import UpdateWorker from '../../workers/UpdateWorker';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -17,7 +18,9 @@ const fakeToken = Helpers.issueToken(payload);
 const testArticle = {
   title: 'this is the title',
   description: 'this is the description',
-  content: 'this is the content'
+  content: 'this is the content',
+  tags: 'travel,life',
+  category: 'life'
 };
 const noTitleArticle = {
   title: '',
@@ -35,9 +38,8 @@ const noContentArticle = {
   content: ''
 };
 const data = {};
-
 describe('GET all articles endpoint', () => {
-  it('should return a 200', (done) => {
+  it('should return a 404', (done) => {
     chai.request(app)
       .get('/api/v1/articles')
       .end((error, response) => {
@@ -98,7 +100,6 @@ describe('POST endpoint for creating articles', () => {
         done();
       });
   });
-
   it('should require the correct token for authorisation ', (done) => {
     chai.request(app)
       .post(api)
@@ -108,11 +109,9 @@ describe('POST endpoint for creating articles', () => {
         if (error) done(error);
         expect(response.status).to.equal(401);
         expect(response.body).to.be.an('object');
-
         done();
       });
   });
-
   it('should not add an article with no title', (done) => {
     chai.request(app)
       .post(api)
@@ -125,8 +124,6 @@ describe('POST endpoint for creating articles', () => {
         done();
       });
   });
-
-
   it('should not add an article with no body ', (done) => {
     chai.request(app)
       .post(api)
@@ -217,8 +214,6 @@ describe('POST endpoint for creating articles', () => {
       });
   });
 });
-
-
 describe('GET endpoint for logged-in user articles', () => {
   const api = '/api/v1/users/articles';
   it('should require an authorization token', (done) => {
@@ -231,7 +226,6 @@ describe('GET endpoint for logged-in user articles', () => {
         done();
       });
   });
-
   it('should require the correct token for authorisation ', (done) => {
     chai.request(app)
       .get(api)
@@ -605,18 +599,134 @@ describe('DELETE endpoint for an article', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(404);
+        done();
+      });
+  });
+});
+
+describe('User Email and Account Verification Test', () => {
+  let userxToken = '';
+  let articleSlug = '';
+  let userId = '';
+  let articleId = '';
+
+  const values = {
+    email: 'meeky.ae@gmail.com',
+    username: 'userone0',
+    password: 'Mochapassword1',
+    confirmPassword: 'Mochapassword1'
+  };
+  it('should return a 201 for successful registration', (done) => {
+    chai.request(app)
+      .post('/api/v1/users/register')
+      .send(values)
+      .end((error, response) => {
+        if (error) done(error);
+        userxToken = response.body.user.token;
+        userId = response.body.user.id;
+        expect(response.status).to.equal(200);
+        done();
+      });
+  });
+  it('should return a 201 for verified user trying to post articles', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles')
+      .set('x-token', userxToken)
+      .send(testArticle)
+      .end((error, response) => {
+        UpdateWorker.updateUserDetailsForTest(userId);
+        if (error) done(error);
+        articleSlug = response.body.article.slug;
+        articleId = response.body.article.id;
+        expect(response.status).to.equal(201);
+        done();
+      });
+  });
+  it('should return a 403 for unverified user trying to post articles', (done) => {
+    chai.request(app)
+      .post('/api/v1/articles')
+      .set('x-token', userxToken)
+      .send(testArticle)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(403);
+        done();
+      });
+  });
+  it('should return a 403 for unverified user trying to publish article', (done) => {
+    chai.request(app)
+      .put(`/api/v1/articles/${articleSlug}/publish`)
+      .set('X-Token', userxToken)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(403);
         expect(response.body).to.be.an('object');
         done();
       });
   });
-  it('should return 404 if article does not exist ', (done) => {
+  it('should return a 403 for unverified users trying to update articles', (done) => {
     chai.request(app)
-      .patch('/api/v1/articles/happy')
-      .set('X-Token', data.token)
+      .put(`/api/v1/articles/${articleSlug}`)
+      .set('X-Token', userxToken)
+      .send(testArticle)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(404);
+        expect(response.status).to.equal(403);
         expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+  it('should return a 403 for unverified users trying to delete articles', (done) => {
+    chai.request(app)
+      .delete(`/api/v1/articles/${articleSlug}`)
+      .set('X-Token', userxToken)
+      .send({
+        tags: 'bars,foos,philosophical,smart,brainiac',
+      })
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(403);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+  it('should return 403 when an unauthorized user is trying to like an article', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/${articleSlug}/likes`)
+      .set('X-Token', userxToken)
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(403);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+  it('should return a 403 (Unauthorized) for unverified user trying to rate article', (done) => {
+    chai.request(app)
+      .post(`/api/v1/articles/ratings/${articleId}`)
+      .set('X-Token', userxToken)
+      .send({ rateValue: 2 })
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(403);
+        done();
+      });
+  });
+  it('Should return 403 (Unauthorized) for unverified user trying to edit profile', (done) => {
+    const testValues = {
+      firstName: 'Jane',
+      username: 'Janny',
+      bio: 'This is my test',
+      avatar: `https://res.cloudinary.com/dstvcmycn/image/upload/v1541530550
+      /Author%27s%20Haven/qtvmhyx8k4pfimdtsucs.jpg`
+    };
+    chai.request(app)
+      .put(`/api/v1/users/${userId}/profiles`)
+      .set('X-Token', userxToken)
+      .send(testValues)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.status).to.equal(403);
         done();
       });
   });

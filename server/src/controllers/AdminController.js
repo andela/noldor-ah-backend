@@ -36,7 +36,7 @@ class AdminController {
     );
 
     await article.update({ published: false });
-    await Helpers.sendMail(
+    await Helpers.sendMail.sendEmail(
       articleOwner.email,
       'no-reply@authorshaven.com',
       'Policy Violation',
@@ -94,7 +94,7 @@ class AdminController {
     await findUser.update({ deactivatedByAdmin: true });
     await findUser.destroy();
 
-    await Helpers.sendMail(
+    await Helpers.sendMail.sendEmail(
       deactivatedUser.email,
       'no-reply@authorshaven.com',
       'Your Account Has Been Deactivated',
@@ -131,7 +131,7 @@ class AdminController {
     if (reactivatedUser.firstName) userName = reactivatedUser.firstName;
     const profileReactivation = Helpers.templates.profileReactivation(userName);
 
-    await Helpers.sendMail(
+    await Helpers.sendMail.sendEmail(
       reactivatedUser.email,
       'no-reply@authorshaven.com',
       'Your Account Has Been Reactivated',
