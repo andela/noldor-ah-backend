@@ -1,6 +1,7 @@
 import dotEnv from 'dotenv';
 import nodemailer from 'nodemailer';
 import UpdateWorker from '../workers/UpdateWorker';
+import logger from './logger';
 
 dotEnv.config();
 
@@ -17,7 +18,10 @@ const sendEmail = (mailOption) => {
       rejectUnauthorized: false
     }
   });
-  transporter.sendMail(mailOption);
+  transporter.sendMail(mailOption, (error, info) => {
+    if (error) return logger.error(error);
+    return logger.info(info);
+  });
 };
 
 const sendVerificationEmail = (mailOption) => {
@@ -33,10 +37,12 @@ const sendVerificationEmail = (mailOption) => {
       rejectUnauthorized: false
     }
   });
-  transporter.sendMail(mailOption, () => {
+  transporter.sendMail(mailOption, (error, info) => {
+    if (error) logger.error(error);
     setTimeout(() => {
       UpdateWorker.updateUserDetails(mailOption);
     }, 1000);
+    logger.info(info);
   });
 };
 

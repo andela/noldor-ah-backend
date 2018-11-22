@@ -11,7 +11,7 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "clean-dist": "rm -rf ./dist/",
     "build": "npm run clean-dist && mkdir ./dist/ && babel index.js -d ./dist/ && babel ./server/src/ -d ./dist/server/src",
-    "dev": "nodemon --exec babel-node --presets env index.js",
+    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node --presets env index.js",
     "migrate": "sequelize db:migrate && sequelize db:seed:all",
     "clean-db": "sequelize db:migrate:undo:all"
   },
@@ -19,6 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
+    "app-root-path": "^2.1.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-plugin-add-module-exports": "^1.0.0",
@@ -52,7 +53,9 @@
     "sinon": "^7.1.1",
     "slug": "^0.9.2",
     "underscore": "^1.9.1",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "winston": "^3.1.0",
+    "winston-daily-rotate-file": "^3.5.1"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-babel": "^1.2.3",
