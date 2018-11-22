@@ -49,8 +49,7 @@ export default {
       type: Sequelize.TEXT
     },
     password: {
-      required: true,
-      allowNull: false,
+      allowNull: true,
       unique: false,
       type: Sequelize.STRING
     },
@@ -85,6 +84,10 @@ export default {
       allowNull: true,
       unique: false,
       type: Sequelize.STRING
+    },
+    facebookId: {
+      allowNull: true,
+      type: Sequelize.BIGINT
     },
     createdAt: {
       allowNull: false,

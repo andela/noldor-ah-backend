@@ -31,8 +31,7 @@ const Users = (sequelize, DataTypes) => {
       type: DataTypes.TEXT
     },
     password: {
-      required: true,
-      allowNull: false,
+      allowNull: true,
       unique: false,
       type: DataTypes.STRING
     },
@@ -84,6 +83,10 @@ const Users = (sequelize, DataTypes) => {
     deactivatedByAdmin: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    facebookId: {
+      allowNull: true,
+      type: DataTypes.BIGINT
     }
   }, { paranoid: true });
   User.associate = (models) => {
