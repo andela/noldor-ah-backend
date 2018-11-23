@@ -18,6 +18,7 @@ import ratingTest from './integrationTests/ratingTest';
 import followTest from './integrationTests/followTest';
 import verificationTest from './unitTests/verificationTest';
 import logger from './unitTests/loggerTest';
+import likeCommentTest from './integrationTests/likeCommentTest';
 
 export default {
   userTest,
@@ -39,5 +40,6 @@ export default {
   roleTest,
   adminTest,
   verificationTest,
-  logger
+  logger,
+  likeCommentTest
 };

@@ -1,7 +1,7 @@
 import ReportValidation from '../helpers/reportValidation';
 import HttpResponseHelper from '../helpers/httpResponse';
 import ReportWorker from '../workers/ReportWorker';
-import CommentWorker from '../workers/CommentWorker';
+import CommentWorker from '../workers/CommentQueries';
 
 const { goodResponse, badResponse } = HttpResponseHelper;
 

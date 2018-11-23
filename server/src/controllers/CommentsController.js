@@ -1,5 +1,5 @@
 import Models from '../db/models';
-import CommentWorker from '../workers/CommentWorker';
+import CommentQueries from '../workers/CommentQueries';
 
 const { Comment, Article } = Models;
 
@@ -7,7 +7,7 @@ const {
   getArticleComments,
   confirmArticle,
   confirmUser
-} = CommentWorker;
+} = CommentQueries;
 
 /**
  * @class { Comment Controller }
@@ -42,6 +42,9 @@ class CommentController {
       await Promise.all(availableComment.map(async (comment) => {
         const replies = await comment.getReplies();
         comment.dataValues.replies = replies.length;
+
+        const likes = await comment.getCommentLikes();
+        comment.dataValues.likes = likes.length;
       }));
       return res.status(200).json({
         success: true,

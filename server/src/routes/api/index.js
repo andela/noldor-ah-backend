@@ -9,6 +9,7 @@ import highlight from './highlight';
 import bookmark from './bookmark';
 import role from './role';
 import admin from './admin';
+import likes from './likes';
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.use('/api/v1', highlight);
 router.use('/api/v1', bookmark);
 router.use('/api/v1', role);
 router.use('/api/v1', admin);
-
+router.use('/api/v1', likes);
 /**
  * Home route
  */

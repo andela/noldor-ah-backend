@@ -28,6 +28,7 @@ export default (sequelize, DataTypes) => {
     Comment.belongsTo(models.Article, { foreignKey: 'articleId' });
     Comment.hasMany(models.Reply, { foreignKey: 'commentId' });
     Comment.hasOne(models.Highlights, { foreignKey: 'commentId' });
+    Comment.hasMany(models.CommentLike, { foreignKey: 'commentId' });
   };
   return Comment;
 };

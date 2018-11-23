@@ -1,11 +1,11 @@
 import Models from '../db/models';
 
 const {
-  User, Article, Comment, Reply, ReportedComment
+  User, Article, Comment, Reply, ReportedComment, ReplyLike
 } = Models;
 /**
  * @class { CommentWorker }
- * @description { Handles for like and unlike }
+ * @description { Handles comments }
  */
 class CommentWorker {
   /**
@@ -63,7 +63,12 @@ class CommentWorker {
       },
       include: [
         {
-          model: Reply
+          model: Reply,
+          include: [
+            {
+              model: ReplyLike
+            }
+          ]
         }
       ]
     });

@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import Models from '../db/models';
 import Helpers from '../helpers/index';
 import HttpResponseHelper from '../helpers/httpResponse';
-import CommentWorker from './CommentWorker';
+import CommentWorker from './CommentQueries';
 
 const { badResponse } = HttpResponseHelper;
 

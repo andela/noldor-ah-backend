@@ -1,40 +1,217 @@
-[Thu Nov 22 2018 18:21:47 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'fred@noldor.com' ],
+[Thu Nov 22 2018 17:54:23 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:23 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:23 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:23 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:24 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:24 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:25 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:25 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:25 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:25 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:25 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:26 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:26 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:26 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:26 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 17:54:26 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Thu Nov 22 2018 17:54:26 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Thu Nov 22 2018 17:54:26 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Thu Nov 22 2018 18:02:29 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:29 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:29 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:29 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:30 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:30 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:31 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:31 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:31 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:31 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:32 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:32 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:32 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:32 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:32 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:02:32 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Thu Nov 22 2018 18:02:32 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Thu Nov 22 2018 18:02:32 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Thu Nov 22 2018 18:02:32 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:54 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:54 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:54 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:54 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:54 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:55 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:56 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:56 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:56 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:56 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:56 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:56 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:56 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:57 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:57 GMT+0100 (WAT)] : undefined
+[Thu Nov 22 2018 18:03:57 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Thu Nov 22 2018 18:03:57 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Thu Nov 22 2018 18:03:57 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Fri Nov 23 2018 11:47:30 GMT+0100 (WAT)] : { accepted: [ 'oluseyi.anani@andela.com' ],
   rejected: [],
-  envelopeTime: 729,
-  messageTime: 1294,
-  messageSize: 1369,
-  response: '250 2.0.0 OK 1542907307 e19sm4680396wrc.27 - gsmtp',
+  envelopeTime: 700,
+  messageTime: 936,
+  messageSize: 1380,
+  response: '250 2.0.0 OK 1542970050 y9sm17197945wrq.55 - gsmtp',
+  envelope: 
+   { from: 'no-reply@authorshaven.com',
+     to: [ 'oluseyi.anani@andela.com' ] },
+  messageId: '<8bec8b6b-bf2e-2c49-6938-cba48944cc25@authorshaven.com>' }
+[Fri Nov 23 2018 12:10:15 GMT+0100 (WAT)] : { accepted: [ 'meeky.ae@mail.com' ],
+  rejected: [],
+  envelopeTime: 1610,
+  messageTime: 890,
+  messageSize: 1371,
+  response: '250 2.0.0 OK 1542971415 o81sm2621972wmd.10 - gsmtp',
+  envelope: 
+   { from: 'no-reply@authorshaven.com',
+     to: [ 'meeky.ae@mail.com' ] },
+  messageId: '<7efe237d-dfdf-fb06-0245-d653555896ca@authorshaven.com>' }
+[Fri Nov 23 2018 12:11:23 GMT+0100 (WAT)] : { accepted: [ 'meeky.ae@gmail.com' ],
+  rejected: [],
+  envelopeTime: 684,
+  messageTime: 1076,
+  messageSize: 1372,
+  response: '250 2.0.0 OK 1542971482 6sm6911420wmk.26 - gsmtp',
+  envelope: 
+   { from: 'no-reply@authorshaven.com',
+     to: [ 'meeky.ae@gmail.com' ] },
+  messageId: '<8aa8fa41-2558-3751-b3d5-a6af9b231022@authorshaven.com>' }
+[Fri Nov 23 2018 12:39:42 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'uwa@noldor.com' ],
+  rejected: [],
+  envelopeTime: 864,
+  messageTime: 839,
+  messageSize: 1372,
+  response: '250 2.0.0 OK 1542973182 v189-v6sm7590200wmd.40 - gsmtp',
   envelope:
-   { from: 'no-reply@authorshaven.com', to: [ 'fred@noldor.com' ] },
-  messageId: '<e98ee3a0-6dd3-1495-980e-b09e2dd019b1@authorshaven.com>' }
-[Thu Nov 22 2018 18:21:47 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'hope@noldor.com' ],
+   { from: 'no-reply@authorshaven.com', to: [ 'uwa@noldor.com' ] },
+  messageId: '<a1ab202d-4b4c-f401-fa97-b851b7354a04@authorshaven.com>' }
+[Fri Nov 23 2018 12:39:43 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'hope@noldor.com' ],
   rejected: [],
-  envelopeTime: 730,
-  messageTime: 1763,
+  envelopeTime: 861,
+  messageTime: 1249,
   messageSize: 1370,
-  response: '250 2.0.0 OK 1542907307 t82-v6sm6221884wme.30 - gsmtp',
+  response: '250 2.0.0 OK 1542973183 y185sm4128921wmg.34 - gsmtp',
   envelope:
    { from: 'no-reply@authorshaven.com', to: [ 'hope@noldor.com' ] },
-  messageId: '<978c5591-1c71-d1ce-6d2c-cd4e8487fead@authorshaven.com>' }
-[Thu Nov 22 2018 18:21:48 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'meeky.ae@gmail.com' ],
+  messageId: '<f57f1693-4839-41e9-3248-c0f963fe1d5d@authorshaven.com>' }
+[Fri Nov 23 2018 12:39:43 GMT+0100 (West Africa Standard Time)] : undefined
+[Fri Nov 23 2018 12:39:43 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'fred@noldor.com' ],
   rejected: [],
-  envelopeTime: 526,
-  messageTime: 2022,
+  envelopeTime: 933,
+  messageTime: 1723,
+  messageSize: 1369,
+  response: '250 2.0.0 OK 1542973183 d18-v6sm37774534wre.25 - gsmtp',
+  envelope:
+   { from: 'no-reply@authorshaven.com', to: [ 'fred@noldor.com' ] },
+  messageId: '<91f74d71-6037-eb43-abff-e8c9a8e4fe93@authorshaven.com>' }
+[Fri Nov 23 2018 12:39:44 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'jane.john@mail.com' ],
+  rejected: [],
+  envelopeTime: 1406,
+  messageTime: 859,
+  messageSize: 1668,
+  response: '250 2.0.0 OK 1542973184 c7sm5373054wre.64 - gsmtp',
+  envelope:
+   { from: 'no-reply@authorshaven.com',
+     to: [ 'jane.john@mail.com' ] },
+  messageId: '<bdbbc735-f984-6389-9e96-64b28ce93769@authorshaven.com>' }
+[Fri Nov 23 2018 12:39:44 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
+[Fri Nov 23 2018 12:39:44 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
+[Fri Nov 23 2018 12:39:44 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
+[Fri Nov 23 2018 12:40:13 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'fred@noldor.com' ],
+  rejected: [],
+  envelopeTime: 523,
+  messageTime: 781,
+  messageSize: 1369,
+  response: '250 2.0.0 OK 1542973213 y81-v6sm4720898wmd.11 - gsmtp',
+  envelope:
+   { from: 'no-reply@authorshaven.com', to: [ 'fred@noldor.com' ] },
+  messageId: '<9e22326e-d5d2-acde-a1ce-3b2de2c99298@authorshaven.com>' }
+[Fri Nov 23 2018 12:40:14 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'hope@noldor.com' ],
+  rejected: [],
+  envelopeTime: 505,
+  messageTime: 1097,
+  messageSize: 1370,
+  response: '250 2.0.0 OK 1542973214 o27-v6sm42355966wro.24 - gsmtp',
+  envelope:
+   { from: 'no-reply@authorshaven.com', to: [ 'hope@noldor.com' ] },
+  messageId: '<3f71bbcd-8dc7-e369-fcf1-1ba20fd28495@authorshaven.com>' }
+[Fri Nov 23 2018 12:40:14 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'uwa@noldor.com' ],
+  rejected: [],
+  envelopeTime: 507,
+  messageTime: 1714,
+  messageSize: 1372,
+  response: '250 2.0.0 OK 1542973214 126-v6sm6686223wme.48 - gsmtp',
+  envelope:
+   { from: 'no-reply@authorshaven.com', to: [ 'uwa@noldor.com' ] },
+  messageId: '<d91abf2e-5b8d-879d-e330-56c2ca3c839a@authorshaven.com>' }
+[Fri Nov 23 2018 12:40:15 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'papa@smurf.com' ],
+  rejected: [],
+  envelopeTime: 1443,
+  messageTime: 862,
+  messageSize: 1373,
+  response: '250 2.0.0 OK 1542973215 s81sm7367333wmf.14 - gsmtp',
+  envelope:
+   { from: 'no-reply@authorshaven.com', to: [ 'papa@smurf.com' ] },
+  messageId: '<d63e9ea2-f165-344a-2cf9-8825f9667631@authorshaven.com>' }
+[Fri Nov 23 2018 12:40:16 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'jane.john@mail.com' ],
+  rejected: [],
+  envelopeTime: 937,
+  messageTime: 1256,
+  messageSize: 1668,
+  response: '250 2.0.0 OK 1542973216 t69-v6sm7737588wmt.5 - gsmtp',
+  envelope:
+   { from: 'no-reply@authorshaven.com',
+     to: [ 'jane.john@mail.com' ] },
+  messageId: '<bf9e63d9-8d19-50c0-37e4-9809e868ce33@authorshaven.com>' }
+[Fri Nov 23 2018 12:40:16 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
+[Fri Nov 23 2018 12:40:16 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
+[Fri Nov 23 2018 12:40:16 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
+[Fri Nov 23 2018 12:40:16 GMT+0100 (West Africa Standard Time)] : undefined
+[Fri Nov 23 2018 12:40:36 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'fred@noldor.com' ],
+  rejected: [],
+  envelopeTime: 516,
+  messageTime: 1132,
+  messageSize: 1369,
+  response: '250 2.0.0 OK 1542973236 b18sm26531263wrw.83 - gsmtp',
+  envelope:
+   { from: 'no-reply@authorshaven.com', to: [ 'fred@noldor.com' ] },
+  messageId: '<5f3a1ee5-8a7e-c4f8-cd52-bfd15da7e971@authorshaven.com>' }
+[Fri Nov 23 2018 12:40:37 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'uwa@noldor.com' ],
+  rejected: [],
+  envelopeTime: 569,
+  messageTime: 1377,
+  messageSize: 1372,
+  response: '250 2.0.0 OK 1542973237 t131sm5483651wmt.1 - gsmtp',
+  envelope:
+   { from: 'no-reply@authorshaven.com', to: [ 'uwa@noldor.com' ] },
+  messageId: '<dbb871dd-9eec-b6ac-555f-0a3cc3a4f6d9@authorshaven.com>' }
+[Fri Nov 23 2018 12:40:37 GMT+0100 (West Africa Standard Time)] : undefined
+[Fri Nov 23 2018 12:40:37 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'hope@noldor.com' ],
+  rejected: [],
+  envelopeTime: 568,
+  messageTime: 2090,
+  messageSize: 1370,
+  response: '250 2.0.0 OK 1542973237 6-v6sm7552301wmg.19 - gsmtp',
+  envelope:
+   { from: 'no-reply@authorshaven.com', to: [ 'hope@noldor.com' ] },
+  messageId: '<f5c8549d-5682-9236-66a5-adb9ea71b3cf@authorshaven.com>' }
+[Fri Nov 23 2018 12:40:38 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'meeky.ae@gmail.com' ],
+  rejected: [],
+  envelopeTime: 1583,
+  messageTime: 1559,
   messageSize: 1376,
-  response: '250 2.0.0 OK 1542907308 q189sm5278271wme.5 - gsmtp',
+  response: '250 2.0.0 OK 1542973238 n12-v6sm3985255wmi.1 - gsmtp',
   envelope:
    { from: 'no-reply@authorshaven.com',
      to: [ 'meeky.ae@gmail.com' ] },
-  messageId: '<4412c69f-c47d-5038-d489-c5d4a546f60c@authorshaven.com>' }
-[Thu Nov 22 2018 18:21:48 GMT+0100 (West Africa Standard Time)] : { accepted: [ 'uwa@noldor.com' ],
-  rejected: [],
-  envelopeTime: 728,
-  messageTime: 3020,
-  messageSize: 1372,
-  response: '250 2.0.0 OK 1542907308 t9sm12940941wrr.17 - gsmtp',
-  envelope:
-   { from: 'no-reply@authorshaven.com', to: [ 'uwa@noldor.com' ] },
-  messageId: '<8798fb57-0ff6-b0d2-a572-f15471451c95@authorshaven.com>' }
-[Thu Nov 22 2018 18:21:49 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
-[Thu Nov 22 2018 18:21:49 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
-[Thu Nov 22 2018 18:21:49 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
+  messageId: '<ea72598a-0af7-8655-aa60-01db40e06205@authorshaven.com>' }
+[Fri Nov 23 2018 12:40:39 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
+[Fri Nov 23 2018 12:40:39 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
+[Fri Nov 23 2018 12:40:39 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
