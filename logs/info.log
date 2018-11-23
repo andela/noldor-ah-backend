@@ -53,3 +53,33 @@
 [Thu Nov 22 2018 18:03:57 GMT+0100 (WAT)] : 'This is just an info logger test'
 [Thu Nov 22 2018 18:03:57 GMT+0100 (WAT)] : 'This is just an info logger test'
 [Thu Nov 22 2018 18:03:57 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Fri Nov 23 2018 11:47:30 GMT+0100 (WAT)] : { accepted: [ 'oluseyi.anani@andela.com' ],
+  rejected: [],
+  envelopeTime: 700,
+  messageTime: 936,
+  messageSize: 1380,
+  response: '250 2.0.0 OK 1542970050 y9sm17197945wrq.55 - gsmtp',
+  envelope: 
+   { from: 'no-reply@authorshaven.com',
+     to: [ 'oluseyi.anani@andela.com' ] },
+  messageId: '<8bec8b6b-bf2e-2c49-6938-cba48944cc25@authorshaven.com>' }
+[Fri Nov 23 2018 12:10:15 GMT+0100 (WAT)] : { accepted: [ 'meeky.ae@mail.com' ],
+  rejected: [],
+  envelopeTime: 1610,
+  messageTime: 890,
+  messageSize: 1371,
+  response: '250 2.0.0 OK 1542971415 o81sm2621972wmd.10 - gsmtp',
+  envelope: 
+   { from: 'no-reply@authorshaven.com',
+     to: [ 'meeky.ae@mail.com' ] },
+  messageId: '<7efe237d-dfdf-fb06-0245-d653555896ca@authorshaven.com>' }
+[Fri Nov 23 2018 12:11:23 GMT+0100 (WAT)] : { accepted: [ 'meeky.ae@gmail.com' ],
+  rejected: [],
+  envelopeTime: 684,
+  messageTime: 1076,
+  messageSize: 1372,
+  response: '250 2.0.0 OK 1542971482 6sm6911420wmk.26 - gsmtp',
+  envelope: 
+   { from: 'no-reply@authorshaven.com',
+     to: [ 'meeky.ae@gmail.com' ] },
+  messageId: '<8aa8fa41-2558-3751-b3d5-a6af9b231022@authorshaven.com>' }
