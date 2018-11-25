@@ -215,3 +215,79 @@
 [Fri Nov 23 2018 12:40:39 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
 [Fri Nov 23 2018 12:40:39 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
 [Fri Nov 23 2018 12:40:39 GMT+0100 (West Africa Standard Time)] : 'This is just an info logger test'
+[Sun Nov 25 2018 02:29:58 GMT+0100 (WAT)] : { accepted: [ 'jane.john@mail.com' ],
+  rejected: [],
+  envelopeTime: 749,
+  messageTime: 719,
+  messageSize: 1668,
+  response: '250 2.0.0 OK 1543109398 q7-v6sm10241401wmg.27 - gsmtp',
+  envelope: 
+   { from: 'no-reply@authorshaven.com',
+     to: [ 'jane.john@mail.com' ] },
+  messageId: '<c3b37654-db9b-ccc0-8b35-370b3c1deffd@authorshaven.com>' }
+[Sun Nov 25 2018 02:29:58 GMT+0100 (WAT)] : { accepted: [ 'papa@smurf.com' ],
+  rejected: [],
+  envelopeTime: 719,
+  messageTime: 1145,
+  messageSize: 1373,
+  response: '250 2.0.0 OK 1543109398 i16sm17713867wmd.28 - gsmtp',
+  envelope: { from: 'no-reply@authorshaven.com', to: [ 'papa@smurf.com' ] },
+  messageId: '<0c30e2d0-1851-ca94-de59-5c54a4af558a@authorshaven.com>' }
+[Sun Nov 25 2018 02:29:59 GMT+0100 (WAT)] : { accepted: [ 'meeky.ae@gmail.com' ],
+  rejected: [],
+  envelopeTime: 723,
+  messageTime: 1596,
+  messageSize: 1376,
+  response: '250 2.0.0 OK 1543109399 d5sm15317134wrx.22 - gsmtp',
+  envelope: 
+   { from: 'no-reply@authorshaven.com',
+     to: [ 'meeky.ae@gmail.com' ] },
+  messageId: '<14a11536-37de-6bb2-d45c-06e933558477@authorshaven.com>' }
+[Sun Nov 25 2018 02:29:59 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Sun Nov 25 2018 02:29:59 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Sun Nov 25 2018 02:29:59 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Sun Nov 25 2018 02:38:30 GMT+0100 (WAT)] : { accepted: [ 'fred@noldor.com' ],
+  rejected: [],
+  envelopeTime: 630,
+  messageTime: 872,
+  messageSize: 1369,
+  response: '250 2.0.0 OK 1543109910 125-v6sm13000466wmm.25 - gsmtp',
+  envelope: { from: 'no-reply@authorshaven.com', to: [ 'fred@noldor.com' ] },
+  messageId: '<3794e0be-d877-0077-d094-143a54670afd@authorshaven.com>' }
+[Sun Nov 25 2018 02:38:30 GMT+0100 (WAT)] : { accepted: [ 'hope@noldor.com' ],
+  rejected: [],
+  envelopeTime: 661,
+  messageTime: 1067,
+  messageSize: 1370,
+  response: '250 2.0.0 OK 1543109910 f18sm1909196wrs.92 - gsmtp',
+  envelope: { from: 'no-reply@authorshaven.com', to: [ 'hope@noldor.com' ] },
+  messageId: '<9a74a07e-6c19-eb39-c014-0dd53fa66693@authorshaven.com>' }
+[Sun Nov 25 2018 02:38:31 GMT+0100 (WAT)] : { accepted: [ 'uwa@noldor.com' ],
+  rejected: [],
+  envelopeTime: 677,
+  messageTime: 1461,
+  messageSize: 1372,
+  response: '250 2.0.0 OK 1543109911 m126sm6323927wmb.30 - gsmtp',
+  envelope: { from: 'no-reply@authorshaven.com', to: [ 'uwa@noldor.com' ] },
+  messageId: '<18088864-c27b-9ddd-6f8d-729fd04468d5@authorshaven.com>' }
+[Sun Nov 25 2018 02:38:32 GMT+0100 (WAT)] : { accepted: [ 'meeky.ae@gmail.com' ],
+  rejected: [],
+  envelopeTime: 1632,
+  messageTime: 1046,
+  messageSize: 1376,
+  response: '250 2.0.0 OK 1543109912 j19sm7723562wmj.44 - gsmtp',
+  envelope: 
+   { from: 'no-reply@authorshaven.com',
+     to: [ 'meeky.ae@gmail.com' ] },
+  messageId: '<76cbc36b-0156-1825-5c73-ec9a7c8a20d0@authorshaven.com>' }
+[Sun Nov 25 2018 02:38:32 GMT+0100 (WAT)] : { accepted: [ 'papa@smurf.com' ],
+  rejected: [],
+  envelopeTime: 1341,
+  messageTime: 1424,
+  messageSize: 1373,
+  response: '250 2.0.0 OK 1543109912 n82sm8138454wma.42 - gsmtp',
+  envelope: { from: 'no-reply@authorshaven.com', to: [ 'papa@smurf.com' ] },
+  messageId: '<65abf60e-521f-cad7-046a-8961c2b5908d@authorshaven.com>' }
+[Sun Nov 25 2018 02:38:32 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Sun Nov 25 2018 02:38:32 GMT+0100 (WAT)] : 'This is just an info logger test'
+[Sun Nov 25 2018 02:38:32 GMT+0100 (WAT)] : 'This is just an info logger test'
