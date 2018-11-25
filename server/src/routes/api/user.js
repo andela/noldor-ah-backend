@@ -47,7 +47,6 @@ router.get('/users/:userId/profiles', userIdChecker, viewUserProfile);
 router.put('/users/:userId/profiles', userIdChecker, token, isVerified, multifile, editUserProfile);
 router.delete('/users/:userId/deactivate', token, deactivateUser);
 
-
 router.get('/users/:userName/followings', token, userFollowing);
 router.get('/users/:userName/followers', token, userFollower);
 router.post('/users/:userName/follow', token, followUser);

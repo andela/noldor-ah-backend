@@ -42,6 +42,10 @@ const Users = (sequelize, DataTypes) => {
       unique: false,
       type: DataTypes.TEXT
     },
+    role: {
+      type: DataTypes.ENUM('0', '1', '2'),
+      defaultValue: '0',
+    },
     confirmEmail: () => {
       let variable;
       if (process.env.NODE_ENV === 'test') {
@@ -77,6 +81,10 @@ const Users = (sequelize, DataTypes) => {
       unique: false,
       type: DataTypes.STRING
     },
+    deactivatedByAdmin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   }, { paranoid: true });
   User.associate = (models) => {
     User.belongsToMany(models.Article, {

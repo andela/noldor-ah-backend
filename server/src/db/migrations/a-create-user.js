@@ -60,6 +60,14 @@ export default {
       unique: false,
       type: Sequelize.TEXT
     },
+    role: {
+      required: false,
+      allowNull: false,
+      unique: false,
+      type: Sequelize.ENUM,
+      values: ['0', '1', '2'],
+      defaultValue: '0',
+    },
     confirmEmail: variableTest(Sequelize),
     emailVerificationHash: {
       allowNull: true,
@@ -89,6 +97,11 @@ export default {
     deletedAt: {
       allowNull: true,
       type: Sequelize.DATE
+    },
+    deactivatedByAdmin: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     }
   }, { paranoid: true }),
   down: queryInterface => queryInterface.dropTable('Users')

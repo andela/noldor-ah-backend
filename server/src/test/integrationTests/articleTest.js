@@ -39,12 +39,12 @@ const noContentArticle = {
 };
 const data = {};
 describe('GET all articles endpoint', () => {
-  it('should return a 200', (done) => {
+  it('should return a 404', (done) => {
     chai.request(app)
       .get('/api/v1/articles')
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(200);
+        expect(response.status).to.equal(404);
         expect(response.body).to.be.an('object');
         done();
       });

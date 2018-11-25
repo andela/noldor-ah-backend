@@ -11,7 +11,10 @@ import articleRatings from './articleRatings';
 import templates from './templates';
 import format from './format';
 import ReportValidation from './reportValidation';
-
+import decodePassword from './hashPassword';
+import roleDefinition from './defineRole';
+import UserHelper from './user';
+import httpResponseHelper from './httpResponse';
 
 export default {
   appendAuthor,
@@ -26,5 +29,9 @@ export default {
   templates,
   ArticleValidation,
   format,
-  ReportValidation
+  ReportValidation,
+  decodePassword,
+  roleDefinition,
+  UserHelper,
+  httpResponseHelper,
 };

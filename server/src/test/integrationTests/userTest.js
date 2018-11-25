@@ -618,7 +618,7 @@ describe('User Profile test', () => {
     const id = userParams;
     const values = {
       firstName: 'Jane',
-      username: 'Janny',
+      username: 'Fanny',
       bio: 'This is my test',
       avatar: `https://res.cloudinary.com/dstvcmycn/image/upload/v1541530550
       /Author%27s%20Haven/qtvmhyx8k4pfimdtsucs.jpg`
