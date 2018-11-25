@@ -10,6 +10,7 @@ import bookmark from './bookmark';
 import role from './role';
 import admin from './admin';
 import likes from './likes';
+import history from './commentHistory';
 
 const router = express.Router();
 
@@ -24,6 +25,7 @@ router.use('/api/v1', bookmark);
 router.use('/api/v1', role);
 router.use('/api/v1', admin);
 router.use('/api/v1', likes);
+router.use('/api/v1', history);
 /**
  * Home route
  */
