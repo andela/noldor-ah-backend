@@ -24,7 +24,7 @@ import socialmediaTest from './integrationTests/socialmediaTest';
 import notificationTest from './integrationTests/notificationTest';
 import issueTokenTest from './unitTests/issueTokenTest';
 import notificationUnitTest from './unitTests/notificationTest';
-import readingStatis from './integrationTests/readingStatisticsTest';
+import readingStats from './integrationTests/readingStatisticsTest';
 
 export default {
   userTest,
@@ -53,5 +53,5 @@ export default {
   notificationTest,
   issueTokenTest,
   notificationUnitTest,
-  readingStatis
+  readingStats,
 };
