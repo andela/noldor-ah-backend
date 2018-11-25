@@ -39,26 +39,36 @@ class NotificationController {
         }
       ]
     });
+    // Set noNewNotification object here
+    const notifications = {};
+    const data = {};
+    // append to the  noNewNotification object here and remove the return statements
     if (!usersNotifications.length) {
-      return res.status(404).json({
-        success: false,
-        message: 'You have no new notification'
+      notifications.current = 'You have no new notifications';
+    }
+
+    if (usersNotifications.length) {
+      notifications.current = usersNotifications.map((x) => {
+        data.message = `${x.User.username} ${x.action}`;
+        data.articleId = x.eventId;
+        return data;
       });
     }
-    const data = {};
-    const notifications = usersNotifications.map((x) => {
-      data.message = `${x.User.username} ${x.action}`;
-      data.articleId = x.eventId;
-      return data;
-    });
-    // const id = await usersNotifications.map(x => x.id);
+    // Mark notification status as true
 
-    // await user.removeNotification(id);
+    // Get Notifications that status is set to true here
+    // Set a readNotifications Object here
+    // Append read notification into object
+    // Return success messages
 
     return res.status(200).json({
       success: true,
       notifications
     });
+  }
+
+  static async markReadNotifications(req, res){
+    const markAsRead = No
   }
 }
 

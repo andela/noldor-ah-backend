@@ -115,7 +115,8 @@ describe('Notifications', () => {
         description: 'this is the description',
         content: 'this is the content',
         featuredImg: 'ahghgkjag.jpg',
-        tags: 'bars,foos,philosophical,smart'
+        tags: 'bars,foos,philosophical,smart',
+        category: 'life'
 
       })
       .end((error, response) => {

@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import express from 'express';
 import CommentController from '../../controllers/CommentsController';
 import commentValidation from '../../middlewares/articleValidations/comment';
@@ -36,9 +35,12 @@ const {
 const router = express.Router();
 
 router.get('/articles/:articleId/comments', articleIdChecker, getComments);
-router.post('/articles/:articleId/comments', token, commentValidation, articleIdChecker, createComment);
-router.put('/articles/:articleId/comments/:commentId', token, articleIdChecker, commentIdChecker, commentValidation, updateComment);
-router.delete('/articles/:articleId/comments/:commentId', token, articleIdChecker, commentIdChecker, deleteComment);
+router.post('/articles/:articleId/comments', token, commentValidation, articleIdChecker,
+  createComment);
+router.put('/articles/:articleId/comments/:commentId', token, articleIdChecker, commentIdChecker,
+  commentValidation, updateComment);
+router.delete('/articles/:articleId/comments/:commentId', token, articleIdChecker, commentIdChecker,
+  deleteComment);
 
 router.post('/articles/:articleId/comments/:commentId/report', token, articleIdChecker, commentIdChecker, reportComment);
 router.put('/articles/:articleId/comments/:commentId/resolve', authorizeRole, articleIdChecker, commentIdChecker, decisionValidator, resolveCommentIssues);

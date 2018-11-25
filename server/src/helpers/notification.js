@@ -1,5 +1,6 @@
 import templates from './templates';
 import Models from '../db/models/index';
+import sendMail from './sendMail';
 
 
 const { Events, User, Article } = Models;
@@ -11,13 +12,13 @@ const { Events, User, Article } = Models;
  */
 class NotificationHelper {
   /**
-     *
+     *@param {*} baseUrl baseUrl
      * @param {*} actionId  articleId
      * @param {*} actionType article/comment
      * @param {*} actorId   userId
      * @return {*} null
      */
-  static async addNotification(actionId, actionType, actorId) {
+  static async addNotification(baseUrl, actionId, actionType, actorId) {
     const data = {};
     if (actionType === 'article') {
       const followersId = await this.getOptedInFollowersId(actorId);
@@ -27,11 +28,12 @@ class NotificationHelper {
       data.sendTo = followersId;
     }
     if (actionType === 'comment') {
-      const articleFollowersId = await this.getOptedInFollowersId(actionId);
-      if (!articleFollowersId) {
+      const reactorsId = await this.getReactorsId(actionId);
+
+      if (!reactorsId) {
         return null;
       }
-      data.sendTo = articleFollowersId;
+      data.sendTo = reactorsId;
     }
     try {
       const action = await Events.create({
@@ -42,7 +44,7 @@ class NotificationHelper {
 
       const emails = await action.getNotified().map(x => x.email);
 
-      await this.sendEmailNotifications(actorId, actionId, actionType, emails);
+      await this.sendEmailNotifications(baseUrl, actorId, actionId, actionType, emails);
       return null;
     } catch (error) {
       return null;
@@ -73,7 +75,7 @@ class NotificationHelper {
    * @return {*} array/null
    */
   static async getReactorsId(id) {
-    const article = Article.findByPk(id);
+    const article = await Article.findByPk(id);
     const reactors = await article.getUsers({
       where: { notification: true }
     }).map(x => x.id);
@@ -84,13 +86,14 @@ class NotificationHelper {
   }
 
   /**
+   * @param {*} baseUrl
    * @param {*} userId
    * @param {*} articleId
    * @param {*} eventType
    * @param {*} emails
    * @return {*} json
    */
-  static async sendEmailNotifications(userId, articleId, eventType, emails) {
+  static async sendEmailNotifications(baseUrl, userId, articleId, eventType, emails) {
     const user = await User.findOne({
       where: {
         id: userId
@@ -107,18 +110,31 @@ class NotificationHelper {
     });
     const { title } = articleTitle.dataValues;
     const message = {};
+    let url = '';
+    const optOutUrl = `http://${baseUrl}/api/v1/users/notifications/opt`;
+
     if (eventType === 'article') {
       message.content = `${username} has published a new article`;
       message.subject = 'New Article Notification';
+      url = `http://${baseUrl}/api/v1/articles/${articleId}/`;
     }
+
     if (eventType === 'comment') {
       message.content = `${title} has a new comment`;
       message.subject = 'New Comment Notification';
+      url = `http://${baseUrl}/api/v1/articles/${articleId}/comments`;
     }
-    const optOutUrl = '';
-    const notificationTemplate = await templates.newArticleNotification(`${articleId}`,
-      message.content, title, optOutUrl);
-    // send message goes here
+
+    const notificationTemplate = await templates.usersNotification(message.content, url, optOutUrl);
+    emails.forEach(async (email) => {
+      const mailOption = {
+        from: 'Authors Haven <no-reply@authorshaven.com>',
+        to: email,
+        subject: message.subject,
+        html: notificationTemplate
+      };
+      await sendMail.sendEmail(mailOption);
+    });
     return null;
   }
 }

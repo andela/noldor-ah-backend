@@ -199,7 +199,7 @@ class ArticleController {
     }
     const { id } = foundArticle.dataValues;
     await publish(id, res);
-    await Helpers.NotificationHelper.addNotification(id, 'article', userId);
+    await Helpers.NotificationHelper.addNotification(req.header.host, id, 'article', userId);
     return res.status(200).json({
       success: true,
       message: 'article published successfully'
