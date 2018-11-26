@@ -21,7 +21,9 @@ import logger from './unitTests/loggerTest';
 import likeCommentTest from './integrationTests/likeCommentTest';
 import uuidTest from './unitTests/uuidTest';
 import socialmediaTest from './integrationTests/socialmediaTest';
-import notificationTest from './integration tests/notificationTest';
+import notificationTest from './integrationTests/notificationTest';
+import issueTokenTest from './unitTests/issueTokenTest';
+import notificationUnitTest from './unitTests/notificationTest';
 
 export default {
   userTest,
@@ -48,4 +50,6 @@ export default {
   uuidTest,
   socialmediaTest,
   notificationTest,
+  issueTokenTest,
+  notificationUnitTest,
 };

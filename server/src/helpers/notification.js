@@ -59,14 +59,18 @@ class NotificationHelper {
   static async getOptedInFollowersId(id) {
     const optedUser = await User.findOne({
       where: {
-        id,
-        notification: true
+        id
       }
     });
     if (!optedUser) {
       return null;
     }
-    const followersId = await optedUser.getFollower({ attributes: ['id'] });
+    const followersId = await optedUser.getFollower({
+      where: {
+        notification: true,
+      },
+      attributes: ['id']
+    });
     return followersId.map(x => x.id);
   }
 
@@ -100,14 +104,19 @@ class NotificationHelper {
       },
       attributes: ['username']
     });
+    if (!user) {
+      return true;
+    }
     const { username } = user.dataValues;
-
     const articleTitle = await Article.findOne({
       where: {
         id: articleId
       },
       attributes: ['title']
     });
+    if (!articleTitle) {
+      return true;
+    }
     const { title } = articleTitle.dataValues;
     const message = {};
     let url = '';

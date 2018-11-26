@@ -46,7 +46,6 @@ describe('Notifications', () => {
         done();
       });
   });
-
   it('should return 200 to opt-out of notification', (done) => {
     chai.request(app)
       .put('/api/v1/users/notifications/opt')
@@ -55,6 +54,7 @@ describe('Notifications', () => {
         if (error) done(error);
         expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
+        expect(response.body.message).to.be.equal('you have opted out for notifications');
         done();
       });
   });
@@ -67,6 +67,8 @@ describe('Notifications', () => {
         if (error) done(error);
         expect(response.status).to.equal(403);
         expect(response.body).to.be.an('object');
+        expect(response.body.success).to.be.equal(false);
+        expect(response.body.message).to.be.equal('you have opted out of getting notifications');
         done();
       });
   });
@@ -78,18 +80,20 @@ describe('Notifications', () => {
         if (error) done(error);
         expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
+        expect(response.body.message).to.be.equal('you have opted in for notifications');
         done();
       });
   });
 
-  it('should return 404 to opt-in of notification', (done) => {
+  it('should return 200 for no new notifications', (done) => {
     chai.request(app)
       .get('/api/v1/notifications')
       .set('X-Token', data.token)
       .end((error, response) => {
         if (error) done(error);
-        expect(response.status).to.equal(404);
+        expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
+        expect(response.body.current).to.be.equal('You have no new notifications');
         done();
       });
   });
@@ -124,6 +128,7 @@ describe('Notifications', () => {
         expect(response.status).to.equal(201);
         expect(response.body).to.be.an('object');
         data.slug = response.body.article.slug;
+        data.articleId = response.body.article.id;
         done();
       });
   });
@@ -139,15 +144,18 @@ describe('Notifications', () => {
       });
   });
 
-  it('should return 200 to opt-in of notification', (done) => {
+  it('should return 200 to opt-out of notification', (done) => {
     chai.request(app)
-      .get('/api/v1/notifications')
+      .put('/api/v1/users/notifications/opt')
       .set('X-Token', data.token2)
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(200);
         expect(response.body).to.be.an('object');
+        expect(response.body.message).to.be.equal('you have opted out for notifications');
         done();
       });
   });
 });
+
+export default data;
