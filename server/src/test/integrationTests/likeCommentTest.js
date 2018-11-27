@@ -50,7 +50,7 @@ describe('Like Comments and their reply', () => {
         .end((error, response) => {
           if (error) done(error);
           expect(response.status).to.equal(404);
-          expect(response.body.message).to.equal('User does not exist');
+          expect(response.body.message).to.equal('user not found');
           done();
         });
     });
@@ -164,7 +164,7 @@ describe('Like Comments and their reply', () => {
         .end((error, response) => {
           if (error) done(error);
           expect(response.status).to.equal(404);
-          expect(response.body.message).to.equal('User does not exist');
+          expect(response.body.message).to.equal('user not found');
           done();
         });
     });

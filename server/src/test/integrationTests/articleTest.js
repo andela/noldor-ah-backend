@@ -194,7 +194,7 @@ describe('POST endpoint for creating articles', () => {
   });
 
 
-  it('should return 500 if userId doesnt exist', (done) => {
+  it('should return 404 if userId doesnt exist', (done) => {
     chai.request(app)
       .post(api)
       .set('X-Token', fakeToken)
@@ -207,8 +207,7 @@ describe('POST endpoint for creating articles', () => {
         category: 'life'
       })
       .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(500);
+        expect(response.status).to.equal(404);
         expect(response.body).to.be.an('object');
         done();
       });

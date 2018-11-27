@@ -1,4 +1,8 @@
 import UserWorker from '../workers/UserWorker';
+import Models from '../db/models';
+
+const { User } = Models;
+
 /**
  * @description { verifies users input}
  */
@@ -66,6 +70,22 @@ class UserHelper {
       return null;
     }
     return existingUser;
+  }
+
+  /**
+   * @param { userId } userId
+   * @returns { Boolean } Boolean
+   */
+  static async checkUserExistence(userId) {
+    const foundUser = await User.findOne({
+      where: {
+        id: userId
+      }
+    });
+    if (!foundUser) {
+      return null;
+    }
+    return true;
   }
 }
 

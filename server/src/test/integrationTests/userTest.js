@@ -675,7 +675,7 @@ describe('Soft Delete users', () => {
         if (err) done(err);
         expect(res.status).to.equal(404);
         expect(res.body.success).to.equal(false);
-        expect(res.body.message).to.equal('User does not exist');
+        expect(res.body.message).to.equal('user not found');
         done();
       });
   });
@@ -686,9 +686,9 @@ describe('Soft Delete users', () => {
       .set('x-token', userOneDetails.token)
       .end((err, res) => {
         if (err) done(err);
-        expect(res.status).to.equal(401);
+        expect(res.status).to.equal(404);
         expect(res.body.success).to.equal(false);
-        expect(res.body.message).to.equal('You are not authorized to do this');
+        expect(res.body.message).to.equal('user not found');
         done();
       });
   });

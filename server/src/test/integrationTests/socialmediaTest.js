@@ -65,16 +65,18 @@ describe('Social media login Test', () => {
         });
     });
   });
-  describe('Database query functions', () => {
-    it('should make database', (done) => {
-      const callBackFuntion = faceBookLogin(accessToken, refreshToken, profile, done);
-      expect(callBackFuntion).to.be.equal(undefined);
-      done();
+  setTimeout(() => {
+    describe('Database query functions', () => {
+      it('should make database', (done) => {
+        const callBackFuntion = faceBookLogin(accessToken, refreshToken, profile, done);
+        expect(callBackFuntion).to.be.equal(undefined);
+        done();
+      });
+      it('should return undefined', (done) => {
+        const callBackFuntion = googleLogin(accessToken, refreshToken, profile, done);
+        expect(callBackFuntion).to.be.equal(undefined);
+        done();
+      });
     });
-    it('should return undefined', (done) => {
-      const callBackFuntion = googleLogin(accessToken, refreshToken, profile, done);
-      expect(callBackFuntion).to.be.equal(undefined);
-      done();
-    });
-  });
+  }, 1000);
 });

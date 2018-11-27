@@ -16,6 +16,7 @@ import roleDefinition from './defineRole';
 import UserHelper from './user';
 import httpResponseHelper from './httpResponse';
 import NotificationHelper from './notification';
+import uuidValidator from './validParams';
 
 
 export default {
@@ -36,5 +37,6 @@ export default {
   roleDefinition,
   UserHelper,
   httpResponseHelper,
-  NotificationHelper
+  NotificationHelper,
+  uuidValidator
 };

@@ -96,24 +96,12 @@ describe('like an article endpoint', () => {
       .post(`/api/v1/articles/${data.slug}/likes`)
       .set('X-Token', data.token)
       .end((error, response) => {
-        if (error) done(error);
         expect(response.status).to.equal(201);
         expect(response.body).to.be.an('object');
         done();
       });
   });
 
-  it('should return 500 when article is liked', (done) => {
-    chai.request(app)
-      .post(`/api/v1/articles/${data.slug}/likes`)
-      .set('X-Token', fakeToken)
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(500);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
 
   it('should return 204 when article is unliked', (done) => {
     chai.request(app)
@@ -122,29 +110,6 @@ describe('like an article endpoint', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(200);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
-
-  it('should return 500 when article is liked', (done) => {
-    chai.request(app)
-      .post(`/api/v1/articles/${data.slug}/likes`)
-      .set('X-Token', fakeToken)
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(500);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
-  it('should return 404 when article is not found', (done) => {
-    chai.request(app)
-      .post('/api/v1/articles/sdkjsn9wn4sldjd98/likes')
-      .set('X-Token', fakeToken)
-      .end((error, response) => {
-        if (error) done(error);
-        expect(response.status).to.equal(404);
         expect(response.body).to.be.an('object');
         done();
       });
