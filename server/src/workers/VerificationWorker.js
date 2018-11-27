@@ -24,8 +24,11 @@ class confirmAccount {
       }
     });
     if (data) {
-      return httpResponse.badResponse(response, 403,
-        'Your email is awaiting verification, please verify and try again');
+      return httpResponse.badResponse(
+        response,
+        403,
+        'Your email is awaiting verification, please verify and try again'
+      );
     }
     next();
   }

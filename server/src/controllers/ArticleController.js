@@ -1,12 +1,21 @@
 import Slug from 'slug';
 import Models from '../db/models';
+import decoder from '../helpers/decoder';
 import ArticleWorker from '../workers/ArticleWorker';
 import Helpers from '../helpers/index';
 import TagWorker from '../workers/TagWorker';
+import ReadingStatsWorker from '../workers/ReadingStatsWorker';
+import httpResponse from '../helpers/response';
 
 const {
   Article, Category
 } = Models;
+
+const {
+  getArticleDetails,
+  createReadingsStats
+} = ReadingStatsWorker;
+
 const {
   checkArticle, getAllArticles, findArticle, publish,
   getUserArticles, deleteArticle, updateArticle
@@ -94,11 +103,23 @@ class ArticleController {
    * @description { get an article by an id}
    * @param {object} req
    * @param {object} res
+   * @param {object} next
    * @returns {object} Json
    * @name getAnArticle
    */
   static async getAnArticle(req, res) {
     const article = await findArticle(req, res);
+    // Get article details
+    if (!article) {
+      return httpResponse.badResponse(res, 404, 'Article with the specified slug was not found.');
+    }
+    if (req.header('x-token')) {
+      decoder.validateToken(req, res);
+      const userId = req.user.payload.id;
+      const getDetails = await getArticleDetails(article.id, res);
+      const { id: articleId } = getDetails;
+      await createReadingsStats(userId, articleId);
+    }
     if (article === null) {
       return res.status(404).json({
         success: false,

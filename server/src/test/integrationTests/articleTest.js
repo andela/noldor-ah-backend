@@ -328,8 +328,6 @@ describe('GET endpoint for an article', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(404);
-        expect(response.body.error).to.be.an('object');
-
         done();
       });
   });
@@ -746,9 +744,8 @@ describe('User Email and Account Verification Test', () => {
         }
         expect(response.status).to.equal(200);
         expect(response.body.success).to.equal(true);
-        expect(response.body.message[0]).to.equal(
-          `Your email ${values.email} was successfully verified`
-        );
+        expect(response.body.message[0])
+          .to.equal(`Your email ${values.email} was successfully verified`);
         done();
       });
   });
