@@ -1,5 +1,7 @@
 {
     "name": "noldor-ah-backend",
+    "description": "This manifest file help create a review app for every pull request made on github.",
+    "repository": "https://github.com/andela/noldor-ah-backend",
     "scripts": {},
     "env": {
         "CLOUDINARY_URL": {
@@ -33,11 +35,23 @@
         }
     },
     "addons": [
-        "heroku-postgresql"
+        {
+          "plan": "heroku-postgresql",
+          "options": {
+          "version": "9.5"
+        }
+      }
     ],
     "buildpacks": [
         {
             "url": "heroku/nodejs"
         }
-    ]
+    ],
+    "environments": {
+    "test": {
+      "scripts": {
+        "test": "npm run clean-db-test && npm run migrate-test && cross-env NODE_ENV=test nyc --reporter=text mocha --require babel-core/register ./server/src/test/index.js --timeout 20000 --recursive --exit",
+      }
+    }
+  }
 }
