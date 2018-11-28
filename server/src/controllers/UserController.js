@@ -108,7 +108,8 @@ class UserController {
     User.findOne({
       where: {
         email,
-      }
+      },
+      paranoid: false
     })
       .then((user) => {
         if (!user) {
@@ -116,6 +117,17 @@ class UserController {
             success: false,
             message: 'email does not exist'
           });
+        }
+        if (user.deactivatedByAdmin) {
+          return res.status(403).json({
+            success: false,
+            // eslint-disable-next-line max-len
+            message: 'Your account has been deactivated by the admin, please contact them for more details.'
+          });
+        }
+        if (user.deletedAt) {
+          user.setDataValue('deletedAt', null);
+          user.save({ paranoid: false });
         }
         const storedHashedPassword = user.password;
         const correctPassword = bcrypt.compareSync(password, storedHashedPassword);
@@ -125,7 +137,6 @@ class UserController {
             message: 'email or password incorrect',
           });
         }
-
         const payload = {
           id: user.dataValues.id,
           email: user.dataValues.email,
