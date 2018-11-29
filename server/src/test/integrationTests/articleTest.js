@@ -609,12 +609,16 @@ describe('User Email and Account Verification Test', () => {
   let articleSlug = '';
   let userId = '';
   let articleId = '';
+  let hash = '';
 
   const values = {
     email: 'meeky.ae@gmail.com',
     username: 'userone0',
     password: 'Mochapassword1',
     confirmPassword: 'Mochapassword1'
+  };
+  const mail = {
+    to: values.email
   };
   it('should return a 201 for successful registration', (done) => {
     chai.request(app)
@@ -624,6 +628,7 @@ describe('User Email and Account Verification Test', () => {
         if (error) done(error);
         userxToken = response.body.user.token;
         userId = response.body.user.id;
+        hash = UpdateWorker.hashGenerator(values.email);
         expect(response.status).to.equal(200);
         done();
       });
@@ -635,6 +640,7 @@ describe('User Email and Account Verification Test', () => {
       .send(testArticle)
       .end((error, response) => {
         UpdateWorker.updateUserDetailsForTest(userId);
+        UpdateWorker.updateUserDetails(mail);
         if (error) done(error);
         articleSlug = response.body.article.slug;
         articleId = response.body.article.id;
@@ -727,6 +733,23 @@ describe('User Email and Account Verification Test', () => {
       .end((err, res) => {
         if (err) done(err);
         expect(res.status).to.equal(403);
+        done();
+      });
+  });
+  it('should return a successful message on verification', (done) => {
+    chai.request(app)
+      .get('/api/v1/users/verify')
+      .set('x-token', userxToken)
+      .query({ id: hash })
+      .end((err, response) => {
+        if (err) {
+          done(err);
+        }
+        expect(response.status).to.equal(200);
+        expect(response.body.success).to.equal(true);
+        expect(response.body.message[0]).to.equal(
+          `Your email ${values.email} was successfully verified`
+        );
         done();
       });
   });

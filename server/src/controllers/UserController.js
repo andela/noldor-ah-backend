@@ -7,6 +7,7 @@ import Mailer from '../helpers/sendMail';
 import UpdateWorker from '../workers/UpdateWorker';
 import templates from '../helpers/templates';
 import httpResponse from '../helpers/response';
+import logger from '../helpers/logger';
 
 const { User } = Models;
 const html = templates.verifyEmailTemplate;
@@ -154,25 +155,35 @@ class UserController {
    * @returns { object } json
    */
   static async verifyEmail(req, res) {
-    const user = await User.findAndCountAll({
-      where: { emailVerificationHash: req.query.id }
+    const { id, username, email } = req.user.payload;
+    const user = await User.findOne({
+      where: {
+        username,
+        emailVerificationHash: req.query.id,
+      }
     });
-    try {
-      if (user.count > 0) {
-        User.update({
-          confirmEmail: true,
-          emailVerificationHash: 'Verified'
+    if (user) {
+      if (user.confirmEmail === true) {
+        return httpResponse.badResponse(res, 400, 'Your have already verified your email');
+      }
+      try {
+        const isUpdated = User.update({
+          confirmEmail: true
         }, {
           where: {
-            emailVerificationHash: req.query.id,
+            id,
           }
         });
-        return httpResponse.goodResponse(res, 200, 'Email verified successfully');
+        if (!isUpdated) {
+          return logger.error('Could not update record, please try again');
+        }
+        return httpResponse.goodResponse(res, 200, `Your email ${email} was successfully verified`);
+      } catch (err) {
+        logger.error(err);
+        throw err;
       }
-      return httpResponse.badResponse(res, 404, 'Verification failed, could not find user');
-    } catch (err) {
-      throw err;
     }
+    return httpResponse.badResponse(res, 401, 'Verification failed, could not find user');
   }
 
   /**
