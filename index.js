@@ -4,6 +4,7 @@ import cors from 'cors';
 import errorhandler from 'errorhandler';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
+import passport from 'passport';
 import routes from './server/src/routes';
 import swaggerDocument from './swagger.json';
 
@@ -22,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors());
+app.use(passport.initialize());
 app.use(routes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 

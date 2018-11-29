@@ -19,6 +19,8 @@ import followTest from './integrationTests/followTest';
 import verificationTest from './unitTests/verificationTest';
 import logger from './unitTests/loggerTest';
 import likeCommentTest from './integrationTests/likeCommentTest';
+import uuidTest from './unitTests/uuidTest';
+import socialmediaTest from './integrationTests/socialmediaTest';
 
 export default {
   userTest,
@@ -41,5 +43,7 @@ export default {
   adminTest,
   verificationTest,
   logger,
-  likeCommentTest
+  likeCommentTest,
+  uuidTest,
+  socialmediaTest
 };
