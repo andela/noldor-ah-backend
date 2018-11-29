@@ -3,10 +3,14 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import errorhandler from 'errorhandler';
 import morgan from 'morgan';
+import swaggerUi from 'swagger-ui-express';
 import routes from './server/src/routes';
-
+import swaggerDocument from './swagger.json';
 
 const isProduction = process.env.NODE_ENV;
+const options = {
+  explorer: true
+};
 
 // Create global app object
 const app = express();
@@ -19,6 +23,7 @@ app.use(bodyParser.json());
 
 app.use(cors());
 app.use(routes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 if (!isProduction) {
   app.use(errorhandler());
