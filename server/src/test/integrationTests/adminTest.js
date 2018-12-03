@@ -167,7 +167,23 @@ describe('Admin Functionality Tests', () => {
           done();
         });
     });
-
+    it('should disallow user login', (done) => {
+      const values = {
+        email: 'mama@smurf.com',
+        password: 'BigBlue5ky'
+      };
+      chai.request(app)
+        .post('/api/v1/users/login')
+        .send(values)
+        .end((err, res) => {
+          if (err) done(err);
+          expect(res.status).to.equal(403);
+          expect(res.body.success).to.equal(false);
+          // eslint-disable-next-line max-len
+          expect(res.body.message).to.equal('Your account has been deactivated by the admin, please contact them for more details.');
+          done();
+        });
+    });
     it('should return a 404 if user does not exist (reactivation)', (done) => {
       chai.request(app)
         .put('/api/v1/admin/reactivate/users/babysmurf')
