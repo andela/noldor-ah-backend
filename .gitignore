@@ -1,10 +1,11 @@
 # Logs
 logs
-*.log
+*logs
 .DS_Store
+bin
+bin/Production
 
 npm-debug.log*
-
 # Runtime data
 pids
 *.pid
@@ -34,3 +35,25 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
+# Production Folder
+dist/
+
+# coveralls file for repo_token
+.coveralls.yml
+
+# nyc out for test coverage
+.nyc_output
+
+# coverage folder for test repoter
+coverage
+
+# .env file
+.env
+
+server/src/db/seeder
+
+# Will be regenerated everytime we run NPM i
+package-lock.json
+
+# vscode settings
+.vscode

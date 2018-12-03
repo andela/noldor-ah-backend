@@ -1,0 +1,243 @@
+{
+    "swagger": "2.0",
+     "info": {
+        "description": "A Social platform for the creative at heart. Creates a community of like minded authors to foster inspiration and innovation by leveraging the modern web",
+        "version": "1.0.0",
+        "title": "Authors Haven",
+        "contact": {
+          "email": "noldor.ah@gmail.com"
+        },
+        "license": {
+          "name": "MIT"
+        }
+      },
+      "host": "noldor-ah-backend-staging.herokuapp.com",
+      "basePath": "/api/v1",
+       "tags": [
+        {
+          "name": "users",
+          "description": "Users routes"
+        },
+        {
+          "name": "articles",
+          "description": "Articles routes"
+        },
+        {
+          "name": "comment",
+          "description": "Comment routes"
+        },
+        {
+          "name": "search",
+          "description": "Search articles route"
+        },
+        {
+          "name": "bookmark",
+          "description": "Bookmark an articles route"
+        },
+        {
+          "name": "category",
+          "description": "Category route"
+        },
+        {
+          "name": "highlight",
+          "description": "Highlight an article route"
+        },
+        {
+          "name": "reply",
+          "description": "Reply an article route"
+        }
+      ],
+      "schemes": [
+        "https"
+      ],
+      "paths": {
+        "/users/register": {
+          "post": {
+            "tags":["users"],
+            "summary": "Add a new user to Authors Haven",
+            "description": "Register a user",
+            "consumes": ["application/x-www-form-urlencoded"],
+            "produces" : ["application/json"],
+            "parameters": [ 
+              {
+                "name": "email",
+                "in": "formData",
+                "description": "Enter a valid email address",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "username",
+                "in": "formData",
+                "description": "Enter a username of your choice",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "password",
+                "in": "formData",
+                "description": "password must be at least 8 alpha-numeric characters",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "confirmPassword",
+                "in": "formData",
+                "description": "Enter the same password as above",
+                "required": true,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "successfully registered"
+              },
+              "409":{
+               "description": "Conflict with already exisiting data"
+              },
+              "400": {
+                "description": "Invalid parameter entered"
+              }
+            }
+              
+          }
+        },
+        "/users/login": {
+         "post": {
+           "tags":["users"],
+           "summary": "Log in registered user to Authors Haven",
+            "description": "Login a user",
+            "operationId": "loginUser",
+            "consumes": ["application/x-www-form-urlencoded"],
+            "produces" : ["application/json"],
+            "parameters": [
+                {
+                "name": "email",
+                "in": "formData",
+                "description": "Enter a valid email address",
+                "required": true,
+                "type": "string"
+              },
+                {
+                "name": "password",
+                "in": "formData",
+                "description": "Enter your password",
+                "required": true,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Successfully logged in"
+              },
+              "400": {
+                "description": "invalid username or password"
+              },
+              "404": {
+                "description": "Email does not exist"
+              }
+            }
+         }
+        },
+        "/users": {
+            "get": {
+            "tags":["users"],
+           "summary": "View a list of users on Authors Haven",
+            "description": "Gets a list (id, username and email) of all registered users on Authos Haven. Only available to registered users",
+            "operationId": "getAllUsers",
+            "produces" : ["application/json"],
+            "parameters": [
+                {
+                    "name": "x-token",
+                    "in": "header",
+                    "description": "provide your token access",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "responses": {
+                "200": {
+                  "description": "successfully retrieved list"
+                },
+                "401": {
+                  "description": "invalid token"
+                }
+              }
+            }
+        },
+        "/users/forgot/": {
+          "put": {
+            "tags": ["users"],
+            "summary": "Request for a password reset",
+            "description": "Users can request to update their password",
+            "operationId": "forgotpassword",
+            "consumes": ["application/x-www-form-urlencoded"],
+            "produces" : ["application/json"],
+            "parameters": [
+              {
+                "name": "email",
+                "in": "formData",
+                "description": "Enter your email here",
+                "required": true,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "404": {
+                "description": "Email does not exist"
+              },
+              "200": {
+                "description" : "Check your email for further instruction"
+              }
+            }
+          }
+        },
+        "/users/forgot/{hash}": {
+          "post": {
+            "tags": ["users"],
+            "summary": "Resets the password with a provided hash",
+            "description": "Provide your new password to complete reset password process",
+            "operationId": "resetPassword",
+            "consumes": ["application/x-www-form-urlencoded"],
+            "produces" : ["application/json"],
+            "parameters": [
+            {
+            "in": "path",
+            "name": "hash",
+            "type": "string",
+              "required": true,
+              "description": "Copy the hash just after the /forgot/ route"
+            }, 
+            {
+                "name": "password",
+                "in": "formData",
+                "description": "Enter your password",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "confirmPassword",
+                "in": "formData",
+                "description": "Enter your password",
+                "required": true,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "401": {
+                "description": "invalid token"
+              },
+              "404": {
+                "description": "Email not found"
+              },
+              "503": {
+                "description": "password cannot be updated, try again"
+              },
+              "200": {
+                "description": "password has been updated"
+              }
+            }
+          }
+        }
+      }
+  }
