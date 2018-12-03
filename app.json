@@ -4,19 +4,46 @@
     "repository": "https://github.com/andela/noldor-ah-backend",
     "scripts": {},
     "env": {
+        "App_Callback": {
+            "required": true
+        },
+        "App_ID": {
+            "required": true
+        },
+        "App_Secret": {
+            "required": true
+        },
+        "Client_Callback": {
+            "required": true
+        },
+        "Client_ID": {
+            "required": true
+        },
+        "Client_Secret": {
+            "required": true
+        }
         "CLOUDINARY_URL": {
             "required": true
         },
         "DATABASE_URL": {
             "required": true
         },
+        "MAIL": {
+            "required": true
+        },
         "NPM_CONFIG_PRODUCTION": {
+            "required": true
+        },
+        "PASS": {
             "required": true
         },
         "PRIVATE_KEY": {
             "required": true
         },
         "SENDGRID_API_KEY": {
+            "required": true
+        },
+        "SocialMediaPassword": {
             "required": true
         },
         "SUPER_USER_EMAIL": {
@@ -46,12 +73,5 @@
         {
             "url": "heroku/nodejs"
         }
-    ],
-    "environments": {
-    "test": {
-      "scripts": {
-        "test": "npm run clean-db-test && npm run migrate-test && cross-env NODE_ENV=test nyc --reporter=text mocha --require babel-core/register ./server/src/test/index.js --timeout 20000 --recursive --exit",
-      }
-    }
-  }
+    ]
 }
