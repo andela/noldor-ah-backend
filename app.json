@@ -21,7 +21,7 @@
         },
         "Client_Secret": {
             "required": true
-        }
+        },
         "CLOUDINARY_URL": {
             "required": true
         },
