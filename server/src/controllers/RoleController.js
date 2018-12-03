@@ -23,8 +23,8 @@ class RoleController {
     const existing = await Helpers.UserHelper.validateRoleEntries(email, username, role, res);
     if (existing) {
       const hashedPassword = Helpers.decodePassword(password);
-      const superAdmin = await UserWorker.createSuperAdmin(username,
-        email, hashedPassword, role, res);
+      const superAdmin = await UserWorker
+        .createSuperAdmin(username, email, hashedPassword, role, res);
       if (superAdmin) {
         return res.status(200).json({
           success: true,

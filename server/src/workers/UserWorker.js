@@ -121,15 +121,13 @@ class UserWorker {
    */
   static async updateRole(role, userId, res) {
     try {
-      const updateUserRole = await User.update(
-        {
-          role,
-        }, {
-          where: {
-            id: userId,
-          }
+      const updateUserRole = await User.update({
+        role,
+      }, {
+        where: {
+          id: userId,
         }
-      );
+      });
       return updateUserRole;
     } catch (error) {
       return res.status(500).json({

@@ -241,9 +241,7 @@ class UserController {
       email,
     };
     const token = Helpers.issueToken(payload, '1h');
-    User.update(
-      { forgotPasswordHash: token }, { where: { id } }
-    )
+    User.update({ forgotPasswordHash: token }, { where: { id } })
       .then((data) => {
         if (data) {
           const resetPasswordTemplate = Helpers.templates.resetPassword(req.headers.host, token);

@@ -118,13 +118,11 @@ class ReportWorker {
         return null;
       }
       if (report) {
-        const reviewReport = await Report.update({
-          status: 'resolved',
-          comment
-        },
-        {
-          where: { id }
-        });
+        const reviewReport = await Report
+          .update({
+            status: 'resolved',
+            comment
+          }, { where: { id } });
         if (reviewReport) {
           return true;
         }

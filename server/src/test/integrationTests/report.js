@@ -50,15 +50,13 @@ describe('POST endpoint for reports', () => {
       chai.request(app)
         .post('/api/v1/articles')
         .set('X-Token', data.token)
-        .send(
-          {
-            title: 'this is the title',
-            description: 'this is the description',
-            content: 'this is the content',
-            featuredImg: 'ahghgkjag.jpg',
-            category: 'life'
-          }
-        )
+        .send({
+          title: 'this is the title',
+          description: 'this is the description',
+          content: 'this is the content',
+          featuredImg: 'ahghgkjag.jpg',
+          category: 'life'
+        })
         .end((error, response) => {
           if (error) done(error);
           expect(response.status).to.equal(201);
