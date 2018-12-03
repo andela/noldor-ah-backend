@@ -1,6 +1,7 @@
 import Models from '../db/models';
 import CommentQueries from '../workers/CommentQueries';
 import Helpers from '../helpers/index';
+import CommentHistory from '../workers/CommentHistoryWorker';
 
 const { Comment, Article } = Models;
 
@@ -9,6 +10,11 @@ const {
   confirmArticle,
   confirmUser
 } = CommentQueries;
+
+const {
+  getComment,
+  createCommentHistory
+} = CommentHistory;
 
 /**
  * @class { Comment Controller }
@@ -149,6 +155,9 @@ class CommentController {
       }
 
       if (existingComment.id === commentId && existingComment.userId === userId) {
+        // Comment History
+        const getComments = await getComment(commentId);
+        await createCommentHistory(userId, commentId, getComments.dataValues.comment);
         const updatedComment = await existingComment.update(req.body, {
           fields: Object.keys(req.body)
         });

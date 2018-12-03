@@ -8,7 +8,7 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 const payload = {
-  id: 1,
+  id: '4340f59e-8ce0-432f-bb04-60468fc34e89',
   email: 'uwahope007',
   username: 'uwahope'
 };
@@ -94,7 +94,7 @@ describe('POST endpoint for creating articles', () => {
       .post(api)
       .send(testArticle)
       .end((error, response) => {
-        if (error) done(error);
+        if (error) throw (error);
         expect(response.status).to.equal(401);
         expect(response.body).to.be.an('object');
         done();
@@ -328,8 +328,6 @@ describe('GET endpoint for an article', () => {
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(404);
-        expect(response.body.error).to.be.an('object');
-
         done();
       });
   });
@@ -746,9 +744,8 @@ describe('User Email and Account Verification Test', () => {
         }
         expect(response.status).to.equal(200);
         expect(response.body.success).to.equal(true);
-        expect(response.body.message[0]).to.equal(
-          `Your email ${values.email} was successfully verified`
-        );
+        expect(response.body.message[0])
+          .to.equal(`Your email ${values.email} was successfully verified`);
         done();
       });
   });

@@ -2,6 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../../../index';
 import userOneDetails from './userTest';
+import commentHistory from '../../workers/CommentHistoryWorker';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -287,6 +288,77 @@ describe('Test CRUD Comments for articles', () => {
           });
       });
     });
+
+    const {
+      getComment,
+      createCommentHistory
+    } = commentHistory;
+
+    describe('Unit testing comment history functionalities', () => {
+      it('should get a single comment', async () => {
+        const { id } = commentId;
+        const { userId } = data;
+        try {
+          const getOneComment = await createCommentHistory(userId, id, 'This is just a test');
+          expect(getOneComment).to.be.an('object');
+        } catch (error) {
+          throw (error);
+        }
+      });
+      it('should get a single comment', async () => {
+        const { id } = commentId;
+        try {
+          const getOneComment = await getComment(id);
+          expect(getOneComment).to.be.an('object');
+        } catch (error) {
+          throw (error);
+        }
+      });
+      it('should return a comment object', async () => {
+        const { id } = commentId;
+        try {
+          const getOneComment = await getComment(id);
+          expect(getOneComment).to.be.an('object');
+        } catch (error) {
+          throw (error);
+        }
+      });
+      it('Should return 200(Ok) if comment was retrieved', (done) => {
+        const { id } = commentId;
+        chai.request(app)
+          .get(`/api/v1/comments/${id}/history`)
+          .set('x-token', data.token)
+          .end((error, response) => {
+            if (error) done(error);
+            expect(response.status).to.equal(200);
+            expect(response.body.message).to.equal('Comment edit history');
+            done();
+          });
+      });
+      it('Should return 404(Not Found) if comment does not exist', (done) => {
+        chai.request(app)
+          .get('/api/v1/comments/5ae2bacd-8dab-42df-9955-eb658ed5b1b8/history')
+          .set('x-token', data.token)
+          .end((error, response) => {
+            if (error) done(error);
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('Edit history not found');
+            done();
+          });
+      });
+      it('Should return 500(Not Found) if UUID is invalid', (done) => {
+        chai.request(app)
+          .get('/api/v1/comments/5ae2bacd-8dab-42df-9955-eb658ed5bzb8/history')
+          .set('x-token', data.token)
+          .end((error, response) => {
+            if (error) done(error);
+            expect(response.status).to.equal(500);
+            expect(response.body.message).to.equal('Internal server error');
+            done();
+          });
+      });
+    });
+
     describe('Delete comments written by you', () => {
       it('Should return 404(Not Found) if article does not exist', (done) => {
         chai.request(app)
