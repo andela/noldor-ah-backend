@@ -1,0 +1,77 @@
+{
+  "name": "noldor-ah-backend",
+  "description": "This manifest file help create a review app for every pull request made on github.",
+  "repository": "https://github.com/andela/noldor-ah-backend",
+  "scripts": {},
+  "env": {
+      "App_Callback": {
+          "required": true
+      },
+      "App_ID": {
+          "required": true
+      },
+      "App_Secret": {
+          "required": true
+      },
+      "Client_Callback": {
+          "required": true
+      },
+      "Client_ID": {
+          "required": true
+      },
+      "Client_Secret": {
+          "required": true
+      },
+      "CLOUDINARY_URL": {
+          "required": true
+      },
+      "DATABASE_URL": {
+          "required": true
+      },
+      "MAIL": {
+          "required": true
+      },
+      "NPM_CONFIG_PRODUCTION": {
+          "required": true
+      },
+      "PASS": {
+          "required": true
+      },
+      "PRIVATE_KEY": {
+          "required": true
+      },
+      "SENDGRID_API_KEY": {
+          "required": true
+      },
+      "SocialMediaPassword": {
+          "required": true
+      },
+      "SUPER_USER_EMAIL": {
+          "required": true
+      },
+      "SUPER_USERNAME": {
+          "required": true
+      },
+      "SUPER_USER_PASSWORD": {
+          "required": true
+      }
+  },
+  "formation": {
+      "web": {
+          "quantity": 1
+      }
+  },
+  "addons": [
+      {
+        "plan": "heroku-postgresql",
+        "options": {
+        "version": "9.5"
+      }
+    }
+  ],
+  "buildpacks": [
+      {
+          "url": "heroku/nodejs"
+      }
+  ]
+}
