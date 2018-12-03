@@ -1,5 +1,6 @@
 import Models from '../db/models';
 import CommentQueries from '../workers/CommentQueries';
+import Helpers from '../helpers/index';
 
 const { Comment, Article } = Models;
 
@@ -94,6 +95,8 @@ class CommentController {
         articleId,
         comment
       });
+      const { host } = req.headers;
+      await Helpers.NotificationHelper.addNotification(host, articleId, 'comment', userId);
       return res.status(201).json({
         success: true,
         message: 'Comment has been posted successfully',

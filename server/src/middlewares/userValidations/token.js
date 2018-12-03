@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import Helpers from '../../helpers/index';
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ const validateToken = (req, res, next) => {
     });
   }
   try {
-    jwt.verify(headerToken, process.env.PRIVATE_KEY, (err, decoded) => {
+    jwt.verify(headerToken, process.env.PRIVATE_KEY, async (err, decoded) => {
       if (err) {
         return res.status(401).json({
           success: false,
@@ -28,12 +29,29 @@ const validateToken = (req, res, next) => {
         });
       }
       if (!err) {
-        req.user = decoded;
-        return next();
+        const userId = decoded.payload.id;
+        const validId = await Helpers.uuidValidator(userId);
+        if (!validId) {
+          return res.status(404).json({
+            success: false,
+            message: 'user not found',
+          });
+        }
+        const foundUser = await Helpers.UserHelper.checkUserExistence(userId);
+        if (!foundUser) {
+          return res.status(404).json({
+            success: false,
+            message: 'user not found',
+          });
+        }
+        if (foundUser) {
+          req.user = decoded;
+          return next();
+        }
       }
     });
   } catch (err) {
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       message: 'Invalid token provided.'
     });

@@ -15,20 +15,25 @@ class confirmAccount {
   * @param { object } next
   * @returns { object } json Object
   */
-  static isVerified(request, response, next) {
+  static async isVerified(request, response, next) {
     const userId = request.user.payload.id;
-    User.findAndCountAll({
+    const user = await User.findOne({
       where: {
         id: userId,
         confirmEmail: false
       }
-    }).then((data) => {
-      if (data.count > 0) {
-        return httpResponse.badResponse(response, 403,
-          'Your email is awaiting verification, please verify and try again');
-      }
     });
-    next();
+
+    if (user) {
+      return httpResponse.badResponse(
+        response, 403,
+        'Your email is awaiting verification, please verify and try again'
+      );
+    }
+
+    if (!user) {
+      next();
+    }
   }
 }
 

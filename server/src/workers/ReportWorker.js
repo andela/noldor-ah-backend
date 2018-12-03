@@ -34,30 +34,32 @@ class ReportWorker {
       }
     });
     if (!article) {
-      return badResponse(res, 404, 'article not found');
+      return 'not found';
     }
-    try {
-      const userId = req.user.payload.id;
-      const articleId = article.dataValues.id;
-      const { reportType, reportDetail } = req.body;
-      const findReport = await Report.findOne({
-        where: {
-          userId,
-          articleId,
-          reportType
-        }
-      });
-      if (!findReport) {
-        const addReport = await Report.create({
-          userId, articleId, reportType, reportDetail, status: 'pending'
+    if (article) {
+      try {
+        const userId = req.user.payload.id;
+        const articleId = article.dataValues.id;
+        const { reportType, reportDetail } = req.body;
+        const findReport = await Report.findOne({
+          where: {
+            userId,
+            articleId,
+            reportType
+          }
         });
-        if (addReport) {
-          return addReport;
+        if (!findReport) {
+          const addReport = await Report.create({
+            userId, articleId, reportType, reportDetail, status: 'pending'
+          });
+          if (addReport) {
+            return addReport;
+          }
         }
+        return null;
+      } catch (error) {
+        return badResponse(res, 500, '', error.message);
       }
-      return null;
-    } catch (error) {
-      return badResponse(res, 500, '', error.message);
     }
   }
 

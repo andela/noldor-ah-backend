@@ -156,7 +156,7 @@ describe('Test CRUD Comments for articles', () => {
           .end((error, response) => {
             if (error) done(error);
             expect(response.status).to.equal(404);
-            expect(response.body.message).to.equal('User does not exist');
+            expect(response.body.message).to.equal('user not found');
             done();
           });
       });
@@ -231,7 +231,7 @@ describe('Test CRUD Comments for articles', () => {
           .end((error, response) => {
             if (error) done(error);
             expect(response.status).to.equal(404);
-            expect(response.body.message).to.equal('User does not exist');
+            expect(response.body.message).to.equal('user not found');
             done();
           });
       });
@@ -306,7 +306,7 @@ describe('Test CRUD Comments for articles', () => {
           .end((error, response) => {
             if (error) done(error);
             expect(response.status).to.equal(404);
-            expect(response.body.message).to.equal('User does not exist');
+            expect(response.body.message).to.equal('user not found');
             done();
           });
       });

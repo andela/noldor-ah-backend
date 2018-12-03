@@ -5,7 +5,7 @@ const resetPassword = (baseUrl, token) => {
       padding-top:50px;padding-bottom:50px;text-align:center;
       width:100%;font-size:12px;font-family:verdana;border-radius:5px;color:#444">
       <div>
-          <img src=https://pli.io/2ptTUa.png width="70px" height="70px">
+          <img src=https://res.cloudinary.com/dstvcmycn/image/upload/v1543246158/Author%27s%20Haven/Asset_1_4x.png width="70px" height="70px">
       </div>
       <p style="margin-bottom:25px";>You told us you forgot your password. 
       If you really did, click the button below to reset password.</p>
@@ -33,7 +33,7 @@ const notifyPaswordChange = (homepage) => {
     padding-top:50px;padding-bottom:50px;text-align:center;
     width:100%;font-size:12px;font-family:verdana;border-radius:5px;color:#444">
     <div>
-        <img src=https://pli.io/2ptTUa.png width="70px" height="70px">
+        <img src=https://res.cloudinary.com/dstvcmycn/image/upload/v1543246158/Author%27s%20Haven/Asset_1_4x.png width="70px" height="70px">
     </div>
     <p> You have successfully changed your password. </p>
     <div style="margin: 50px 50px">
@@ -53,7 +53,7 @@ const verifyEmailTemplate = (username, url, hash) => {
   padding-top:50px;padding-bottom:50px;text-align:center;
   width:100%;font-size:12px;font-family:verdana;border-radius:5px;color:#444">
   <div>
-      <img src=https://pli.io/2ptTUa.png width="70px" height="70px">
+      <img src=https://res.cloudinary.com/dstvcmycn/image/upload/v1543246158/Author%27s%20Haven/Asset_1_4x.png width="70px" height="70px">
   </div>
   <h2>Welcome to Authors Haven, ${username}</h2><br>
   <p>Please click the button below to verify your account.<p>
@@ -78,7 +78,7 @@ const articleTakedown = (user, slug, article) => `<div style="background:#f0f0f0
 padding-top:50px;padding-bottom:50px;text-align:center;
 width:100%;font-size:12px;font-family:verdana;border-radius:5px;color:#444">
 <div>
-  <img src=https://pli.io/2ptTUa.png width="70px" height="70px">
+  <img src=https://res.cloudinary.com/dstvcmycn/image/upload/v1543246158/Author%27s%20Haven/Asset_1_4x.png width="70px" height="70px">
 </div>
 
 <p style="text-align:center;">
@@ -114,7 +114,7 @@ const profileTakedown = user => `<div style="background:#f0f0f0;margin:0 auto;
 padding-top:50px;padding-bottom:50px;text-align:center;
 width:100%;font-size:12px;font-family:verdana;border-radius:5px;color:#444">
 <div>
-  <img src=https://pli.io/2ptTUa.png width="70px" height="70px">
+  <img src=https://res.cloudinary.com/dstvcmycn/image/upload/v1543246158/Author%27s%20Haven/Asset_1_4x.png width="70px" height="70px">
 </div>
 
 <p style="text-align:center;">
@@ -146,7 +146,7 @@ const profileReactivation = user => `<div style="background:#f0f0f0;margin:0 aut
 padding-top:50px;padding-bottom:50px;text-align:center;
 width:100%;font-size:12px;font-family:verdana;border-radius:5px;color:#444">
 <div>
-  <img src=https://pli.io/2ptTUa.png width="70px" height="70px">
+  <img src=https://res.cloudinary.com/dstvcmycn/image/upload/v1543246158/Author%27s%20Haven/Asset_1_4x.png width="70px" height="70px">
 </div>
 
 <p style="text-align:center;">
@@ -161,11 +161,38 @@ width:100%;font-size:12px;font-family:verdana;border-radius:5px;color:#444">
 <span style="font-family:sans-serif;font-size:10px">&copy; 2018, Authors Haven</span>
 </div>`;
 
+
+const usersNotification = (message, url, optOutUrl) => {
+  const html = `
+  <div style="background:#f0f0f0;margin:0 auto;
+padding-top:50px;padding-bottom:50px;text-align:center;
+width:100%;font-size:12px;font-family:verdana;border-radius:5px;color:#444;">
+    <div>
+        <img src=https://res.cloudinary.com/dstvcmycn/image/upload/v1543246158/Author%27s%20Haven/Asset_1_4x.png width="70px" height="70px">
+    </div>
+    <p> ${message} </p>
+     <p> Click below to view </p>
+         <a style="background:#e66869;box-shadow:0 4px 8px 0 rgba(0,0,0,0.2);
+         color:white;text-decoration:none;text-align:center;padding:13px 20px;border-radius:25px;
+         border:0.5px solid #e66869;"
+         href="${url}">View</a>
+     <p> 
+         <a style="color:#E66869;" href="${optOutUrl}"> Click Here</a> 
+         to opt-out of recieving notification
+    </p>
+  </div>
+    `;
+
+  return html;
+};
+
+
 export default {
   resetPassword,
   notifyPaswordChange,
   articleTakedown,
   profileTakedown,
   profileReactivation,
-  verifyEmailTemplate
+  verifyEmailTemplate,
+  usersNotification
 };

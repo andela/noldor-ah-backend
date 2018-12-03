@@ -86,7 +86,12 @@ const Users = (sequelize, DataTypes) => {
     },
     facebookId: {
       allowNull: true,
-      type: DataTypes.BIGINT
+      type: DataTypes.BIGINT,
+    },
+    notification: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     }
   }, { paranoid: true });
   User.associate = (models) => {
@@ -108,6 +113,12 @@ const Users = (sequelize, DataTypes) => {
       foreignKey: 'followerId',
     });
     User.hasMany(models.Reply, { foreignKey: 'userId' });
+    User.belongsToMany(models.Events, {
+      through: 'Notifications',
+      as: 'Notification',
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
   };
   return User;
 };

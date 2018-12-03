@@ -20,10 +20,16 @@ class ReportController {
     const error = ReportValidation.postValidation(req, res);
     if (error === null) {
       const makeReport = await ReportWorker.report(req, res);
+
       if (!makeReport) {
         return badResponse(res, 200, 'you have reported this article previously');
       }
-      return goodResponse(res, 201, 'article has been reported');
+      if (makeReport === 'not found') {
+        return badResponse(res, 404, 'article not found');
+      }
+      if (makeReport) {
+        return goodResponse(res, 201, 'article has been reported');
+      }
     }
   }
 
