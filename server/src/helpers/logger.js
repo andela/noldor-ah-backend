@@ -16,7 +16,6 @@ const isDir = (filePath) => {
 isDir(`${root}/logs/info.log`);
 isDir(`${root}/logs/error.log`);
 
-
 const infoStream = fileSystem.createWriteStream(`${root}/logs/info.log`, { flags: 'a' });
 const errorStream = fileSystem.createWriteStream(`${root}/logs/error.log`, { flags: 'a' });
 

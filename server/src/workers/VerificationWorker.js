@@ -17,23 +17,20 @@ class confirmAccount {
   */
   static async isVerified(request, response, next) {
     const userId = request.user.payload.id;
-    const user = await User.findOne({
+    const data = await User.findOne({
       where: {
         id: userId,
         confirmEmail: false
       }
     });
-
-    if (user) {
+    if (data) {
       return httpResponse.badResponse(
-        response, 403,
+        response,
+        403,
         'Your email is awaiting verification, please verify and try again'
       );
     }
-
-    if (!user) {
-      next();
-    }
+    next();
   }
 }
 

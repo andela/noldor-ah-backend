@@ -77,6 +77,6 @@ describe('Social media login Test', () => {
         expect(callBackFuntion).to.be.equal(undefined);
         done();
       });
-    });
-  }, 1000);
+    }, 1000);
+  });
 });

@@ -22,7 +22,7 @@ class ArticleWorker {
         published: true
       },
       attributes: ['slug', 'title',
-        'description', 'content', 'published',
+        'description', 'content', 'published', 'ratings',
         'createdAt', 'updatedAt'],
       include: [{
         model: User, attributes: ['username', 'bio', 'avatarUrl']
@@ -45,7 +45,7 @@ class ArticleWorker {
           published: publish
         },
         attributes: ['slug', 'title',
-          'description', 'published', 'content',
+          'description', 'published', 'content', 'ratings',
           'createdAt', 'updatedAt']
       });
       return article;
@@ -180,7 +180,7 @@ class ArticleWorker {
           published: true
         },
         attributes: ['id', 'slug', 'title',
-          'description', 'published', 'content',
+          'description', 'published', 'content', 'ratings',
           'createdAt', 'updatedAt'],
         include: [
           {
