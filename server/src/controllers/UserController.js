@@ -166,35 +166,42 @@ class UserController {
    * @returns { object } json
    */
   static async verifyEmail(req, res) {
-    const { id, username, email } = req.user.payload;
     const user = await User.findOne({
       where: {
-        username,
         emailVerificationHash: req.query.id,
       }
     });
     if (user) {
       if (user.confirmEmail === true) {
-        return httpResponse.badResponse(res, 400, 'Your have already verified your email');
+        return res.status(400).json({
+          success: true,
+          message: 'Your have already verified your email'
+        });
       }
       try {
         const isUpdated = User.update({
           confirmEmail: true
         }, {
           where: {
-            id,
+            id: user.id,
           }
         });
         if (!isUpdated) {
           return logger.error('Could not update record, please try again');
         }
-        return httpResponse.goodResponse(res, 200, `Your email ${email} was successfully verified`);
+        return res.status(200).json({
+          success: true,
+          message: `Your email ${user.email} was successfully verified`
+        });
       } catch (err) {
         logger.error(err);
         throw err;
       }
     }
-    return httpResponse.badResponse(res, 401, 'Verification failed, could not find user');
+    return res.status(401).json({
+      success: false,
+      message: 'Verification failed, could not find user'
+    });
   }
 
   /**

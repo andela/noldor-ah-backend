@@ -62,7 +62,7 @@ router.delete('/users/:userId/deactivate', token, deactivateUser);
 router.get('/users/:userName/followings', token, userFollowing);
 router.get('/users/:userName/followers', token, userFollower);
 router.post('/users/:userName/follow', token, followUser);
-router.get('/users/verify', token, verifyEmail);
+router.get('/users/verify', verifyEmail);
 
 /**
 * Social Media Login
