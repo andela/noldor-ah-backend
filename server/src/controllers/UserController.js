@@ -74,7 +74,7 @@ class UserController {
           return res.header('x-token', token).status(200).json({
             user: {
               success: true,
-              message: 'Registration successful',
+              message: 'Please check your email to complete registration',
               id: data.dataValues.id,
               email: data.dataValues.email,
               token,
