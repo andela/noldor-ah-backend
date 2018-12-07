@@ -27,7 +27,7 @@ const resetPassword = (baseUrl, token) => {
   return html;
 };
 
-const notifyPaswordChange = (homepage) => {
+const notifyPaswordChange = (baseUrl) => {
   const html = `
   <div style="background:#f0f0f0;margin:0 auto;
     padding-top:50px;padding-bottom:50px;text-align:center;
@@ -40,7 +40,7 @@ const notifyPaswordChange = (homepage) => {
       <p><a style="background:#e66869;box-shadow:0 4px 8px 0 rgba(0,0,0,0.2);
           color:white;text-decoration:none;text-align:center;padding:13px 20px;border-radius:25px;
           border:0.5px solid #e66869;" 
-            href="http://${homepage}/">Continue to Authors Haven</a></p></br>
+            href="${baseUrl}/">Continue to Authors Haven</a></p></br>
     </div><br>
     <span style="font-family:sans-serif;font-size:10px">&copy; 2018, Authors Haven</span>
   </div>`;
@@ -48,7 +48,7 @@ const notifyPaswordChange = (homepage) => {
   return html;
 };
 
-const verifyEmailTemplate = (username, url, hash) => {
+const verifyEmailTemplate = (username, baseUrl, hash) => {
   const html = `<div style="background:#f0f0f0;margin:0 auto;
   padding-top:50px;padding-bottom:50px;text-align:center;
   width:100%;font-size:12px;font-family:verdana;border-radius:5px;color:#444">
@@ -62,7 +62,7 @@ const verifyEmailTemplate = (username, url, hash) => {
   <p><a style="background:#e66869;box-shadow:0 4px 8px 0 rgba(0,0,0,0.2);
     color:white;text-decoration:none;text-align:center;padding:13px 20px;border-radius:25px;
     border:0.5px solid #e66869;" 
-         href="http://${url}/api/v1/users/verify?id=${hash}">Verify your account
+         href="${baseUrl}/users/verify?id=${hash}">Verify your account
       </a>
   </p>
 </div>

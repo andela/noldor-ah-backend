@@ -38,13 +38,13 @@ class UserController {
       if (foundUsername) {
         return res.status(409).json({
           success: false,
-          message: `Username ${username} aready exist`,
+          message: `Username ${username} already exist`,
         });
       }
       if (foundUserEmail) {
         return res.status(409).json({
           success: false,
-          message: `Email ${email} aready exist`,
+          message: `Email ${email} already exist`,
         });
       }
       User.create({
@@ -60,11 +60,12 @@ class UserController {
             role: data.dataValues.role
           };
           const token = Helpers.issueToken(payload);
+          const { BASE_URL } = process.env;
           const mailOption = {
             from: 'Authors Haven <no-reply@authorshaven.com>',
             to: email,
             subject: 'Welcome to Authors Haven',
-            html: html(username, req.headers.host, UpdateWorker.hashGenerator(email))
+            html: html(username, BASE_URL, UpdateWorker.hashGenerator(email))
           };
           try {
             Mailer.sendVerificationEmail(mailOption);
@@ -333,7 +334,8 @@ class UserController {
               message: 'password cannot be updated. try again',
             });
           }
-          const notifyPasswordChange = Helpers.templates.notifyPaswordChange(req.headers.host);
+          const { BASE_URL } = process.env;
+          const notifyPasswordChange = Helpers.templates.notifyPaswordChange(BASE_URL);
           const mailOptions = {
             to: email,
             from: 'Authors Haven <no-reply@authorshaven.com>',
