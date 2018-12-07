@@ -40,7 +40,7 @@ const signupValidation = (req, res, next) => {
     return badResponse(res, 400, 'Username field can not be blank');
   }
   if (values.username && !checkUsername(values.username.toString())) {
-    return badResponse(res, 400, 'Username is invalid, user only aphanumeric characters');
+    return badResponse(res, 400, 'Username is invalid, use only alphanumeric characters');
   }
   /**
   * Check to see that email is not blanck

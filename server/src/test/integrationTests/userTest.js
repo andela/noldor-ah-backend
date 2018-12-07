@@ -85,7 +85,7 @@ describe('Signup validation test', () => {
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(409);
-        expect(res.body.message).to.equal(`Username ${values.username} aready exist`);
+        expect(res.body.message).to.equal(`Username ${values.username} already exist`);
         done();
       });
   });
@@ -101,7 +101,7 @@ describe('Signup validation test', () => {
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(409);
-        expect(res.body.message).to.equal(`Email ${values.email} aready exist`);
+        expect(res.body.message).to.equal(`Email ${values.email} already exist`);
         done();
       });
   });
