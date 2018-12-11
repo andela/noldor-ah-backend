@@ -29,7 +29,7 @@ router.post('/articles', authorization, isVerified, tagsValidation, postArticle)
 router.put('/articles/:slug/publish', authorization, isVerified, publishArticle);
 router.put('/articles/:slug', authorization, isVerified, tagsValidation, updateArticle);
 router.delete('/articles/:slug', authorization, isVerified, deleteArticle);
-router.get('/articles/limit/:limit/page/:source', Paginator.page);
+router.get('/articles/page/:source', Paginator.page);
 router.post('/articles/:slug/likes', authorization, isVerified, ReactionController.likeArticle);
 router.post('/articles/ratings/:articleId', authorization, isVerified, rateArticles);
 

@@ -16,9 +16,9 @@ class PaginatorController {
      * @var {number} limit per page
      * @var {limit} offSet page skip
    */
-    const { Article, User } = model;
+    const { Article } = model;
     const page = parseInt(req.params.source, 10);
-    const limit = parseInt(req.params.limit, 10);
+    const limit = 3;
     if (page === 0 || page < 0) {
       return res.status(404).json({
         message: 'Page number must be numeric and greater than zero'
@@ -44,10 +44,7 @@ class PaginatorController {
       ],
       where: {
         published: true
-      },
-      include: [{
-        model: User, attributes: ['username', 'bio', 'avatarUrl']
-      }]
+      }
     })
       .then((data) => {
         if (data.count === 0) {
