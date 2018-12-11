@@ -47,7 +47,7 @@ describe('GET all articles endpoint', () => {
   });
   it('Should return 200 for successful pagination', (done) => {
     chai.request(app)
-      .get('/api/v1/articles/limit/1/page/1')
+      .get('/api/v1/articles/page/1')
       .end((error, response) => {
         if (error) done(error);
         expect(response.status).to.equal(200);

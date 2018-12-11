@@ -1,4 +1,9 @@
 import issueToken from '../helpers/issueToken';
+import httpResponse from '../helpers/response';
+
+const {
+  goodResponse
+} = httpResponse;
 
 /**
  * @class { Social media controller that returns a token to the user }
@@ -14,14 +19,7 @@ class SocialMedia {
     const { user } = req;
     const token = issueToken(user);
     res.header('x-token', token);
-    return res.status(200).json({
-      success: true,
-      message: 'Facebook login successful',
-      data: {
-        user,
-        token
-      }
-    });
+    return goodResponse(res, 200, 'Facebook login successful', user, token);
   }
 
   /**
@@ -33,14 +31,7 @@ class SocialMedia {
     const { user } = req;
     const token = issueToken(user);
     res.header('x-token', token);
-    return res.status(200).json({
-      success: true,
-      message: 'Google login successful',
-      data: {
-        user,
-        token
-      }
-    });
+    return goodResponse(res, 200, 'Google login successful', user, token);
   }
 }
 
