@@ -23,7 +23,7 @@ class ArticleWorker {
       },
       attributes: ['slug', 'title',
         'description', 'content', 'published', 'ratings',
-        'createdAt', 'updatedAt'],
+        'featuredImg', 'category', 'createdAt', 'updatedAt'],
       include: [{
         model: User, attributes: ['username', 'bio', 'avatarUrl']
       }]
@@ -46,7 +46,7 @@ class ArticleWorker {
         },
         attributes: ['slug', 'title',
           'description', 'published', 'content', 'ratings',
-          'createdAt', 'updatedAt']
+          'featuredImg', 'category', 'createdAt', 'updatedAt']
       });
       return article;
     } catch (error) {
@@ -79,6 +79,9 @@ class ArticleWorker {
       }
       if (req.body.description) {
         input.description = req.body.description;
+      }
+      if (req.body.featuredImg) {
+        input.featuredImg = req.body.featuredImg;
       }
       if (req.body.category) {
         req.body.category = req.body.category.toLowerCase();
@@ -181,7 +184,7 @@ class ArticleWorker {
         },
         attributes: ['id', 'slug', 'title',
           'description', 'published', 'content', 'ratings',
-          'createdAt', 'updatedAt'],
+          'featuredImg', 'category', 'createdAt', 'updatedAt'],
         include: [
           {
             model: User, attributes: ['id', 'username', 'bio', 'avatarUrl']

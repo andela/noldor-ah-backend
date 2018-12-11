@@ -37,7 +37,7 @@ describe('Signup validation test', () => {
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.error.email).to.equal('email is required');
+        expect(res.body.message).to.equal('email is required');
         done();
       });
   });
@@ -52,7 +52,7 @@ describe('Signup validation test', () => {
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.error.username).to.equal('username is required');
+        expect(res.body.message).to.equal('username is required');
         done();
       });
   });
@@ -85,7 +85,7 @@ describe('Signup validation test', () => {
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(409);
-        expect(res.body.message).to.equal(`Username ${values.username} aready exist`);
+        expect(res.body.message).to.equal(`Username ${values.username} already exist`);
         done();
       });
   });
@@ -101,7 +101,7 @@ describe('Signup validation test', () => {
       .send(values)
       .end((err, res) => {
         expect(res.status).to.equal(409);
-        expect(res.body.message).to.equal(`Email ${values.email} aready exist`);
+        expect(res.body.message).to.equal(`Email ${values.email} already exist`);
         done();
       });
   });
@@ -118,7 +118,7 @@ describe('Signup validation test', () => {
       .end((err, res) => {
         if (err) done(err);
         expect(res.status).to.equal(400);
-        expect(res.body.error.email).to.equal('Invalid email');
+        expect(res.body.message).to.equal('Invalid email');
         done();
       });
   });
@@ -137,7 +137,7 @@ describe('Signup validation test', () => {
         const mes1 = 'Password must be at least 8 characters long and';
         const mes2 = 'must be a combination of characters and numbers';
         expect(res.status).to.equal(400);
-        expect(res.body.error.password).to.equal(`${mes1} ${mes2}`);
+        expect(res.body.message).to.equal(`${mes1} ${mes2}`);
         done();
       });
   });
@@ -154,7 +154,7 @@ describe('Signup validation test', () => {
       .end((err, res) => {
         if (err) done(err);
         expect(res.status).to.equal(400);
-        expect(res.body.error.matchPass).to.equal('Passwords did not match, please try again');
+        expect(res.body.message).to.equal('Passwords did not match, please try again');
         done();
       });
   });
@@ -173,7 +173,7 @@ describe('Signup validation test', () => {
         if (err) done(err);
         expect(res.status).to.equal(200);
         expect(res.body.user.token).to.be.a('string');
-        expect(res.body.user.message).to.equal('Registration successful');
+        expect(res.body.user.message).to.equal('Please check your email to complete registration');
         userOneDetails.token = res.body.user.token;
         done();
       });

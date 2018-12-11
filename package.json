@@ -10,7 +10,7 @@
     "clean-db-test": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "clean-dist": "rm -rf ./dist/",
-    "build": "npm run clean-dist && mkdir ./dist/ && babel index.js -d ./dist/ && babel ./server/src/ -d ./dist/server/src",
+    "build": "npm run clean-dist && mkdir ./dist/ && babel index.js -d ./dist/ && cp swagger.json ./dist && babel ./server/src/ -d ./dist/server/src",
     "dev": "cross-env NODE_ENV=development nodemon --exec babel-node --presets env index.js",
     "migrate": "sequelize db:migrate && sequelize db:seed:all",
     "clean-db": "sequelize db:migrate:undo:all"

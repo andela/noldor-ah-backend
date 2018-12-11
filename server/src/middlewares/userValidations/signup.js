@@ -1,3 +1,7 @@
+import HttpResponseHelper from '../../helpers/httpResponse';
+
+const { badResponse } = HttpResponseHelper;
+
 /**
 *
 * @param { object } req
@@ -13,26 +17,13 @@ const signupValidation = (req, res, next) => {
   if (req.body.email) req.body.email = req.body.email.trim();
   const values = req.body;
   const required = ['username', 'email', 'password', 'confirmPassword'];
-  const errors = {};
-  let pass = true;
-  /**
-  * Loop through all the required fields, and check for missing fields values
-  * @param {string} value - value of each field
-  * @param {string} required - array of required fields
-  * @param {object} error - object holding all keys and their error messages
-  * @var {boolean} pass - check if value meets the minimum requirement
-  */
+
   for (let i = 0; i < required.length; i += 1) {
     if (!values[required[i]]) {
-      errors[required[i]] = `${required[i]} is required`;
-      pass = false;
+      return badResponse(res, 400, `${required[i]} is required`);
     }
   }
-  /**
-  * Check if password has atleast a string, number and is upto 8 characters long
-  * @param {string} str - parameter for email arguments
-  * @returns {string} boolean (true or false) if it meets the requirement or false if otherwise
-  */
+
   const checkPassword = (str) => {
     const check = /(?=.*\d)(?=.*[a-z]).{8,}/;
     return check.test(str);
@@ -46,20 +37,17 @@ const signupValidation = (req, res, next) => {
   * @param {string} username - User's username {meeky}
   */
   if (values.username && !values.username.replace(/\s/g, '').length) {
-    errors.username = 'Username field can not be blank';
-    pass = false;
+    return badResponse(res, 400, 'Username field can not be blank');
   }
   if (values.username && !checkUsername(values.username.toString())) {
-    errors.username = 'Username is invalid, user only aphanumeric characters';
-    return false;
+    return badResponse(res, 400, 'Username is invalid, use only alphanumeric characters');
   }
   /**
   * Check to see that email is not blanck
   * @param {string} email - User's email {meeky.ae@gmail.com}
   */
   if (values.email && !values.email.replace(/\s/g, '').length) {
-    errors.email = 'Email field can not be blank';
-    pass = false;
+    return badResponse(res, 400, 'Email field can not be blank');
   }
 
   /**
@@ -67,8 +55,7 @@ const signupValidation = (req, res, next) => {
   * @param {string} email - User's email {meeky.ae@gmail.com}
   */
   if (values.email && !emailFilter.test(String(values.email).toLowerCase())) {
-    errors.email = 'Invalid email';
-    pass = false;
+    return badResponse(res, 400, 'Invalid email');
   }
 
   /**
@@ -76,8 +63,7 @@ const signupValidation = (req, res, next) => {
   * @param {string} password - User's password {x456As49#u4me}
   */
   if (values.password && !values.password.toString().replace(/\s/g, '').length) {
-    errors.password = 'Password field can not be blank';
-    pass = false;
+    return badResponse(res, 400, 'Password field can not be blank');
   }
 
   /**
@@ -87,8 +73,8 @@ const signupValidation = (req, res, next) => {
   if (values.password && !checkPassword(values.password.toString())) {
     const mes1 = 'Password must be at least 8 characters long and';
     const mes2 = 'must be a combination of characters and numbers';
-    errors.password = `${mes1} ${mes2}`;
-    pass = false;
+    const mes = `${mes1} ${mes2}`;
+    return badResponse(res, 400, mes);
   }
 
   /**
@@ -96,8 +82,7 @@ const signupValidation = (req, res, next) => {
   * @param {string} confirmPassword - User's password {x456As49#u4me}
   */
   if (values.confirmPassword && !values.confirmPassword.toString().replace(/\s/g, '').length) {
-    errors.confirmPassword = 'Confirm Password field can not be blank';
-    pass = false;
+    return badResponse(res, 400, 'Confirm Password field can not be blank');
   }
   /**
   * Get the values of password and confirm pass and check their equality
@@ -107,17 +92,9 @@ const signupValidation = (req, res, next) => {
   const passOne = values.confirmPassword && values.confirmPassword.toString().replace(/\s/g, '');
   const passTwo = values.password && values.password.toString().replace(/\s/g, '');
   if (passOne !== passTwo) {
-    errors.matchPass = 'Passwords did not match, please try again';
-    pass = false;
+    return badResponse(res, 400, 'Passwords did not match, please try again');
   }
-  /**
-  * Check if any validation failed, if yes display error(s) else continue
-  */
-  if (pass === false) {
-    return res.status(400).json({
-      error: errors
-    });
-  }
+
   req.body.username = req.body.username.toString().trim();
   req.body.password = req.body.password.toString().trim();
   req.body.email = req.body.email.trim().toLowerCase();

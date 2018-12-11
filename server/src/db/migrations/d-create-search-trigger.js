@@ -12,9 +12,7 @@ export default {
       .then(() => sequelize
         .query(`UPDATE "${tableName}" SET "${columnName}" = to_tsvector('english', title || ' ' || content )`)
         .then(() => sequelize
-          .query(`CREATE INDEX searchIndex ON "${tableName}" ("${columnName}");`)
-          .then(() => sequelize
-            .query(`CREATE TRIGGER updateSearchIndex BEFORE INSERT OR UPDATE ON "${tableName}" FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger("${columnName}", 'pg_catalog.english', ${searchFields.join(', ')})`))));
+          .query(`CREATE TRIGGER updateSearchIndex BEFORE INSERT OR UPDATE ON "${tableName}" FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger("${columnName}", 'pg_catalog.english', ${searchFields.join(', ')})`)));
   },
 
   down: (queryInterface) => {
@@ -22,8 +20,6 @@ export default {
 
     return sequelize
       .query(`DROP TRIGGER updateSearchIndex ON "${tableName}"`)
-      .then(() => sequelize
-        .query('DROP INDEX searchIndex'))
       .then(() => sequelize
         .query(`ALTER TABLE "${tableName}" DROP COLUMN "${columnName}"`));
   },
