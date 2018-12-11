@@ -19,7 +19,7 @@ class SocialMedia {
     const { user } = req;
     const token = issueToken(user);
     res.header('x-token', token);
-    return goodResponse(res, 200, 'Facebook login successful', token);
+    return goodResponse(res, 200, 'Facebook login successful', user, token);
   }
 
   /**
@@ -31,7 +31,7 @@ class SocialMedia {
     const { user } = req;
     const token = issueToken(user);
     res.header('x-token', token);
-    return goodResponse(res, 200, 'Google login successful', token);
+    return goodResponse(res, 200, 'Google login successful', user, token);
   }
 }
 
