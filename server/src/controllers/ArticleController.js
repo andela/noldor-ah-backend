@@ -25,6 +25,14 @@ const { addTags } = TagWorker;
 
 const { postValidation } = Helpers.ArticleValidation;
 
+const {
+  queryArticle,
+  queryUserRatings,
+  rateArticle,
+  getArticleAverageRate,
+  getUserRating
+} = Helpers.articleRatings;
+
 /**
  * @class { ArticleController }
  * @description { Handles Articles Requests }
@@ -291,19 +299,17 @@ class ArticleController {
    * @returns {object} Json
    */
   static async rateArticles(req, res) {
-    await Helpers.articleRatings.queryArticle(req, res).then((data) => {
+    await queryArticle(req, res).then(async (data) => {
       if (data.count > 0) {
-        Helpers.articleRatings.queryUserRatings(req).then((user) => {
+        await queryUserRatings(req).then(async (user) => {
           if (user.count > 0) {
             return res.status(403).json({
               success: false,
               message: 'You already rated this article'
             });
           }
-          Helpers.articleRatings.rateArticle(req, res);
-          setTimeout(() => {
-            Helpers.articleRatings.getArticleAverageRate(req, res);
-          }, 3000);
+          await rateArticle(req, res);
+          await getArticleAverageRate(req, res);
         });
       } else {
         return res.status(404).json({
@@ -318,6 +324,41 @@ class ArticleController {
         error: error.message
       }
     }));
+  }
+
+  /**
+   *
+   * @description { get user articles ratings }
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Json
+   */
+  static async getUserRatings(req, res) {
+    const { articleId } = req.params;
+    const userId = req.user.payload.id;
+    try {
+      await queryArticle(req, res).then(async (data) => {
+        if (data.count > 0) {
+          const rateValue = await getUserRating(userId, articleId);
+          if (!rateValue) {
+            return res.status(404).json({
+              success: true,
+              message: 'No rating provided yet'
+            });
+          }
+          return res.status(200).json({
+            message: 'User ratings retrieved successfully',
+            data: rateValue
+          });
+        }
+        return res.status(404).json({
+          success: false,
+          message: 'Article with the specified ID was not found'
+        });
+      });
+    } catch (error) {
+      httpResponse.badResponse(res, 500, 'Internal server error', error.message);
+    }
   }
 }
 
