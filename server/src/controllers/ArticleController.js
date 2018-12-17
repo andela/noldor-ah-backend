@@ -6,6 +6,7 @@ import Helpers from '../helpers/index';
 import TagWorker from '../workers/TagWorker';
 import ReadingStatsWorker from '../workers/ReadingStatsWorker';
 import httpResponse from '../helpers/response';
+import Comments from './CommentsViewController';
 
 const {
   Article, Category
@@ -131,6 +132,7 @@ class ArticleController {
     const likes = await article.countUsers();
     const tags = await article.getTags({ attributes: ['name'] });
     article.dataValues.likes = likes;
+    article.dataValues.comments = await Comments.getComments(req, res);
     const tagsArray = tags.map(x => x.name);
     article.dataValues.tags = tagsArray;
     article.dataValues.highlights = await article.getHighlights({
