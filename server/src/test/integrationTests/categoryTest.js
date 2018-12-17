@@ -14,6 +14,19 @@ const article = {
   category: 'error'
 };
 
+describe('get all categories', () => {
+  it('it should return 200', (done) => {
+    chai.request(app)
+      .get('/api/v1/categories')
+      .end((error, response) => {
+        if (error) done(error);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+});
+
 describe('Category Tests', () => {
   let userToken = '';
 
