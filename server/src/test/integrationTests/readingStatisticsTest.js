@@ -21,7 +21,7 @@ const fakeToken = helpers.issueToken(payload);
 describe('Users reading statistics test', () => {
   it('Login a user', (done) => {
     const values = {
-      email: 'meeky.ae@gmail.com',
+      email: 'meeky00.ae@gmail.com',
       password: 'Mochapassword1'
     };
     chai.request(app)
