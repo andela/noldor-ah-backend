@@ -13,6 +13,7 @@ const { Events, User, Article } = Models;
 class NotificationHelper {
   /**
      *@param {*} baseUrl baseUrl
+     *
      * @param {*} actionId  articleId
      * @param {*} actionType article/comment
      * @param {*} actorId   userId

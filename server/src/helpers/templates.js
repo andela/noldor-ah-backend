@@ -70,7 +70,6 @@ const verifyEmailTemplate = (username, baseUrl, hash) => {
   If you didn't sign up an account on Authors Haven please ignore this email</p><br>
   <span style="font-family:sans-serif;font-size:10px">&copy; 2018, Authors Haven</span>
 </div>`;
-
   return html;
 };
 
