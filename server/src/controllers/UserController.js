@@ -213,7 +213,8 @@ class UserController {
    */
   static getAllUser(req, res) {
     User.findAll({
-      attributes: ['id', 'username', 'email']
+      attributes: ['id', 'username', 'email'],
+      order: [['username', 'ASC']],
     })
       .then((data) => {
         const users = [];

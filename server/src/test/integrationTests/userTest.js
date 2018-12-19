@@ -7,8 +7,6 @@ import app from '../../../../index';
 const { expect } = chai;
 chai.use(chaiHttp);
 
-const fakeToken = 'eyJhbGciO6IkpXVCJ9.eS00NGEyLThhN2NjI5ODB9.3S6yu-goP8T0iv2MqsD0ffff';
-
 const userOneDetails = {};
 let userParams = '';
 let userTwoParams = '';
@@ -284,31 +282,6 @@ describe('Login validation test', () => {
         expect(res.header['x-token']).to.be.a('string');
         expect(res.body.message).to.equal('successfully logged in');
         userTwoParams = res.body.id;
-        done();
-      });
-  });
-
-  it('Should return 401 for getting the list of all users', (done) => {
-    chai.request(app)
-      .get('/api/v1/users/')
-      .end((err, res) => {
-        if (err) done(err);
-        expect(res.status).to.equal(401);
-        expect(res.body.success).to.equal(false);
-        expect(res.body.message).to.equal('Access denied. No token provided.');
-        done();
-      });
-  });
-
-  it('Should return 400 for getting the list of all users', (done) => {
-    chai.request(app)
-      .get('/api/v1/users/')
-      .set('x-token', fakeToken)
-      .end((err, res) => {
-        if (err) done(err);
-        expect(res.status).to.equal(401);
-        expect(res.body.success).to.equal(false);
-        expect(res.body.message).to.equal('invalid token');
         done();
       });
   });

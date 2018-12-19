@@ -52,7 +52,7 @@ const { facebookRoutes } = faceBookOauthInfo;
 
 router.post('/users/register', signup, register);
 router.post('/users/login/', Validators.login, login);
-router.get('/users/', token, getAllUser);
+router.get('/users/', getAllUser);
 router.put('/users/forgot', Validators.forgotPassword, forgetPassword);
 router.post('/users/forgot/:hash', Validators.resetPassword, resetPassword);
 router.get('/users/:userId/profiles', userIdChecker, viewUserProfile);
