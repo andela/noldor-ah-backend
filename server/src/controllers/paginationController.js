@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import model from '../db/models';
 /**
  * @class { UserController }
@@ -17,26 +18,33 @@ class PaginatorController {
      * @var {limit} offSet page skip
    */
     const { Article, User } = model;
-    const page = parseInt(req.params.source, 10);
-    const limit = parseInt(req.params.limit, 10);
+    const { source, limit } = req.params;
+    const page = parseInt(source, 10);
+    const pageLimit = parseInt(limit, 10);
     if (page === 0 || page < 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         message: 'Page number must be numeric and greater than zero'
       });
     }
     if (page === '') {
-      return res.status(404).json({
+      return res.status(400).json({
         message: 'Page number can not be empty'
       });
     }
     if (!page) {
-      return res.status(404).json({
+      return res.status(400).json({
         message: 'Page number must be numeric and greater than zero'
       });
     }
-    const offset = (page - 1) * limit;
+
+    if (isNaN(page)) {
+      return res.status(400).json({
+        message: 'Page number must be numeric and greater than zero'
+      });
+    }
+    const offset = (page - 1) * pageLimit;
     Article.findAndCountAll({
-      limit,
+      pageLimit,
       offset,
       $sort: { id: 1 },
       order: [
@@ -56,7 +64,7 @@ class PaginatorController {
             message: 'No articles yet, please try again later'
           });
         }
-        const pages = Math.ceil(data.count / limit);
+        const pages = Math.ceil(data.count / pageLimit);
         if (page > pages) return res.status(404).json({ message: 'Reached page limit...' });
         return res.status(200).json({
           result: data.rows,
