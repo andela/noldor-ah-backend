@@ -38,8 +38,8 @@ class SearchController {
       return res.status(200).json(response);
     }
 
-    if (filters.category && !filters.author) { // filter by category only
-      const query = Helpers.buildQuery(filters.category, null, searchTerm);
+    if (filters.tags && !filters.author) { // filter by tags only
+      const query = Helpers.buildQuery(filters.tags, null, searchTerm);
       const results = await Helpers.searchFor(query);
 
       if (results.length === 0) return res.status(404).json(failureResponse);
@@ -50,7 +50,7 @@ class SearchController {
       return res.status(200).json(response);
     }
 
-    if (filters.author && !filters.category) { // filter by author only
+    if (filters.author && !filters.tags) { // filter by author only
       const query = Helpers.buildQuery(null, filters.author, searchTerm);
       const results = await Helpers.searchFor(query);
 
@@ -62,8 +62,8 @@ class SearchController {
       return res.status(200).json(response);
     }
 
-    if (filters.author && filters.category) { // filter by both category and author
-      const query = Helpers.buildQuery(filters.category, filters.author, searchTerm);
+    if (filters.author && filters.tags) { // filter by both tags and author
+      const query = Helpers.buildQuery(filters.tags, filters.author, searchTerm);
       const results = await Helpers.searchFor(query);
 
       if (results.length === 0) return res.status(404).json(failureResponse);

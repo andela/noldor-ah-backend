@@ -135,10 +135,10 @@ describe('Search Initializations', () => {
       });
     });
 
-    describe('Filtering by Category Only', () => {
+    describe('Filtering by Tags Only', () => {
       it('should return an array of results when filtered successfully', (done) => {
         chai.request(app)
-          .post('/api/v1/search?category=life')
+          .post('/api/v1/search?tags=philosophy')
           .send({
             keywords: 'bar',
           })
@@ -153,7 +153,7 @@ describe('Search Initializations', () => {
 
       it('should return an empty object when keywords aren\'t found', (done) => {
         chai.request(app)
-          .post('/api/v1/search?category=millenials')
+          .post('/api/v1/search?tags=millenials')
           .send({
             keywords: 'bar',
           })
@@ -167,10 +167,10 @@ describe('Search Initializations', () => {
       });
     });
 
-    describe('Filtering by Both Categories and Authors', () => {
+    describe('Filtering by Both Tags and Authors', () => {
       it('should return an array of results when filtered successfully', (done) => {
         chai.request(app)
-          .post('/api/v1/search?author=userone&category=life')
+          .post('/api/v1/search?author=userone&tags=philosophy')
           .send({
             keywords: 'bar',
           })
@@ -185,7 +185,7 @@ describe('Search Initializations', () => {
 
       it('should return an empty object when keywords aren\'t found', (done) => {
         chai.request(app)
-          .post('/api/v1/search?author=userone&category=millenials')
+          .post('/api/v1/search?author=userone&tags=millenials')
           .send({
             keywords: 'bar',
           })
