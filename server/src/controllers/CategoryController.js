@@ -4,6 +4,12 @@ import httpResponseHelper from '../helpers/httpResponse';
 const { Category } = Models;
 const { goodResponse, badResponse } = httpResponseHelper;
 
+export const getAllCategories = async (req, res) => {
+  const categories = await Category.findAll();
+  const allCategories = categories.map(x => x.name);
+  return goodResponse(res, 200, 'retrieved successfully', allCategories);
+};
+
 const getArticles = async (req, res) => {
   let { category } = req.params;
   category = category.toLowerCase();
