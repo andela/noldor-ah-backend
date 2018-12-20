@@ -97,12 +97,12 @@ class Bookmarkworker {
         },
         include: [
           {
-            model: Article
+            model: Article,
+            include: {
+              model: User, attributes: ['username']
+            }
           },
-          {
-            model: User, attributes: ['username']
 
-          }
         ],
         order: [['updatedAt', 'DESC']]
       });
