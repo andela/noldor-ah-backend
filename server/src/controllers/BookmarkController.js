@@ -34,7 +34,7 @@ class BookmarkController {
       return res.status(200).json({
         success: true,
         message: 'successfully retrieved user\'s bookmarked articles',
-        userBookmarks,
+        userBookmarks
       });
     }
   }
