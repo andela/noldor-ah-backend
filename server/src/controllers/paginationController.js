@@ -40,7 +40,7 @@ class PaginatorController {
       offset,
       $sort: { id: 1 },
       order: [
-        ['createdAt', 'ASC']
+        ['createdAt', 'DESC']
       ],
       where: {
         published: true

@@ -1,9 +1,10 @@
 import Models from '../db/models';
 import ArticleWorker from './ArticleWorker';
 
+
 const {
   Bookmark,
-  Article
+  Article, User
 } = Models;
 
 /**
@@ -96,7 +97,11 @@ class Bookmarkworker {
         },
         include: [
           {
-            model: Article, attributes: ['title', 'description', 'featuredImg', 'ratings']
+            model: Article
+          },
+          {
+            model: User, attributes: ['username']
+
           }
         ],
         order: [['updatedAt', 'DESC']]
