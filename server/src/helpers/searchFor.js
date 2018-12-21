@@ -1,7 +1,6 @@
 import Models from '../db/models';
 
 const { Article, sequelize } = Models;
-
 const searchFor = async (query) => {
   const results = await sequelize.query(query, {
     type: sequelize.QueryTypes.SELECT,

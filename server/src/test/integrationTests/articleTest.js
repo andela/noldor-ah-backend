@@ -609,7 +609,7 @@ describe('User Email and Account Verification Test', () => {
   let hash = '';
 
   const values = {
-    email: 'meeky00.ae@gmail.com',
+    email: 'meeky.ae@gmail.com',
     username: 'userone0',
     password: 'Mochapassword1',
     confirmPassword: 'Mochapassword1'

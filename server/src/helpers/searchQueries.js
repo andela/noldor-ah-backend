@@ -1,17 +1,18 @@
-const buildQuery = (category, author, searchTerm) => {
-  if (category && !author) {
-    return `SELECT DISTINCT "Articles".id, "Articles"."userId", "Articles".title, 
-    "Articles".description,  "Articles".content, "Articles".slug, 
-    "Articles"."featuredImg", "Articles"."category", "Articles"."ratings", "Articles"."createdAt", 
-    "Articles"."updatedAt" FROM "Articles"
-    INNER JOIN "Categories" ON "Articles"."category" = "Categories"."name"
-    AND "Articles"."published" = 'TRUE' 
-    WHERE "Categories"."name" = '${category}' 
-    AND "Articles"."searchVectors" @@ to_tsquery('${searchTerm}') 
+const buildQuery = (tags, author, searchTerm) => {
+  if (tags && !author) { // filter by tags only
+    const tagsArray = tags.split(',').map(tag => `'${tag}' `);
+    return `SELECT DISTINCT "Articles".id, "Articles"."userId", 
+    "Articles".title, "Articles".description,  "Articles".content, 
+    "Articles".slug, "Articles"."featuredImg", "Articles"."createdAt", 
+    "Articles"."createdAt", "Articles"."updatedAt" FROM "Articles" 
+    INNER JOIN "ArticleTags" ON "ArticleTags"."articleId" = "Articles"."id" 
+    INNER JOIN "Tags" ON "Tags"."id" = "ArticleTags"."tagId" 
+    WHERE "Articles".published = 'TRUE' AND "Tags"."name" IN (${[...tagsArray]}) 
+    AND "Articles"."searchVectors" @@ to_tsquery('${searchTerm}')
     ORDER BY "Articles"."createdAt" DESC`;
   }
 
-  if (author && !category) { // filter by author only
+  if (author && !tags) { // filter by author only
     return `SELECT DISTINCT "Articles".id, "Articles"."userId", "Articles".title, 
     "Articles".description,  "Articles".content, "Articles".slug, 
     "Articles"."featuredImg", "Articles"."createdAt", "Articles"."createdAt", 
@@ -22,21 +23,20 @@ const buildQuery = (category, author, searchTerm) => {
     ORDER BY "Articles"."createdAt" DESC`;
   }
 
-  if (author && category) {
+  if (author && tags) { // filter by both tags and author
+    const tagsArray = tags.split(',').map(tag => `'${tag}' `);
     return `SELECT DISTINCT "Articles".id, "Articles"."userId", "Articles".title,
      "Articles".description,  "Articles".content, "Articles".slug, 
      "Articles"."featuredImg", "Articles"."createdAt", "Articles"."createdAt", 
-     "Articles"."updatedAt" FROM "Articles" INNER JOIN "Categories" ON 
-     "Articles"."category" = "Categories"."name" INNER JOIN "Users" ON
-     "Users"."id" = "Articles"."userId" WHERE "Categories"."name" = '${category}' 
-     AND "Users"."username" = '${author}'
-     AND "Articles"."searchVectors" @@ to_tsquery('${searchTerm}') 
-     AND "Articles"."published" = 'TRUE'
-     ORDER BY "Articles"."createdAt" DESC;
-     `;
+     "Articles"."updatedAt" FROM "Articles" INNER JOIN "ArticleTags" ON 
+     "ArticleTags"."articleId" = "Articles"."id" INNER JOIN "Tags" ON 
+     "Tags"."id" = "ArticleTags"."tagId" INNER JOIN "Users" ON 
+     "Users"."id" = "Articles"."userId" WHERE "Tags"."name" IN (${[...tagsArray]}) 
+     AND "Users"."username" = '${author}' AND "Articles"."searchVectors" 
+     @@ to_tsquery('${searchTerm}') ORDER BY "Articles"."createdAt" DESC`;
   }
 
-  if (!author && !category) { // no filters
+  if (!author && !tags) { // no filters
     return `SELECT "Articles".id, "Articles"."userId", "Articles".title, 
     "Articles".description,  "Articles".content, "Articles".slug, 
     "Articles"."featuredImg", "Articles"."createdAt", "Articles"."updatedAt" 
