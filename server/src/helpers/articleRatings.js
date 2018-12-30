@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import models from '../db/models';
 
 const { Article, Ratings } = models;
@@ -56,7 +57,7 @@ class Rating {
         message: 'Rate value must be from 1 to 5'
       });
     }
-    if (!rateValue) {
+    if (!rateValue || isNaN(parseInt(rateValue, 10))) {
       return res.status(403).json({
         success: false,
         message: 'Please provide a rate value from 1 to 5'
@@ -67,9 +68,9 @@ class Rating {
       articleId,
       ratings: rateValue,
     }).then(data => res.status(201).json({
-      data,
       success: true,
-      message: 'You successfully rated this article'
+      message: 'You successfully rated this article',
+      data
     }));
   }
 
@@ -81,7 +82,7 @@ class Rating {
    */
   static async updateArtilceRatings(req, average) {
     const { articleId } = req.params;
-    Article.update({
+    await Article.update({
       ratings: average
     }, {
       where: {
@@ -96,26 +97,37 @@ class Rating {
    * @param { object } res object
    * @returns { boolean } true or false
    */
-  static async getArticleAverageRate(req, res) {
+  static async getArticleAverageRate(req) {
     const { articleId } = req.params;
     await Ratings.findAndCountAll({
       where: {
         articleId
       }
-    }).then((data) => {
+    }).then(async (data) => {
       if (data.count > 0) {
-        Ratings.sum('ratings').then((sum) => {
+        await Ratings.sum('ratings', { where: { articleId } }).then(async (sum) => {
           const average = (sum / data.count);
-          this.updateArtilceRatings(req, average);
+          await Rating.updateArtilceRatings(req, average);
         });
       }
-    }).catch(error => res.status(500).json({
-      success: false,
-      error: {
-        message: 'Internal server error',
-        error: error.message
+    });
+  }
+
+  /**
+   * @description { get user article rating }
+   * @param { object } userId
+   * @param { object } articleId
+   * @returns { Object } rateValue
+   */
+  static async getUserRating(userId, articleId) {
+    const rateValue = await Ratings.findOne({
+      where: {
+        userId,
+        articleId
       }
-    }));
+    });
+    if (!rateValue) return null;
+    return rateValue;
   }
 }
 

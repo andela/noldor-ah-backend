@@ -9,7 +9,7 @@ import EmailVerification from '../../workers/VerificationWorker';
 const {
   allArticles, userArticles, userDrafts,
   getAnArticle, postArticle, publishArticle,
-  updateArticle, deleteArticle, rateArticles
+  updateArticle, deleteArticle, rateArticles, getUserRatings
 } = ArticleController;
 
 const { token: authorization, tags: tagsValidation } = Validators;
@@ -32,6 +32,7 @@ router.delete('/articles/:slug', authorization, isVerified, deleteArticle);
 router.get('/articles/limit/:limit/page/:source', Paginator.page);
 router.post('/articles/:slug/likes', authorization, isVerified, ReactionController.likeArticle);
 router.post('/articles/ratings/:articleId', authorization, isVerified, rateArticles);
+router.get('/articles/ratings/:articleId', authorization, isVerified, getUserRatings);
 
 
 const {
